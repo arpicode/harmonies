@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harmonies</title>
+</head>
+
+<body>
+  <figure class="game-board-container">
+    <img class="hex-board" src="" alt="Hex board">
+    <svg id="hex-board" width="400" height="350"></svg>
+  </figure>
+  <div id="token-menu">
+    <input type="radio" id="blue-radio" name="color" value="Blue" checked>
+    <label for="blue-radio">River</label>
+    <input type="radio" id="gray-radio" name="color" value="Gray">
+    <label for="gray-radio">Mountain</label>
+    <input type="radio" id="brown-radio" name="color" value="Brown">
+    <label for="brown-radio">Wood</label>
+    <input type="radio" id="green-radio" name="color" value="Green">
+    <label for="green-radio">Leaves</label>
+    <input type="radio" id="yellow-radio" name="color" value="Yellow">
+    <label for="yellow-radio">Field</label>
+    <input type="radio" id="red-radio" name="color" value="Red">
+    <label for="red-radio">Bricks</label>
+  </div>
+  <svg id="hex-pattern" width="200" height="200"></svg>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

@@ -1,0 +1,698 @@
+{
+  "hedgehog": {
+    "name": "Hérisson",
+    "ecosystem": "Building",
+    "points": [12, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Wood", "Leaves"]
+      }
+    ]
+  },
+  "eagle": {
+    "name": "Aigle",
+    "ecosystem": "Mountain",
+    "points": [11, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Mountain", "Mountain", "Mountain"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "kingfisher": {
+    "name": "Martin-pêcheur",
+    "ecosystem": "Tree",
+    "points": [18, 11, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Wood", "Wood", "Leaves"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["River"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["River"]
+      }
+    ]
+  },
+  "squirrel": {
+    "name": "Écureuil",
+    "ecosystem": "Building",
+    "points": [15, 9, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Wood", "Wood", "Leaves"]
+      }
+    ]
+  },
+  "panther": {
+    "name": "Panthère",
+    "ecosystem": "Field",
+    "points": [11, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Field"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"]
+      }
+    ]
+  },
+  "fenec": {
+    "name": "Fennec",
+    "ecosystem": "Mountain",
+    "points": [16, 9, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Mountain"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Mountain"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "bear": {
+    "name": "Ours",
+    "ecosystem": "Tree",
+    "points": [11, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Leaves"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Mountain", "Mountain"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Mountain", "Mountain"]
+      }
+    ]
+  },
+  "meerkat": {
+    "name": "Suricate",
+    "ecosystem": "Mountain",
+    "points": [11, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Mountain"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "peafowl": {
+    "name": "Paon",
+    "ecosystem": "Building",
+    "points": [17, 10, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["River"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["River"]
+      }
+    ]
+  },
+  "wolf": {
+    "name": "Loup",
+    "ecosystem": "Tree",
+    "points": [16, 10, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Wood", "Wood", "Leaves"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Field"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "lama": {
+    "name": "Lama",
+    "ecosystem": "Field",
+    "points": [12, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Field"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Field"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Mountain", "Mountain"]
+      }
+    ]
+  },
+  "shrew": {
+    "name": "Musaraigne",
+    "ecosystem": "Building",
+    "points": [17, 10, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Field"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "crocodile": {
+    "name": "Crocodile",
+    "ecosystem": "River",
+    "points": [15, 9, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["River"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["River"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Wood", "Wood", "Leaves"]
+      }
+    ]
+  },
+  "ray": {
+    "name": "Raie",
+    "ecosystem": "River",
+    "points": [16, 10, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["River"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Mountain"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Mountain"]
+      }
+    ]
+  },
+  "hare": {
+    "name": "Lièvre",
+    "ecosystem": "Tree",
+    "points": [17, 10, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Leaves"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Leaves"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"]
+      }
+    ]
+  },
+  "trout": {
+    "name": "Truite",
+    "ecosystem": "River",
+    "points": [16, 10, 6, 3],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Mountain", "Mountain", "Mountain"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["River"],
+        "isSpawn": true
+      }
+    ]
+  },
+  "flamingo": {
+    "name": "Flamant",
+    "ecosystem": "River",
+    "points": [16, 10, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["River"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Field"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "boar": {
+    "name": "Sanglier",
+    "ecosystem": "Tree",
+    "points": [13, 8, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"]
+      }
+    ]
+  },
+  "koala": {
+    "name": "Koala",
+    "ecosystem": "Tree",
+    "points": [15, 10, 6, 3],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Leaves"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"],
+        "isSpawn": true
+      }
+    ]
+  },
+  "bat": {
+    "name": "Chauve-souris",
+    "ecosystem": "Mountain",
+    "points": [15, 10, 6, 3],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Wood", "Wood", "Leaves"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Mountain"],
+        "isSpawn": true
+      }
+    ]
+  },
+  "raven": {
+    "name": "Corbeau",
+    "ecosystem": "Field",
+    "points": [9, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Field"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Bricks", "Bricks"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Bricks", "Bricks"]
+      }
+    ]
+  },
+  "raccoon": {
+    "name": "Raton laveur",
+    "ecosystem": "Field",
+    "points": [12, 6],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Field"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["River"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["River"]
+      },
+      {
+        "q": 0,
+        "r": 1,
+        "tokens": ["River"]
+      }
+    ]
+  },
+  "ladybug": {
+    "name": "Coccinelle",
+    "ecosystem": "Field",
+    "points": [17, 12, 8, 5, 2],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Field"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Leaves"]
+      }
+    ]
+  },
+  "frog": {
+    "name": "Grenouille",
+    "ecosystem": "River",
+    "points": [15, 10, 6, 4, 2],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["River"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Leaves"]
+      }
+    ]
+  },
+  "articWolf": {
+    "name": "Loup arctique",
+    "ecosystem": "Field",
+    "points": [17, 10, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Field"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Wood", "Leaves"]
+      }
+    ]
+  },
+  "duck": {
+    "name": "Canard",
+    "ecosystem": "River",
+    "points": [13, 8, 4, 2],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["River"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"]
+      }
+    ]
+  },
+  "parrot": {
+    "name": "Perroquet",
+    "ecosystem": "Tree",
+    "points": [14, 9, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["River"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["River"]
+      }
+    ]
+  },
+  "japaneseMacaque": {
+    "name": "Macaque japonais",
+    "ecosystem": "Mountain",
+    "points": [11, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Mountain", "Mountain"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["River"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["River"]
+      }
+    ]
+  },
+  "otter": {
+    "name": "Loutre",
+    "ecosystem": "River",
+    "points": [16, 10, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Leaves"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["River"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Leaves"]
+      }
+    ]
+  },
+  "bee": {
+    "name": "Abeille",
+    "ecosystem": "Tree",
+    "points": [18, 8],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Wood", "Leaves"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["Field"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["Field"]
+      },
+      {
+        "q": 0,
+        "r": 1,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "lizard": {
+    "name": "Lézard",
+    "ecosystem": "Building",
+    "points": [16, 10, 5],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Field"]
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "isSpawn": true
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "tokens": ["Field"]
+      }
+    ]
+  },
+  "penguin": {
+    "name": "Pinguin",
+    "ecosystem": "River",
+    "points": [16, 10, 4],
+    "pattern": [
+      {
+        "q": 0,
+        "r": 0,
+        "tokens": ["Mountain"],
+        "isSpawn": true
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "tokens": ["River"]
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "tokens": ["River"]
+      }
+    ]
+  }
+}

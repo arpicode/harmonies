@@ -1,0 +1,140 @@
+:root {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+svg {
+  display: block;
+}
+
+.game-board-container {
+  position: relative;
+  width: 450px;
+  height: 400px;
+}
+
+.game-board-container svg,
+.game-board-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* river: e1cba2 */
+/* island: e0c9af */
+
+.hex {
+  fill: #e5d2ae;
+  stroke: #9c8156;
+  stroke-width: calc(1rem / 16);
+  transition: fill 150ms ease-in-out;
+}
+
+.hex-board--custom {
+  border: 1px solid #645a49;
+}
+
+.hex-board--river .hex {
+  fill: #e1cba2;
+  stroke: #9c8156;
+}
+
+.hex-board--river .hex:hover {
+  fill: hsl(39, 51%, 70%);
+}
+
+.hex-board--island .hex {
+  fill: #e0c9af;
+  stroke: #5a726a;
+}
+
+.hex-board--island .hex:hover {
+  fill: hsl(192, 29%, 70%);
+}
+
+.coords {
+  font-family: Verdana;
+  fill: #794d08;
+  font-size: 8px;
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+.token-stack {
+  stroke: black;
+  stroke-width: calc(1rem / 16);
+  pointer-events: none;
+}
+
+.river .token-top {
+  fill: hsl(221, 79%, 55%);
+}
+.river .token-front {
+  fill: hsl(223, 68%, 51%);
+}
+
+.mountain .token-top {
+  fill: hsl(0, 0%, 50%);
+}
+
+.mountain .token-front {
+  fill: hsl(0, 0%, 45%);
+}
+
+.wood .token-top {
+  fill: hsl(34, 73%, 35%);
+}
+
+.wood .token-front {
+  fill: hsl(35, 84%, 30%);
+}
+
+.leaves .token-top {
+  fill: hsl(120, 61%, 34%);
+}
+
+.leaves .token-front {
+  fill: hsl(120, 61%, 30%);
+}
+
+.field .token-top {
+  fill: hsl(51, 94%, 51%);
+}
+
+.field .token-front {
+  fill: hsl(50, 94%, 48%);
+}
+
+.bricks .token-top {
+  fill: hsl(0, 74%, 45%);
+}
+
+.bricks .token-front {
+  fill: hsl(0, 74%, 40%);
+}
