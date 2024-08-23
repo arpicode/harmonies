@@ -3,6 +3,7 @@ import TokenStack from './TokenStack'
 export class Hex {
   public static directions: Hex[]
   public static diagonals: Hex[]
+  public static rotations: ((q: number, r: number, s: number) => Hex)[]
   public readonly tokens = new TokenStack()
   public readonly id: string
   private _offsetCoords: OffsetCoord
@@ -41,29 +42,24 @@ export class Hex {
   }
 
   /**
+   * Rotates the hexagon by a given number of 60-degree steps around the origin counter-clockwise.
+   * The origin is the hexagon at (0, 0, 0).
+   * @param steps - The number of 60-degree steps to rotate.
+   * @returns A new rotated hexagon.
+   */
+  rotate(steps: number): Hex {
+    const rotatedHex = Hex.rotations[steps % 6](this.q, this.r, this.s)
+    this.tokens.toArray().forEach((token) => rotatedHex.tokens.push(token))
+
+    return rotatedHex
+  }
+
+  /**
    * Rotates the hexagon to the left.
    * @returns The resulting hexagon.
    */
   rotateLeft(): Hex {
     return new Hex(-this.s, -this.q, -this.r)
-  }
-
-  /**
-   * Rotates the hex by a given number of 60-degree steps around the origin.
-   * @param steps - The number of 60-degree steps to rotate.
-   * @returns A new rotated Hex.
-   */
-  rotate(steps: number): Hex {
-    let { q, r, s } = this
-
-    for (let i = 0; i < steps; i++) {
-      const temp = q
-      q = -s
-      s = -r
-      r = -temp
-    }
-
-    return new Hex(q, r, s)
   }
 
   /**
@@ -197,6 +193,15 @@ Hex.diagonals = [
   new Hex(-2, 1, 1),
   new Hex(-1, 2, -1),
   new Hex(1, 1, -2),
+] as const
+
+Hex.rotations = [
+  (q: number, r: number, s: number) => new Hex(q, r, s),
+  (q: number, r: number, s: number) => new Hex(-s, -q, -r),
+  (q: number, r: number, s: number) => new Hex(r, s, q),
+  (q: number, r: number, s: number) => new Hex(-q, -r, -s),
+  (q: number, r: number, s: number) => new Hex(s, q, r),
+  (q: number, r: number, s: number) => new Hex(-r, -s, -q),
 ] as const
 
 export interface OffsetCoord {

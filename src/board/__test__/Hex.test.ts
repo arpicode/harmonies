@@ -52,6 +52,44 @@ describe('Hex', () => {
     })
   })
 
+  describe('rotate', () => {
+    it('should rotate a hex by 1 step correctly', () => {
+      const hex = new Hex(1, -1, 0)
+      const result = hex.rotate(1)
+      expect(result.cubeCoords).toEqual({ q: 0, r: -1, s: 1 })
+    })
+
+    it('should rotate a hex by 2 steps correctly', () => {
+      const hex = new Hex(1, -1, 0)
+      const result = hex.rotate(2)
+      expect(result.cubeCoords).toEqual({ q: -1, r: 0, s: 1 })
+    })
+
+    it('should rotate a hex by 3 steps correctly', () => {
+      const hex = new Hex(1, -1, 0)
+      const result = hex.rotate(3)
+      expect(result.cubeCoords).toEqual({ q: -1, r: 1, s: 0 })
+    })
+
+    it('should rotate a hex by 4 steps correctly', () => {
+      const hex = new Hex(1, -1, 0)
+      const result = hex.rotate(4)
+      expect(result.cubeCoords).toEqual({ q: 0, r: 1, s: -1 })
+    })
+
+    it('should rotate a hex by 5 steps correctly', () => {
+      const hex = new Hex(1, -1, 0)
+      const result = hex.rotate(5)
+      expect(result.cubeCoords).toEqual({ q: 1, r: 0, s: -1 })
+    })
+
+    it('should rotate a hex by 6 steps correctly', () => {
+      const hex = new Hex(1, -1, 0)
+      const result = hex.rotate(6)
+      expect(result.cubeCoords).toEqual({ q: 1, r: -1, s: 0 })
+    })
+  })
+
   describe('distance', () => {
     it('should calculate the distance between two hexes correctly', () => {
       const hex1 = new Hex(3, -1, -2)

@@ -3,6 +3,8 @@ import ITokenManager from './ITokenManager'
 import HexTokenManager from './HexTokenManager'
 import IPathFinder from './IPathFinder'
 import HexPathFinder from './HexPathFinder'
+import IPatternMatcher from './IPatternMatcher'
+import PatternMatcher from './PatternMatcher'
 
 export type HexBoardType = 'river' | 'island' | 'custom'
 
@@ -16,6 +18,7 @@ export class HexBoard {
   public readonly hexes = new Map<string, Hex>()
   public readonly tokenManager: ITokenManager
   public readonly hexPathFinder: IPathFinder
+  public readonly patternMatcher: IPatternMatcher
 
   /**
    * Creates an instance of HexBoard.
@@ -30,7 +33,8 @@ export class HexBoard {
     numRows: number,
     type: HexBoardType = 'river',
     tokenManager?: ITokenManager,
-    pathFinder?: IPathFinder
+    pathFinder?: IPathFinder,
+    patternMatcher?: IPatternMatcher
   ) {
     this.cols = numCols
     this.rows = numRows
@@ -38,6 +42,7 @@ export class HexBoard {
     this._generateHexes()
     this.tokenManager = tokenManager ?? new HexTokenManager(this.hexes)
     this.hexPathFinder = pathFinder ?? new HexPathFinder(this.hexes)
+    this.patternMatcher = patternMatcher ?? new PatternMatcher(this.hexes)
   }
 
   private _generateHexes(): void {
@@ -126,73 +131,6 @@ export class HexBoard {
    * @returns `true` if the pattern is found, `false` otherwise.
    */
   public hasPattern(other: HexBoard): boolean {
-    const patternHexes = Array.from(other.hexes.values()).filter((hex) => !hex.tokens.isEmpty())
-
-    if (patternHexes.length === 0) return true
-
-    const patternKeyHex = patternHexes[0]
-
-    const rotatedPatterns = this._generateRotatedPatterns(patternHexes)
-    const matchedHexGroups: Hex[][] = []
-
-    for (const hex of this.hexes.values()) {
-      const matchedHexes = this._doesPatternMatchAtPosition(hex, rotatedPatterns, patternKeyHex)
-      if (matchedHexes.length > 0) {
-        matchedHexGroups.push(matchedHexes)
-      }
-    }
-
-    matchedHexGroups.forEach((matchedHexes, index) => {
-      console.log(`Pattern matched at hexes [Match ${index + 1}]: ${matchedHexes.map((h) => h.toString()).join(', ')}`)
-    })
-
-    return matchedHexGroups.length > 0
-  }
-
-  private _generateRotatedPatterns(patternHexes: Hex[]): Hex[][] {
-    const rotations = []
-
-    for (let i = 0; i < 6; i++) {
-      const rotatedPattern = patternHexes.map((hex) => {
-        const rotatedHex = hex.rotate(i)
-        rotatedHex.tokens = hex.tokens // Copy tokens from the original hex
-        return rotatedHex
-      })
-      rotations.push(rotatedPattern)
-    }
-
-    return rotations
-  }
-
-  private _doesPatternMatchAtPosition(sourceHex: Hex, rotatedPatterns: Hex[][], patternKeyHex: Hex): Hex[] {
-    for (const rotatedPattern of rotatedPatterns) {
-      // The key hex in the rotated pattern should match with the sourceHex
-      const rotatedKeyHex = rotatedPattern[0] // Assuming first hex is always the key
-
-      if (!sourceHex.tokens.equals(rotatedKeyHex.tokens)) {
-        continue
-      }
-
-      const matchedHexes: Hex[] = []
-      const isMatch = rotatedPattern.every((hex) => {
-        const targetHex = this.getHex(sourceHex.q + (hex.q - rotatedKeyHex.q), sourceHex.r + (hex.r - rotatedKeyHex.r))
-
-        if (!targetHex?.tokens.equals(hex.tokens)) {
-          return false
-        }
-
-        matchedHexes.push(targetHex)
-        return true
-      })
-
-      if (isMatch) {
-        console.log(
-          `Pattern matched using source hex: ${sourceHex.toString()} for pattern starting at: ${patternKeyHex.toString()}`
-        )
-        return matchedHexes
-      }
-    }
-
-    return []
+    return this.patternMatcher.hasPattern(other)
   }
 }

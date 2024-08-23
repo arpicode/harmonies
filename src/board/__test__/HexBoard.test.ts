@@ -372,10 +372,49 @@ describe('HexBoard', () => {
   describe('hasPattern', () => {
     let patternBoard: HexBoard
     beforeEach(() => {
-      patternBoard = new HexBoard(0, 0)
+      patternBoard = new HexBoard(0, 0, 'custom')
+      patternBoard.addHex(0, 0)
+      patternBoard.addHex(1, 0)
+      patternBoard.addHex(1, -1)
+      patternBoard.addHex(0, -1)
+      patternBoard.addHex(-1, 0)
+      patternBoard.addHex(-1, 1)
+      patternBoard.addHex(0, 1)
     })
 
     it('should return true when the empty pattern is found', () => {
+      expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(true)
+    })
+
+    it('should return true for a triangle river pattern', () => {
+      patternBoard.getHex(0, 0)?.tokens.push(new Token(TokenType.Blue))
+      patternBoard.getHex(1, 0)?.tokens.push(new Token(TokenType.Blue))
+      patternBoard.getHex(1, -1)?.tokens.push(new Token(TokenType.Blue))
+      console.log(patternBoard.toString())
+      expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(true)
+    })
+
+    it('should return true for the river/field pattern', () => {
+      patternBoard.getHex(0, 0)?.tokens.push(new Token(TokenType.Blue))
+      patternBoard.getHex(-1, 0)?.tokens.push(new Token(TokenType.Yellow))
+      patternBoard.getHex(0, 1)?.tokens.push(new Token(TokenType.Yellow))
+      expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(true)
+    })
+
+    it('should return false for the triangle leaves pattern', () => {
+      patternBoard.getHex(0, 0)?.tokens.push(new Token(TokenType.Green))
+      patternBoard.getHex(1, 0)?.tokens.push(new Token(TokenType.Green))
+      patternBoard.getHex(1, -1)?.tokens.push(new Token(TokenType.Green))
+      expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(false)
+    })
+
+    it('should return true with buildings in the pattern', () => {
+      patternBoard.getHex(0, 0)?.tokens.push(new Token(TokenType.Brown))
+      patternBoard.getHex(0, 0)?.tokens.push(new Token(TokenType.Red))
+      patternBoard.getHex(1, 0)?.tokens.push(new Token(TokenType.Blue))
+      patternBoard.getHex(1, -1)?.tokens.push(new Token(TokenType.Gray))
+      patternBoard.getHex(1, -1)?.tokens.push(new Token(TokenType.Red))
+      patternBoard.getHex(0, -1)?.tokens.push(new Token(TokenType.Gray))
       expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(true)
     })
   })
