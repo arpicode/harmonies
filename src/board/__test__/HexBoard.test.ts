@@ -382,8 +382,8 @@ describe('HexBoard', () => {
       patternBoard.addHex(0, 1)
     })
 
-    it('should return true when the empty pattern is found', () => {
-      expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(true)
+    it('should return false when pattern is empty', () => {
+      expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(false)
     })
 
     it('should return true for a triangle river pattern', () => {

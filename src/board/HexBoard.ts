@@ -5,6 +5,7 @@ import IPathFinder from './IPathFinder'
 import HexPathFinder from './HexPathFinder'
 import IPatternMatcher from './IPatternMatcher'
 import PatternMatcher from './PatternMatcher'
+import Token, { TokenType } from './Token'
 
 export type HexBoardType = 'river' | 'island' | 'custom'
 
@@ -78,9 +79,13 @@ export class HexBoard {
    * Adds a hex to the hex map.
    * @param q - The `q` coordinate of the hex.
    * @param r - The `r` coordinate of the hex.
+   * @param tokenTypes - Optional token types to add to the hex.
    */
-  addHex(q: number, r: number): void {
+  addHex(q: number, r: number, tokenTypes?: TokenType[]): void {
     const hex = new Hex(q, r, -q - r)
+    if (tokenTypes) {
+      tokenTypes.forEach((type) => hex.tokens.push(new Token(type)))
+    }
     this.hexes.set(hex.id, hex)
   }
 
@@ -125,12 +130,16 @@ export class HexBoard {
   }
 
   /**
-   * Checks if the current HexBoard contains the pattern formed by non-empty hexes in the 'other' HexBoard.
+   * Checks if the current HexBoard contains the pattern formed by non-empty hexes in the `other` HexBoard.
    * The pattern is considered to match if it can be found in any orientation.
    * @param other - The `other` HexBoard containing the pattern to search for.
    * @returns `true` if the pattern is found, `false` otherwise.
    */
   public hasPattern(other: HexBoard): boolean {
     return this.patternMatcher.hasPattern(other)
+  }
+
+  public findAllMatchingPatterns(other: HexBoard): Hex[][] {
+    return this.patternMatcher.findAllMatchingPatterns(other)
   }
 }

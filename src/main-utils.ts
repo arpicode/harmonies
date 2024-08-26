@@ -3,6 +3,7 @@ import { Layout, LAYOUT_FLAT } from './board/Layout'
 import ScoreBoard from './board/ScoreBoard'
 import GeneticAlgorithm from './genetic/GeneticAlgorithm'
 import SvgRenderer from './SvgRenderer'
+import Animal from './board/Animal'
 
 export function testGaAndBoardRendering() {
   const layout = new Layout(LAYOUT_FLAT, { x: 33, y: 33 }, { x: 124, y: 59 })
@@ -48,6 +49,8 @@ export function testHexBoardSides(side: HexBoardType) {
     console.log('hasPattern:', hexBoard.hasPattern(patternHexBoard))
   }
   patternRenderer.render()
+
+  return hexBoard
 }
 
 function createRiverHexBoard() {
@@ -99,4 +102,24 @@ export function createHexBoard(hexBoardType: HexBoardType) {
   if (hexBoardType === 'custom') return createCustomHexBoard()
   setHexBoardImage(hexBoardType)
   return hexBoardType === 'river' ? createRiverHexBoard() : createIslandHexBoard()
+}
+
+export function initializeAnimalCards(hexBoard: HexBoard) {
+  const animalCards = document.querySelectorAll('.animal-card')
+  animalCards.forEach((card) => {
+    card.addEventListener('mouseenter', () => {
+      console.clear()
+      card.classList.toggle('animal-card--selected')
+      const animalKey = card.getAttribute('alt')
+      if (!animalKey) throw new Error('Missing animal key')
+      const animal = new Animal(animalKey)
+      const matched = hexBoard.findAllMatchingPatterns(animal.pattern)
+      if (matched.length === 0) console.log(`No match for: ${animal.name}`)
+      console.log('Source Board:\n', hexBoard.toString())
+      console.log(`Pattern (${animalKey}):\n`, animal.pattern.toString())
+    })
+    card.addEventListener('mouseleave', () => {
+      card.classList.toggle('animal-card--selected')
+    })
+  })
 }

@@ -1,4 +1,5 @@
 import './style.scss'
-import { testHexBoardSides } from './main-utils'
+import { initializeAnimalCards, testHexBoardSides } from './main-utils'
 
-testHexBoardSides('river')
+const hexBoard = testHexBoardSides('river')
+initializeAnimalCards(hexBoard)

@@ -1,17 +1,42 @@
+import { IAnimalPattern } from './Animal'
+import Token from './Token'
 import TokenStack from './TokenStack'
 
+export interface IOffsetCoord {
+  col: number
+  row: number
+}
+
+export interface IAxialCoord {
+  q: number
+  r: number
+}
+
+export interface ICubeCoord extends IAxialCoord {
+  s: number
+}
+
+/**
+ * Represents a hexagon on a hex-based grid.
+ */
 export class Hex {
   public static directions: Hex[]
   public static diagonals: Hex[]
   public static rotations: ((q: number, r: number, s: number) => Hex)[]
   public readonly tokens = new TokenStack()
   public readonly id: string
-  private _offsetCoords: OffsetCoord
+  private _offsetCoords: IOffsetCoord
 
   constructor(public q: number, public r: number, public s: number) {
     if (q + r + s !== 0) throw new Error('Invalid cube coordinates: q + r + s must be 0')
     this.id = `${q},${r}`
     this._offsetCoords = this.cubeToOddQ()
+  }
+
+  public static fromJson(json: IAnimalPattern): Hex {
+    const hex = new Hex(json.q, json.r, -json.q - json.r)
+    json.tokenTypes.forEach((tokenType) => hex.tokens.push(new Token(tokenType)))
+    return hex
   }
 
   /**
@@ -82,6 +107,16 @@ export class Hex {
 
   /**
    * Gets the neighboring hexagon in a given direction.
+   *
+   * ```plaintext
+   * The directions are as follows:
+   * 0: East
+   * 1: Southeast
+   * 2: Southwest
+   * 3: West
+   * 4: Northwest
+   * 5: Northeast
+   * ```
    * @param direction - The direction index.
    * @returns The neighboring hexagon.
    * @throws Will throw an error if the direction is invalid.
@@ -96,6 +131,16 @@ export class Hex {
 
   /**
    * Gets the diagonal neighboring hexagon in a given direction.
+   *
+   * ```plaintext
+   * The directions are as follows:
+   * 0: East-Northeast
+   * 1: Southeast
+   * 2: Southwest
+   * 3: West-Southwest
+   * 4: Northwest
+   * 5: Northeast
+   * ```
    * @param direction - The direction index.
    * @returns The diagonal neighboring hexagon.
    * @throws Will throw an error if the direction is invalid.
@@ -110,21 +155,24 @@ export class Hex {
 
   /**
    * Converts cube coordinates to odd-q offset coordinates.
+   * {@link https://www.redblobgames.com/grids/hexagons/#conversions}
    * @returns The offset coordinates.
    */
-  cubeToOddQ(): OffsetCoord {
+  cubeToOddQ(): IOffsetCoord {
     const col = this.q
+    // x & 1 returns 1 if x is odd and 0 if x is even <=> x % 2
     const row = this.r + (this.q - (this.q & 1)) / 2
     return { col, row }
   }
 
   /**
    * Converts odd-q offset coordinates to cube coordinates.
+   * {@link https://www.redblobgames.com/grids/hexagons/#conversions}
    * @param col - The column coordinate.
    * @param row - The row coordinate.
    * @returns The cube coordinates.
    */
-  static oddQToCube(col: number, row: number): CubeCoord {
+  static oddQToCube(col: number, row: number): ICubeCoord {
     const q = col
     const r = row - (col - (col & 1)) / 2
     const s = -q - r
@@ -152,7 +200,7 @@ export class Hex {
    * Gets the offset coordinates of the hexagon.
    * @returns The offset coordinates.
    */
-  get offsetCoords(): OffsetCoord {
+  get offsetCoords(): IOffsetCoord {
     return this._offsetCoords
   }
 
@@ -160,7 +208,7 @@ export class Hex {
    * Gets the axial coordinates of the hexagon.
    * @returns The axial coordinates.
    */
-  get axialCoords(): AxialCoord {
+  get axialCoords(): IAxialCoord {
     return { q: this.q, r: this.r }
   }
 
@@ -203,17 +251,3 @@ Hex.rotations = [
   (q: number, r: number, s: number) => new Hex(s, q, r),
   (q: number, r: number, s: number) => new Hex(-r, -s, -q),
 ] as const
-
-export interface OffsetCoord {
-  col: number
-  row: number
-}
-
-export interface CubeCoord extends AxialCoord {
-  s: number
-}
-
-export interface AxialCoord {
-  q: number
-  r: number
-}

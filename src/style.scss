@@ -27,7 +27,8 @@ body {
   flex-direction: column;
 }
 
-svg {
+svg,
+img {
   display: block;
 }
 
@@ -131,10 +132,14 @@ svg {
   fill: hsl(50, 94%, 48%);
 }
 
-.bricks .token-top {
-  fill: hsl(0, 74%, 45%);
+.bricks {
+  .token-top {
+    fill: hsl(0, 74%, 45%);
+  }
+
+  .token-front {
+    fill: hsl(0, 74%, 40%);
+  }
 }
 
-.bricks .token-front {
-  fill: hsl(0, 74%, 40%);
-}
+@import 'scss/animals';

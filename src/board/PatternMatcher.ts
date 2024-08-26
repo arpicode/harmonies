@@ -12,76 +12,111 @@ export default class PatternMatcher implements IPatternMatcher {
   hasPattern(pattern: HexBoard): boolean {
     const patternHexes = Array.from(pattern.hexes.values()).filter((hex) => !hex.tokens.isEmpty())
 
-    if (patternHexes.length === 0) return true
-
-    const patternKeyHex = patternHexes[0]
+    if (patternHexes.length === 0) return false
 
     const rotatedPatterns = this._generateRotatedPatterns(patternHexes)
-    const matchedHexGroups: Hex[][] = []
 
     for (const hex of this._hexes.values()) {
-      const matchedHexes = this._doesPatternMatchAtPosition(hex, rotatedPatterns, patternKeyHex)
-      if (matchedHexes.length > 0) {
-        matchedHexGroups.push(matchedHexes)
+      if (this._doesPatternExistAtPosition(hex, rotatedPatterns)) {
+        return true
       }
+    }
+
+    return false
+  }
+
+  findAllMatchingPatterns(pattern: HexBoard): Hex[][] {
+    const patternHexes = Array.from(pattern.hexes.values()).filter((hex) => !hex.tokens.isEmpty())
+
+    if (patternHexes.length === 0) return []
+
+    const rotatedPatterns = this._generateRotatedPatterns(patternHexes)
+
+    const matchedHexGroups: Hex[][] = []
+    for (const hex of this._hexes.values()) {
+      const matchesAtPosition = this._findMatchesAtPosition(hex, rotatedPatterns)
+      matchedHexGroups.push(...matchesAtPosition)
     }
 
     matchedHexGroups.forEach((matchedHexes, index) => {
-      console.log(`Pattern matched at hexes [Match ${index + 1}]: ${matchedHexes.map((h) => h.toString()).join(', ')}`)
+      console.log(
+        `Pattern matched at hexes [Match ${index + 1}]: ${matchedHexes.map((hex) => hex.toString()).join(', ')}`
+      )
     })
 
-    return matchedHexGroups.length > 0
+    return matchedHexGroups
   }
 
   private _generateRotatedPatterns(patternHexes: Hex[]): Hex[][] {
-    const rotations = []
-
-    for (let i = 0; i < 6; i++) {
-      const rotatedPattern = patternHexes.map((hex) => {
-        return hex.rotate(i)
-      })
-      rotations.push(rotatedPattern)
-    }
-
-    return rotations
+    return Array.from({ length: 6 }, (_, i) => patternHexes.map((hex) => hex.rotate(i)))
   }
 
-  private _doesPatternMatchAtPosition(sourceHex: Hex, rotatedPatterns: Hex[][], patternKeyHex: Hex): Hex[] {
-    for (const rotatedPattern of rotatedPatterns) {
-      // The key hex in the rotated pattern should match with the sourceHex
-      const rotatedKeyHex = rotatedPattern[0] // Assuming first hex is always the key
+  private _findMatchesAtPosition(boardHex: Hex, rotatedPatterns: Hex[][]): Hex[][] {
+    return rotatedPatterns
+      .filter((rotatedPattern) => this._isReferenceHexMatch(boardHex, rotatedPattern[0]))
+      .map((rotatedPattern) => this._matchPattern(boardHex, rotatedPattern))
+      .filter((matchedHexes) => matchedHexes.length > 0)
+  }
 
-      if (!sourceHex.tokens.equals(rotatedKeyHex.tokens)) {
-        continue
+  private _doesPatternExistAtPosition(boardHex: Hex, rotatedPatterns: Hex[][]): boolean {
+    return rotatedPatterns.some((rotatedPattern) => {
+      if (!this._isReferenceHexMatch(boardHex, rotatedPattern[0])) {
+        return false
+      }
+      return this._isPatternMatching(boardHex, rotatedPattern)
+    })
+  }
+
+  private _isReferenceHexMatch(boardHex: Hex, referenceHex: Hex): boolean {
+    return (
+      boardHex.tokens.equals(referenceHex.tokens) ||
+      (boardHex.tokens.isCombinationOfType('building') && referenceHex.tokens.isCombinationOfType('building'))
+    )
+  }
+
+  private _matchPattern(boardHex: Hex, rotatedPattern: Hex[]): Hex[] {
+    const matchedHexes: Hex[] = []
+
+    for (const patternHex of rotatedPattern) {
+      const { q, r } = this._calculateTargetHexCoordinates(boardHex, patternHex, rotatedPattern[0])
+      const targetHex = this._hexes.get(`${q},${r}`)
+
+      if (!this._isHexMatch(targetHex, patternHex)) {
+        return [] // Early exit if any pattern hex doesn't match
       }
 
-      const matchedHexes: Hex[] = []
-      const isMatch = rotatedPattern.every((hex) => {
-        const q = sourceHex.q + (hex.q - rotatedKeyHex.q)
-        const r = sourceHex.r + (hex.r - rotatedKeyHex.r)
-        const targetHex = this._hexes.get(`${q},${r}`)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      matchedHexes.push(targetHex!) // Safe to push since we've already checked if it's a match
+    }
 
-        if (
-          !targetHex ||
-          (!targetHex.tokens.equals(hex.tokens) &&
-            !(targetHex.tokens.isCombinationOfType('building') && hex.tokens.isCombinationOfType('building')))
-        ) {
-          return false
-        }
+    return matchedHexes
+  }
 
-        matchedHexes.push(targetHex)
+  private _isPatternMatching(boardHex: Hex, rotatedPattern: Hex[]): boolean {
+    for (const patternHex of rotatedPattern) {
+      const { q, r } = this._calculateTargetHexCoordinates(boardHex, patternHex, rotatedPattern[0])
+      const targetHex = this._hexes.get(`${q},${r}`)
 
-        return true
-      })
-
-      if (isMatch) {
-        console.log(
-          `Pattern matched using source hex: ${sourceHex.toString()} for pattern starting at: ${patternKeyHex.toString()}`
-        )
-        return matchedHexes
+      if (!this._isHexMatch(targetHex, patternHex)) {
+        return false // Early exit if any pattern hex doesn't match
       }
     }
 
-    return []
+    return true
+  }
+
+  private _calculateTargetHexCoordinates(boardHex: Hex, patternHex: Hex, referenceHex: Hex): { q: number; r: number } {
+    return {
+      q: boardHex.q + (patternHex.q - referenceHex.q),
+      r: boardHex.r + (patternHex.r - referenceHex.r),
+    }
+  }
+
+  private _isHexMatch(targetHex: Hex | undefined, patternHex: Hex): boolean {
+    return (
+      targetHex !== undefined &&
+      (targetHex.tokens.equals(patternHex.tokens) ||
+        (targetHex.tokens.isCombinationOfType('building') && patternHex.tokens.isCombinationOfType('building')))
+    )
   }
 }

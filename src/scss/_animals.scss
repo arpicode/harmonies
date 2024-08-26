@@ -1,0 +1,20 @@
+.animal-cards-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.animal-card {
+  cursor: pointer;
+  width: 150px;
+  opacity: 0.85;
+  border-radius: 0.5rem;
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+
+  &:hover {
+    z-index: 10;
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.8);
+  }
+}

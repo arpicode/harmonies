@@ -1,83 +1,85 @@
 {
   "hedgehog": {
     "name": "Hérisson",
-    "ecosystem": "Building",
+    "ecosystem": "Bricks",
     "points": [12, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "tokenTypes": ["Bricks", "Bricks"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Leaves"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Leaves"]
       }
     ]
   },
   "eagle": {
     "name": "Aigle",
     "ecosystem": "Mountain",
+    "image": "animals/eagle.png",
     "points": [11, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Mountain", "Mountain", "Mountain"],
+        "tokenTypes": ["Mountain", "Mountain", "Mountain"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
   "kingfisher": {
     "name": "Martin-pêcheur",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
+    "image": "animals/kingfisher.png",
     "points": [18, 11, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Wood", "Wood", "Leaves"],
+        "tokenTypes": ["Wood", "Wood", "Leaves"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       }
     ]
   },
   "squirrel": {
     "name": "Écureuil",
-    "ecosystem": "Building",
+    "ecosystem": "Bricks",
     "points": [15, 9, 4],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "tokenTypes": ["Bricks", "Bricks"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Wood", "Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Wood", "Leaves"]
       }
     ]
   },
@@ -89,18 +91,18 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Leaves"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Field"],
+        "tokenTypes": ["Field"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Leaves"]
       }
     ]
   },
@@ -112,41 +114,41 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Mountain"]
+        "tokenTypes": ["Mountain"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Mountain"],
+        "tokenTypes": ["Mountain"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
   "bear": {
     "name": "Ours",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
     "points": [11, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Leaves"],
+        "tokenTypes": ["Leaves"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Mountain", "Mountain"]
+        "tokenTypes": ["Mountain", "Mountain"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Mountain", "Mountain"]
+        "tokenTypes": ["Mountain", "Mountain"]
       }
     ]
   },
@@ -158,59 +160,59 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Mountain"],
+        "tokenTypes": ["Mountain"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
   "peafowl": {
     "name": "Paon",
-    "ecosystem": "Building",
+    "ecosystem": "Bricks",
     "points": [17, 10, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "tokenTypes": ["Bricks", "Bricks"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       }
     ]
   },
   "wolf": {
     "name": "Loup",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
     "points": [16, 10, 4],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Wood", "Wood", "Leaves"],
+        "tokenTypes": ["Wood", "Wood", "Leaves"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
@@ -222,41 +224,41 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Field"],
+        "tokenTypes": ["Field"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Mountain", "Mountain"]
+        "tokenTypes": ["Mountain", "Mountain"]
       }
     ]
   },
   "shrew": {
     "name": "Musaraigne",
-    "ecosystem": "Building",
+    "ecosystem": "Bricks",
     "points": [17, 10, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "tokenTypes": ["Bricks", "Bricks"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
@@ -268,18 +270,18 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["River"],
+        "tokenTypes": ["River"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Wood", "Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Wood", "Leaves"]
       }
     ]
   },
@@ -291,41 +293,41 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["River"],
+        "tokenTypes": ["River"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Mountain"]
+        "tokenTypes": ["Mountain"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Mountain"]
+        "tokenTypes": ["Mountain"]
       }
     ]
   },
   "hare": {
     "name": "Lièvre",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
     "points": [17, 10, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Leaves"]
+        "tokenTypes": ["Leaves"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Leaves"],
+        "tokenTypes": ["Leaves"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"]
+        "tokenTypes": ["Bricks", "Bricks"]
       }
     ]
   },
@@ -337,12 +339,12 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Mountain", "Mountain", "Mountain"]
+        "tokenTypes": ["Mountain", "Mountain", "Mountain"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["River"],
+        "tokenTypes": ["River"],
         "isSpawn": true
       }
     ]
@@ -355,53 +357,53 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["River"],
+        "tokenTypes": ["River"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
   "boar": {
     "name": "Sanglier",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
     "points": [13, 8, 4],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Wood", "Leaves"],
+        "tokenTypes": ["Wood", "Leaves"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"]
+        "tokenTypes": ["Bricks", "Bricks"]
       }
     ]
   },
   "koala": {
     "name": "Koala",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
     "points": [15, 10, 6, 3],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Leaves"]
+        "tokenTypes": ["Leaves"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Wood", "Leaves"],
+        "tokenTypes": ["Wood", "Leaves"],
         "isSpawn": true
       }
     ]
@@ -414,12 +416,12 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Wood", "Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Wood", "Leaves"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Mountain"],
+        "tokenTypes": ["Mountain"],
         "isSpawn": true
       }
     ]
@@ -432,18 +434,18 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Field"],
+        "tokenTypes": ["Field"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Bricks", "Bricks"]
+        "tokenTypes": ["Bricks", "Bricks"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Bricks", "Bricks"]
+        "tokenTypes": ["Bricks", "Bricks"]
       }
     ]
   },
@@ -455,41 +457,42 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Field"],
+        "tokenTypes": ["Field"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": 0,
         "r": 1,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       }
     ]
   },
   "ladybug": {
     "name": "Coccinelle",
     "ecosystem": "Field",
+    "image": "animals/ladybug.png",
     "points": [17, 12, 8, 5, 2],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Field"],
+        "tokenTypes": ["Field"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Leaves"]
+        "tokenTypes": ["Leaves"]
       }
     ]
   },
@@ -501,13 +504,13 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["River"],
+        "tokenTypes": ["River"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Leaves"]
+        "tokenTypes": ["Leaves"]
       }
     ]
   },
@@ -519,18 +522,18 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Field"],
+        "tokenTypes": ["Field"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Leaves"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Wood", "Leaves"]
+        "tokenTypes": ["Wood", "Leaves"]
       }
     ]
   },
@@ -542,36 +545,36 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["River"],
+        "tokenTypes": ["River"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"]
+        "tokenTypes": ["Bricks", "Bricks"]
       }
     ]
   },
   "parrot": {
     "name": "Perroquet",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
     "points": [14, 9, 4],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Wood", "Leaves"],
+        "tokenTypes": ["Wood", "Leaves"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       }
     ]
   },
@@ -583,18 +586,18 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Mountain", "Mountain"],
+        "tokenTypes": ["Mountain", "Mountain"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       }
     ]
   },
@@ -606,69 +609,70 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Leaves"]
+        "tokenTypes": ["Leaves"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["River"],
+        "tokenTypes": ["River"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Leaves"]
+        "tokenTypes": ["Leaves"]
       }
     ]
   },
   "bee": {
     "name": "Abeille",
-    "ecosystem": "Tree",
+    "ecosystem": "Leaves",
+    "image": "animals/bee.png",
     "points": [18, 8],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Wood", "Leaves"],
+        "tokenTypes": ["Wood", "Leaves"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       },
       {
         "q": 0,
         "r": 1,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
   "lizard": {
     "name": "Lézard",
-    "ecosystem": "Building",
+    "ecosystem": "Bricks",
     "points": [16, 10, 5],
     "pattern": [
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["(Bricks|Mountain|Wood)", "Bricks"],
+        "tokenTypes": ["Bricks", "Bricks"],
         "isSpawn": true
       },
       {
         "q": -1,
         "r": 0,
-        "tokens": ["Field"]
+        "tokenTypes": ["Field"]
       }
     ]
   },
@@ -680,18 +684,18 @@
       {
         "q": 0,
         "r": 0,
-        "tokens": ["Mountain"],
+        "tokenTypes": ["Mountain"],
         "isSpawn": true
       },
       {
         "q": 1,
         "r": 0,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       },
       {
         "q": -1,
         "r": 1,
-        "tokens": ["River"]
+        "tokenTypes": ["River"]
       }
     ]
   }

@@ -213,22 +213,6 @@ describe('TokenStack', () => {
       expect(sourceTokenStack.equals(targetTokenStack)).toBe(true)
     })
 
-    it.skip('should return true for equal building combinations', () => {
-      const sourceTokenStack = new TokenStack()
-      const targetTokenStack1 = new TokenStack()
-      const targetTokenStack2 = new TokenStack()
-      sourceTokenStack.push(bricks) // A
-      sourceTokenStack.push(bricks)
-      targetTokenStack1.push(wood) // B
-      targetTokenStack1.push(bricks)
-      targetTokenStack2.push(mountain) // C
-      targetTokenStack2.push(bricks)
-      // A = B and A = C => B = C
-      expect(sourceTokenStack.equals(targetTokenStack1)).toBe(true)
-      expect(sourceTokenStack.equals(targetTokenStack2)).toBe(true)
-      expect(targetTokenStack1.equals(targetTokenStack2)).toBe(true)
-    })
-
     it('should return false for different token stacks', () => {
       const sourceTokenStack = new TokenStack()
       const targetTokenStack = new TokenStack()
