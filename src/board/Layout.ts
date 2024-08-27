@@ -42,7 +42,15 @@ export const LAYOUT_FLAT: Orientation = {
 }
 
 export class Layout {
-  constructor(public orientation: Orientation, public size: Point, public origin: Point) {}
+  public readonly orientation: Orientation
+  public readonly size: Point
+  public readonly origin: Point
+
+  constructor(orientation: Orientation, size: Point, origin: Point) {
+    this.orientation = orientation
+    this.size = size
+    this.origin = origin
+  }
 
   hexToPixel(hex: Hex): Point {
     const M = this.orientation

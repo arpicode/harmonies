@@ -56,7 +56,7 @@ export function testHexBoardSides(side: HexBoardType) {
 function createRiverHexBoard() {
   setHexBoardImage('river')
   const hexBoard = new HexBoard(5, 5, 'river')
-  const layout = new Layout(LAYOUT_FLAT, { x: 33, y: 33 }, { x: 124, y: 59 })
+  const layout = new Layout(LAYOUT_FLAT, { x: 59, y: 59 }, { x: 220, y: 103 })
 
   return { hexBoard, layout }
 }
@@ -64,7 +64,7 @@ function createRiverHexBoard() {
 function createIslandHexBoard() {
   setHexBoardImage('island')
   const hexBoard = new HexBoard(7, 4, 'island')
-  const layout = new Layout(LAYOUT_FLAT, { x: 33.3, y: 33.3 }, { x: 76, y: 88 })
+  const layout = new Layout(LAYOUT_FLAT, { x: 59.6, y: 59.6 }, { x: 134, y: 156 })
 
   return { hexBoard, layout }
 }

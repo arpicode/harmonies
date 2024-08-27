@@ -1,0 +1,19 @@
+.game-board-container {
+  position: relative;
+  display: inline-block;
+  margin: 1rem;
+  max-width: calc((1rem / 16) * 500);
+}
+
+.game-board-container img {
+  display: block;
+  max-width: 100%;
+}
+
+.game-board-container svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}

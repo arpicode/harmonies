@@ -139,6 +139,11 @@ export class HexBoard {
     return this.patternMatcher.hasPattern(other)
   }
 
+  /**
+   * Finds all matching patterns in the current HexBoard that match the pattern formed by non-empty hexes in the `other` HexBoard.
+   * @param other - The `other` HexBoard containing the pattern to search for.
+   * @returns An array of arrays of hexes that match the pattern.
+   */
   public findAllMatchingPatterns(other: HexBoard): Hex[][] {
     return this.patternMatcher.findAllMatchingPatterns(other)
   }

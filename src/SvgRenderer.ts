@@ -13,11 +13,13 @@ export default class SvgRenderer {
   private static readonly HEX_CLASS = 'hex'
   private static readonly COORDS_CLASS = 'coords'
   private static readonly TOKEN_STACK_CLASS = 'token-stack'
+  private readonly _tokenOffsetFactor: number
 
   constructor(hexBoard: HexBoard, layout: Layout, svg: SVGGElement) {
     this._hexBoard = hexBoard
     this._layout = layout
     this._svg = svg
+    this._tokenOffsetFactor = 15 / this._layout.size.y
   }
 
   drawHex(hex: Hex): void {
@@ -88,7 +90,7 @@ export default class SvgRenderer {
     const center = this._layout.hexToPixel(hex)
 
     text.setAttribute('x', center.x.toFixed(5))
-    text.setAttribute('y', (center.y - 20).toFixed(5))
+    text.setAttribute('y', (center.y - this._layout.size.y * 0.6).toFixed(5))
     text.setAttribute('class', SvgRenderer.COORDS_CLASS)
     text.textContent = `${hex.q} ${hex.r} ${hex.s}`
     return text
@@ -110,24 +112,28 @@ export default class SvgRenderer {
   private _renderTokens(hex: Hex, tokenStackGroup: SVGGElement): void {
     const center = this._layout.hexToPixel(hex)
     const tokens = hex.tokens.toArray()
-    const yOffSet = this._calculateYOffset(tokens.length)
+    const tokenHeight = this._layout.size.y
+    const yOffset = this._calculateYOffset(tokens.length, tokenHeight)
 
     tokens.forEach((token, index) => {
       const tokenSvg = this._createSvgTokenElement(token.type.toLowerCase())
       const tokenWidth = Number(tokenSvg.getAttribute('width'))
-      const tokenHeight = Number(tokenSvg.getAttribute('height'))
+
       tokenSvg.setAttribute('x', (center.x - tokenWidth / 2).toFixed(2))
-      tokenSvg.setAttribute('y', (center.y + yOffSet - index * 8.3 - tokenHeight / 2).toFixed(2))
+      tokenSvg.setAttribute(
+        'y',
+        (center.y + yOffset - index * tokenHeight * this._tokenOffsetFactor - tokenHeight / 2).toFixed(2)
+      )
       tokenStackGroup.appendChild(tokenSvg)
     })
   }
 
-  private _createSvgTokenElement(tokenClass: string, width = 30): SVGElement {
+  private _createSvgTokenElement(tokenClass: string): SVGElement {
     const svgNamespace = SvgRenderer.SVG_NAMESPACE
     const svg = document.createElementNS(svgNamespace, 'svg')
     svg.setAttribute('class', tokenClass)
-    svg.setAttribute('width', `${width}`)
-    svg.setAttribute('height', `${(width * 161) / 277}`)
+    svg.setAttribute('width', `${this._layout.size.x * 0.95}`)
+    svg.setAttribute('height', `${this._layout.size.y}`)
     svg.setAttribute('viewBox', '0 0 277 161')
     svg.setAttribute('xmlns', svgNamespace)
 
@@ -157,18 +163,17 @@ export default class SvgRenderer {
       'M276.5 42.5C276.5 48.1308 272.78 53.5907 265.822 58.6382C258.876 63.6776 248.793 68.2367 236.288 72.074C211.283 79.7468 176.71 84.5 138.5 84.5C100.29 84.5 65.7165 79.7468 40.7124 72.074C28.2073 68.2367 18.1238 63.6776 11.1776 58.6382C4.2203 53.5907 0.5 48.1308 0.5 42.5C0.5 36.8692 4.2203 31.4093 11.1776 26.3618C18.1238 21.3224 28.2073 16.7633 40.7124 12.926C65.7165 5.25322 100.29 0.5 138.5 0.5C176.71 0.5 211.283 5.25322 236.288 12.926C248.793 16.7633 258.876 21.3224 265.822 26.3618C272.78 31.4093 276.5 36.8692 276.5 42.5Z'
     )
     tokenTopPath.setAttribute('fill', '#e9e9e9')
-    tokenTopPath.setAttribute('stroke', 'black')
     svg.appendChild(tokenTopPath)
 
     return svg
   }
 
-  private _calculateYOffset(tokenCount: number): number {
+  private _calculateYOffset(tokenCount: number, tokenHeight: number): number {
     switch (tokenCount) {
       case 2:
-        return 5
+        return tokenHeight * (this._tokenOffsetFactor / 2)
       case 3:
-        return 10
+        return tokenHeight * this._tokenOffsetFactor
       default:
         return 0
     }

@@ -1,0 +1,133 @@
+$colors: (
+  'hex': (
+    'fill': rgba(229, 210, 174, 1),
+    'stroke': #9c8156,
+  ),
+  'river': (
+    'fill': #e1cba2,
+    'hover': hsl(39, 51%, 70%),
+  ),
+  'island': (
+    'fill': #e0c9af,
+    'stroke': #5a726a,
+    'hover': hsl(194, 9%, 71%),
+  ),
+  'coords': (
+    'fill': #794d08,
+  ),
+  /* Used for custom board border */ 'border': #645a49,
+  'token-stroke': black,
+  'river-token': (
+    'top': hsl(221, 79%, 55%),
+    'front': hsl(223, 68%, 51%),
+  ),
+  'mountain-token': (
+    'top': hsl(0, 0%, 50%),
+    'front': hsl(0, 0%, 45%),
+  ),
+  'wood-token': (
+    'top': hsl(34, 73%, 35%),
+    'front': hsl(35, 84%, 30%),
+  ),
+  'leaves-token': (
+    'top': hsl(120, 61%, 34%),
+    'front': hsl(120, 61%, 30%),
+  ),
+  'field-token': (
+    'top': hsl(51, 94%, 51%),
+    'front': hsl(50, 94%, 48%),
+  ),
+  'bricks-token': (
+    'top': hsl(0, 74%, 45%),
+    'front': hsl(0, 74%, 40%),
+  ),
+);
+
+$board-types: (
+  'river': (
+    'fill': 'river',
+    'stroke': 'hex',
+    'hover': 'river',
+  ),
+  'island': (
+    'fill': 'island',
+    'stroke': 'island',
+    'hover': 'island',
+  ),
+  'custom': (
+    'fill': 'hex',
+    'stroke': 'hex',
+    'border': 'border',
+  ),
+);
+
+$token-types: (
+  'river': 'river-token',
+  'mountain': 'mountain-token',
+  'wood': 'wood-token',
+  'leaves': 'leaves-token',
+  'field': 'field-token',
+  'bricks': 'bricks-token',
+);
+
+@function get-color($key, $subkey: null) {
+  @if $subkey {
+    @return map-get(map-get($colors, $key), $subkey);
+  }
+  @return map-get($colors, $key);
+}
+
+@mixin hex-style($fill-key, $stroke-key) {
+  fill: get-color($fill-key, 'fill');
+  stroke: get-color($stroke-key, 'stroke');
+  stroke-width: calc(1rem / 16);
+  transition: fill 150ms ease-in-out;
+}
+
+@mixin token-style($token-key) {
+  .token-top {
+    fill: get-color($token-key, 'top');
+  }
+  .token-front {
+    fill: get-color($token-key, 'front');
+  }
+}
+
+// Generate styles for board types
+@each $board, $keys in $board-types {
+  .hex-board--#{$board} .hex {
+    @include hex-style(map-get($keys, 'fill'), map-get($keys, 'stroke'));
+  }
+  @if map-has-key($keys, 'hover') {
+    .hex-board--#{$board} .hex:hover {
+      fill: get-color(map-get($keys, 'hover'), 'hover');
+    }
+  }
+  @if map-has-key($keys, 'border') {
+    .hex-board--#{$board} {
+      border: 1px solid get-color(map-get($keys, 'border'));
+    }
+  }
+}
+
+// Generate styles for token types
+@each $token, $color-key in $token-types {
+  .#{$token} {
+    @include token-style($color-key);
+  }
+}
+
+.coords {
+  font-family: Verdana;
+  fill: get-color('coords', 'fill');
+  font-size: 80%;
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+.token-stack {
+  stroke: get-color('token-stroke');
+  stroke-width: calc(1rem / 16);
+  pointer-events: none;
+}
