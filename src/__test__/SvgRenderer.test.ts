@@ -2,7 +2,7 @@ import { MockInstance } from 'vitest'
 import { Hex } from '../board/Hex'
 import { HexBoard } from '../board/HexBoard'
 import { Layout, LAYOUT_FLAT } from '../board/Layout'
-import SvgRenderer from '../SvgRenderer'
+import SvgRenderer from '../renderers/SvgRenderer'
 import { TokenType } from '../board/Token'
 
 describe('SvgRenderer', () => {

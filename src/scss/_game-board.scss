@@ -1,19 +1,26 @@
-.game-board-container {
+.game-board-container,
+.draft-table-container {
   position: relative;
   display: inline-block;
-  margin: 1rem;
   max-width: calc((1rem / 16) * 500);
+  margin: 0;
 }
 
-.game-board-container img {
+.draft-table-container {
+  max-width: calc((1rem / 16) * 300);
+}
+
+.game-board-container img,
+.draft-table-container img {
   display: block;
   max-width: 100%;
 }
 
-.game-board-container svg {
+.game-board-container svg,
+.draft-table-container svg {
   position: absolute;
   width: 100%;
-  height: 100%;
+  // height: 100%;
   top: 0;
   left: 0;
 }

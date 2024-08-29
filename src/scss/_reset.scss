@@ -26,3 +26,8 @@ body {
   // justify-content: center;
   // flex-direction: column;
 }
+
+svg,
+img {
+  user-select: none;
+}

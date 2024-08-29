@@ -2,8 +2,12 @@ import { HexBoard, HexBoardType } from './board/HexBoard'
 import { Layout, LAYOUT_FLAT } from './board/Layout'
 import ScoreBoard from './board/ScoreBoard'
 import GeneticAlgorithm from './genetic/GeneticAlgorithm'
-import SvgRenderer from './SvgRenderer'
+import SvgRenderer from './renderers/SvgRenderer'
 import Animal from './board/Animal'
+import Bag from './board/Bag'
+import Token, { startingTokensMap } from './board/Token'
+import DraftTable from './board/DraftTable'
+import DraftTableRenderer from './renderers/DraftTableRenderer'
 
 export function testGaAndBoardRendering() {
   const layout = new Layout(LAYOUT_FLAT, { x: 33, y: 33 }, { x: 124, y: 59 })
@@ -115,11 +119,28 @@ export function initializeAnimalCards(hexBoard: HexBoard) {
       const animal = new Animal(animalKey)
       const matched = hexBoard.findAllMatchingPatterns(animal.pattern)
       if (matched.length === 0) console.log(`No match for: ${animal.name}`)
-      console.log('Source Board:\n', hexBoard.toString())
-      console.log(`Pattern (${animalKey}):\n`, animal.pattern.toString())
+      // console.log('Source Board:\n', hexBoard.toString())
+      // console.log(`Pattern (${animalKey}):\n`, animal.pattern.toString())
     })
     card.addEventListener('mouseleave', () => {
       card.classList.toggle('animal-card--selected')
     })
   })
+}
+
+export function initializeDraftTable() {
+  const svg = document.getElementById('draft-table') as SVGGElement | null
+  if (!svg) throw new Error('No SVG element found')
+
+  const bag = new Bag<Token>()
+  for (const [type, count] of startingTokensMap) {
+    for (let i = 0; i < count; i++) {
+      bag.add(new Token(type))
+    }
+  }
+  bag.shuffle()
+
+  const draftTable = new DraftTable(bag)
+  const renderer = new DraftTableRenderer(draftTable, svg)
+  renderer.drawSlots()
 }

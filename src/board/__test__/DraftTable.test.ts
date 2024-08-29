@@ -23,7 +23,7 @@ describe('DraftTable', () => {
   })
 
   it('should initialize correctly with a non-empty bag', () => {
-    expect(draftTable.slots.length).toBe(DraftTable.MAX_SLOTS)
+    expect(draftTable.slots.length).toBe(DraftTable.MAX_SLOTS_MULTIPLAYER)
     draftTable.slots.forEach((slot) => {
       expect(slot).not.toBeNull()
       expect(slot.length).toBeLessThanOrEqual(DraftTable.MAX_SLOT_SIZE)
@@ -50,13 +50,13 @@ describe('DraftTable', () => {
   it('should correctly pick up tokens from a valid slot', () => {
     const slotIndex = 0
     const tokens = draftTable.pickUp(slotIndex)
-    expect(tokens?.length).toBe(DraftTable.MAX_SLOT_SIZE)
+    expect(tokens.length).toBe(DraftTable.MAX_SLOT_SIZE)
     expect(draftTable.slots[slotIndex].length).toBe(0)
   })
 
   it('should throw an error when trying to pick up from an invalid slot', () => {
     expect(() => draftTable.pickUp(-1)).toThrow(DraftTable.INVALID_SLOT_ERROR_MESSAGE)
-    expect(() => draftTable.pickUp(DraftTable.MAX_SLOTS)).toThrow(DraftTable.INVALID_SLOT_ERROR_MESSAGE)
+    expect(() => draftTable.pickUp(DraftTable.MAX_SLOTS_MULTIPLAYER)).toThrow(DraftTable.INVALID_SLOT_ERROR_MESSAGE)
     try {
       draftTable.pickUp(-1)
     } catch (error) {
@@ -83,6 +83,12 @@ describe('DraftTable', () => {
     draftTable.refill()
     expect(draftTable.slots[0]?.length).toBe(DraftTable.MAX_SLOT_SIZE)
     expect(draftTable.slots[1]?.length).toBe(DraftTable.MAX_SLOT_SIZE)
+  })
+
+  it('should not refill slots with remaining tokens', () => {
+    const slot1Tokens = draftTable.slots[1]
+    draftTable.refill()
+    expect(draftTable.slots[1]).toBe(slot1Tokens)
   })
 
   it('should handle the case where the bag does not have enough tokens to refill all slots', () => {

@@ -8,10 +8,6 @@
 </head>
 
 <body>
-  <figure class="game-board-container">
-    <img class="hex-board" src="" alt="Hex board">
-    <svg id="hex-board" viewBox="0 0 800 642"></svg>
-  </figure>
   <div id="token-menu">
     <input type="radio" id="blue-radio" name="color" value="Blue" checked>
     <label for="blue-radio">River</label>
@@ -25,6 +21,20 @@
     <label for="yellow-radio">Field</label>
     <input type="radio" id="red-radio" name="color" value="Red">
     <label for="red-radio">Bricks</label>
+  </div>
+
+  <div class="game-zone">
+    <div class="game-zone-left">
+      <figure class="draft-table-container orientation-player-1">
+        <img class="draft-table" src="draft_table.png" alt="Draft table">
+        <svg id="draft-table" viewBox="0 0 666 675"></svg>
+      </figure>
+      <div class="token-holder"></div>
+    </div>
+    <figure class="game-board-container">
+      <img class="hex-board" src="" alt="Hex board">
+      <svg id="hex-board" viewBox="0 0 800 642"></svg>
+    </figure>
   </div>
   <div class="animal-cards-container">
     <img class="animal-card" src="animals/eagle.png" alt="eagle">

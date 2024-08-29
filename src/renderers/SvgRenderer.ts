@@ -1,7 +1,7 @@
-import { Hex } from './board/Hex'
-import { HexBoard } from './board/HexBoard'
-import { Layout } from './board/Layout'
-import Token, { TokenType } from './board/Token'
+import { Hex } from '../board/Hex'
+import { HexBoard } from '../board/HexBoard'
+import { Layout } from '../board/Layout'
+import Token, { TokenType } from '../board/Token'
 
 export default class SvgRenderer {
   private _hexBoard: HexBoard
@@ -9,7 +9,7 @@ export default class SvgRenderer {
   private _svg: SVGGElement
   public afterHexClick?: () => void
 
-  private static readonly SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
+  public static readonly SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
   private static readonly HEX_CLASS = 'hex'
   private static readonly COORDS_CLASS = 'coords'
   private static readonly TOKEN_STACK_CLASS = 'token-stack'
@@ -138,7 +138,6 @@ export default class SvgRenderer {
     svg.setAttribute('xmlns', svgNamespace)
 
     const mask = document.createElementNS(svgNamespace, 'mask')
-    mask.setAttribute('id', 'mask')
     const maskPath = document.createElementNS(svgNamespace, 'path')
     maskPath.setAttribute(
       'd',

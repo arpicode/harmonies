@@ -1,5 +1,7 @@
+import { GameMode } from '../game/Game'
 import Bag from './Bag'
 import Token from './Token'
+import TokenHolder from './TokenHolder'
 
 /**
  * Error thrown when the bag is not initialized with tokens.
@@ -54,9 +56,14 @@ export default class DraftTable {
   public static readonly INVALID_SLOT_ERROR_MESSAGE = 'Invalid slot number'
 
   /**
-   * Maximum number of slots in the draft table.
+   * Maximum number of slots in the draft table for solo mode.
    */
-  public static readonly MAX_SLOTS = 5
+  public static readonly MAX_SLOTS_SOLO = 3
+
+  /**
+   * Maximum number of slots in the draft table for multiplayer mode.
+   */
+  public static readonly MAX_SLOTS_MULTIPLAYER = 5
 
   /**
    * Maximum number of tokens in each slot.
@@ -69,28 +76,33 @@ export default class DraftTable {
   public readonly slots: Token[][] = []
 
   private _bag: Bag<Token>
+  private _maxSlots: number
+  private _draftedTokens: TokenHolder
 
   /**
    * Creates an instance of DraftTable.
    * @param bag - The bag containing tokens.
    * @throws UninitializedError if the bag is empty.
    */
-  constructor(bag: Bag<Token>) {
+  constructor(bag: Bag<Token>, gameMode?: GameMode) {
     if (bag.isEmpty()) throw new UninitializedError()
     this._bag = bag
+    this._maxSlots = gameMode === 'solo' ? DraftTable.MAX_SLOTS_SOLO : DraftTable.MAX_SLOTS_MULTIPLAYER
+    this._draftedTokens = new TokenHolder()
 
     this._initialize()
   }
 
   private _initialize(): void {
-    for (let i = 0; i < DraftTable.MAX_SLOTS; i++) {
+    for (let i = 0; i < this._maxSlots; i++) {
+      this.slots.push([])
       this._fillSlot(i)
     }
   }
 
   private _fillSlot(slot: number): void {
     try {
-      this.slots[slot] = this._bag.draw(DraftTable.MAX_SLOT_SIZE)
+      if (this.slots[slot].length === 0) this.slots[slot] = this._bag.draw(DraftTable.MAX_SLOT_SIZE)
     } catch (e) {
       if (e instanceof RangeError) {
         throw new InsufficientTokensError()
@@ -103,13 +115,14 @@ export default class DraftTable {
   /**
    * Picks up tokens from a specific slot.
    * @param slot - The slot number to pick up tokens from.
-   * @returns The tokens picked up from the slot, or null if the slot is empty.
+   * @returns The tokens picked up from the slot.
    * @throws InvalidSlotError if the slot number is invalid.
    */
-  pickUp(slot: number): Token[] | null {
-    if (slot < 0 || slot >= DraftTable.MAX_SLOTS) throw new InvalidSlotError()
+  pickUp(slot: number): Token[] {
+    if (slot < 0 || slot >= this._maxSlots) throw new InvalidSlotError()
     const pickedUpTokens = this.slots[slot]
     this.slots[slot] = []
+    this._draftedTokens.addMany(pickedUpTokens)
     return pickedUpTokens
   }
 
@@ -118,8 +131,12 @@ export default class DraftTable {
    * @throws InsufficientTokensError if there are not enough tokens in the bag.
    */
   refill(): void {
-    for (let i = 0; i < DraftTable.MAX_SLOTS; i++) {
+    for (let i = 0; i < this._maxSlots; i++) {
       this._fillSlot(i)
     }
+  }
+
+  get draftedTokens(): TokenHolder {
+    return this._draftedTokens
   }
 }
