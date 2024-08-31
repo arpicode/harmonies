@@ -1,7 +1,13 @@
 import DraftTable from '../board/DraftTable'
-import SvgRenderer from './SvgRenderer'
+import { GameMode } from '../game/Game'
+import { SVG_NAMESPACE } from '../utils/utils'
 
 export default class DraftTableRenderer {
+  public static readonly DRAFT_TABLE_WRAPPER_CLASS = 'draft-table-container'
+  public static readonly TABLE_IMAGES = {
+    solo: 'draft_table_solo.png',
+    multiplayer: 'draft_table.png',
+  } as Record<GameMode, string>
   public static readonly WIDTH = 666
   public static readonly HEIGHT = 675
   public static readonly SLOT_RADIUS = 235
@@ -9,17 +15,25 @@ export default class DraftTableRenderer {
   private _draftTable: DraftTable
   private _svg: SVGGElement
 
-  constructor(draftTable: DraftTable, svg: SVGGElement) {
+  constructor(draftTable: DraftTable) {
     this._draftTable = draftTable
-    this._svg = svg
+    this._svg = this._createDraftTableSVGElement()
+  }
+
+  private _createDraftTableSVGElement(): SVGGElement {
+    const svg = document.createElementNS(SVG_NAMESPACE, 'svg') as SVGGElement
+    svg.setAttribute('xmlns', SVG_NAMESPACE)
+    svg.setAttribute('id', 'draft-table')
+    svg.setAttribute('viewBox', `0 0 ${DraftTableRenderer.WIDTH} ${DraftTableRenderer.HEIGHT}`)
+    return svg
   }
 
   private _createGradientDefs(): void {
     // Create the <defs> element
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs')
+    const defs = document.createElementNS(SVG_NAMESPACE, 'defs')
 
     // Create the <radialGradient> element
-    const radialGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient')
+    const radialGradient = document.createElementNS(SVG_NAMESPACE, 'radialGradient')
     radialGradient.setAttribute('id', 'hover-gradient')
     radialGradient.setAttribute('cx', '50%')
     radialGradient.setAttribute('cy', '50%')
@@ -28,11 +42,11 @@ export default class DraftTableRenderer {
     radialGradient.setAttribute('fy', '50%')
 
     // Create the <stop> elements
-    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop')
+    const stop1 = document.createElementNS(SVG_NAMESPACE, 'stop')
     stop1.setAttribute('offset', '0%')
     stop1.setAttribute('style', 'stop-color:rgba(255, 255, 255, 1); stop-opacity:0.25')
 
-    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop')
+    const stop2 = document.createElementNS(SVG_NAMESPACE, 'stop')
     stop2.setAttribute('offset', '100%')
     stop2.setAttribute('style', 'stop-color:rgba(255, 255, 255, 0); stop-opacity:0')
 
@@ -47,7 +61,38 @@ export default class DraftTableRenderer {
     this._svg.appendChild(defs)
   }
 
-  drawSlots(): void {
+  _createTokenHolder(): void {
+    const wrapper = document.querySelector('.game-zone-left')
+    if (!wrapper) {
+      console.error('No game zone left wrapper found')
+      return
+    }
+
+    const tokenHolder = document.createElement('div')
+    tokenHolder.className = 'token-holder'
+    wrapper.appendChild(tokenHolder)
+  }
+
+  render(): void {
+    const wrapper = document.querySelector(`.${DraftTableRenderer.DRAFT_TABLE_WRAPPER_CLASS}`)
+    if (!wrapper) {
+      console.error('No draft table wrapper found')
+      return
+    }
+
+    const imgSrc = DraftTableRenderer.TABLE_IMAGES[this._draftTable.gameMode]
+    const img = document.createElement('img')
+    img.src = imgSrc
+    img.alt = 'Draft Table'
+    img.className = 'draft-table'
+    wrapper.appendChild(img)
+
+    this._renderSlots()
+    wrapper.appendChild(this._svg)
+    this._createTokenHolder()
+  }
+
+  _renderSlots(): void {
     this._createGradientDefs()
 
     const centerX = DraftTableRenderer.WIDTH / 2
@@ -56,19 +101,19 @@ export default class DraftTableRenderer {
     const angleOffset = Math.PI / 2 // 90 degrees in radians (player-1)
     const angle = (2 * Math.PI) / DraftTable.MAX_SLOTS_MULTIPLAYER
 
-    for (let i = 0; i < DraftTable.MAX_SLOTS_MULTIPLAYER; i++) {
+    for (let i = 0; i < this._draftTable.slotCount; i++) {
       const adjustedAngle = angle * i - angleOffset
       const { x: adjX, y: adjY } = this._adjustSlotCenter(i)
       const x = centerX + adjX + DraftTableRenderer.SLOT_RADIUS * Math.cos(adjustedAngle)
       const y = centerY + adjY + DraftTableRenderer.SLOT_RADIUS * Math.sin(adjustedAngle)
 
       // Create a <g> element
-      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+      const group = document.createElementNS(SVG_NAMESPACE, 'g')
       group.setAttribute('data-slot', i.toString())
       group.setAttribute('data-center', `${x.toFixed(2)},${y.toFixed(2)}`)
 
       // Create the circle element
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+      const circle = document.createElementNS(SVG_NAMESPACE, 'circle')
       circle.setAttribute('cx', x.toString())
       circle.setAttribute('cy', y.toString())
       circle.setAttribute('r', '82')
@@ -91,7 +136,6 @@ export default class DraftTableRenderer {
     if (!slotGroup) return
 
     const tokens = slotGroup.querySelectorAll('svg')
-    console.log(tokens)
     if (tokens.length === 0) {
       console.log('No tokens in the slot')
       return
@@ -101,7 +145,24 @@ export default class DraftTableRenderer {
     tokenHolder.innerHTML = ''
 
     tokens.forEach((token) => {
-      tokenHolder.appendChild(token)
+      const tokenHolderSlot = document.createElement('div')
+      tokenHolderSlot.className = 'token-holder-slot source'
+      tokenHolderSlot.setAttribute('draggable', 'true')
+      const tokenType = token.getAttribute('class') ?? ''
+      // capitalize the first letter of the token type
+      const tokenTypeCapitalized = tokenType.charAt(0).toUpperCase() + tokenType.slice(1)
+      tokenHolderSlot.setAttribute('data-token-type', tokenTypeCapitalized)
+
+      tokenHolderSlot.appendChild(token)
+      tokenHolderSlot.addEventListener('dragstart', () => {
+        tokenHolderSlot.classList.add('dragging')
+      })
+      tokenHolderSlot.addEventListener('dragend', () => {
+        tokenHolderSlot.classList.remove('dragging')
+        // console.log('dragend', e)
+      })
+
+      tokenHolder.appendChild(tokenHolderSlot)
     })
   }
 
@@ -113,7 +174,7 @@ export default class DraftTableRenderer {
 
     this._draftTable.slots.forEach((slot, i) => {
       // Create a <g> element for the slot tokens
-      const slotTokensGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+      const slotTokensGroup = document.createElementNS(SVG_NAMESPACE, 'g')
       slotTokensGroup.setAttribute('class', 'slot-tokens')
 
       slot.forEach((token, j) => {
@@ -155,7 +216,7 @@ export default class DraftTableRenderer {
   }
 
   private _createSvgTokenElement(tokenClass: string): SVGElement {
-    const svgNamespace = SvgRenderer.SVG_NAMESPACE
+    const svgNamespace = SVG_NAMESPACE
     const svg = document.createElementNS(svgNamespace, 'svg')
     svg.setAttribute('class', tokenClass)
     svg.setAttribute('width', `${DraftTableRenderer.SLOT_RADIUS * 0.25}`)
@@ -194,6 +255,16 @@ export default class DraftTableRenderer {
   }
 
   private _adjustSlotCenter(slot: number): { x: number; y: number } {
+    if (this._draftTable.gameMode === 'solo') {
+      switch (slot) {
+        case 0:
+          return { x: -106, y: 165 }
+        case 1:
+          return { x: -115, y: 3 }
+        case 2:
+          return { x: -139, y: -80 }
+      }
+    }
     switch (slot) {
       case 0:
         return { x: 2, y: 6 }

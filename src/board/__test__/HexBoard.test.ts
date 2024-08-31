@@ -2,8 +2,22 @@ import Token, { TokenType } from '../Token'
 import { Hex } from '../Hex'
 import { HexBoard } from '../HexBoard'
 import { testIslandHexBoard, testRiverHexBoard } from './test-data'
+import { MockInstance } from 'vitest'
 
 describe('HexBoard', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let consoleLogSpy: MockInstance
+
+  beforeEach(() => {
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {
+      /* empty body */
+    })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   describe('constructor', () => {
     it('should initialize with correct dimensions', () => {
       const board = new HexBoard(2, 5)

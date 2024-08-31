@@ -1,13 +1,23 @@
+import { MockInstance } from 'vitest'
 import Animal from '../Animal'
 import { HexBoard } from '../HexBoard'
 import Token, { TokenType } from '../Token'
 import { testRiverHexBoard } from './test-data'
 
 describe('hasPattern', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let consoleLogSpy: MockInstance
   let patternBoard: HexBoard
 
   beforeEach(() => {
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {
+      /* empty body */
+    })
     patternBoard = new HexBoard(0, 0, 'custom')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('should return false when the pattern is empty', () => {

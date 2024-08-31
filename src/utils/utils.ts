@@ -52,3 +52,5 @@ export function mapKeysToArray<K, V>(map: Map<K, V>): K[] {
 export function mapValuesToArray<K, V>(map: Map<K, V>): V[] {
   return Array.from(map.values())
 }
+
+export const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'

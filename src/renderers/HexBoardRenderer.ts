@@ -1,29 +1,44 @@
 import { Hex } from '../board/Hex'
-import { HexBoard } from '../board/HexBoard'
+import { HexBoard, HexBoardType } from '../board/HexBoard'
 import { Layout } from '../board/Layout'
 import Token, { TokenType } from '../board/Token'
+import { SVG_NAMESPACE } from '../utils/utils'
 
-export default class SvgRenderer {
+export default class HexBoardRenderer {
   private _hexBoard: HexBoard
   private _layout: Layout
   private _svg: SVGGElement
   public afterHexClick?: () => void
 
-  public static readonly SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
+  public static readonly GAME_BOARD_WRAPPER_CLASS = 'game-board-container'
+  public static readonly BOARD_IMAGES = {
+    river: 'river_map_800.png',
+    island: 'island_map_800.png',
+  } as Record<HexBoardType, string>
+  public static readonly IMAGE_SIZE = { w: 800, h: 642 }
   private static readonly HEX_CLASS = 'hex'
   private static readonly COORDS_CLASS = 'coords'
   private static readonly TOKEN_STACK_CLASS = 'token-stack'
   private readonly _tokenOffsetFactor: number
 
-  constructor(hexBoard: HexBoard, layout: Layout, svg: SVGGElement) {
+  constructor(hexBoard: HexBoard, layout: Layout, svg?: SVGGElement) {
     this._hexBoard = hexBoard
     this._layout = layout
-    this._svg = svg
+    this._svg = svg ?? this._createHexBoardSVGElement(hexBoard.type)
     this._tokenOffsetFactor = 15 / this._layout.size.y
   }
 
+  private _createHexBoardSVGElement(type: HexBoardType): SVGGElement {
+    const svg = document.createElementNS(SVG_NAMESPACE, 'svg') as SVGGElement
+    svg.setAttribute('xmlns', SVG_NAMESPACE)
+    svg.setAttribute('id', 'hex-board')
+    svg.setAttribute('class', `hex-board--${type}`)
+    svg.setAttribute('viewBox', `0 0 ${HexBoardRenderer.IMAGE_SIZE.w} ${HexBoardRenderer.IMAGE_SIZE.h}`)
+    return svg
+  }
+
   drawHex(hex: Hex): void {
-    const group = this._createSvgGroup(hex)
+    const group = this._createHexSvgGroup(hex)
     const polygon = this._createHexPolygon(hex)
     const text = this._createHexText(hex)
 
@@ -32,6 +47,52 @@ export default class SvgRenderer {
 
     this._svg.appendChild(group)
     this._renderTokenStack(hex)
+  }
+
+  private _createHexSvgGroup(hex: Hex): SVGGElement {
+    const group = document.createElementNS(SVG_NAMESPACE, 'g')
+    group.setAttribute('id', `hex-${hex.q}-${hex.r}`)
+    group.addEventListener('click', () => this.handleHexClick(hex))
+    group.addEventListener('dragover', (e) => {
+      e.preventDefault()
+    })
+
+    group.addEventListener('drop', () => {
+      try {
+        const currentToken = document.querySelector('.dragging')
+        if (!currentToken) throw new Error('No token selected')
+
+        hex.tokens.push(new Token(currentToken.getAttribute('data-token-type') as TokenType))
+        this._renderTokenStack(hex)
+        if (this.afterHexClick) this.afterHexClick()
+        currentToken.remove()
+      } catch (error) {
+        console.error((error as Error).message)
+      }
+    })
+    return group
+  }
+
+  private _createHexPolygon(hex: Hex): SVGPolygonElement {
+    const polygon = document.createElementNS(SVG_NAMESPACE, 'polygon')
+    const corners = this._layout.polygonCorners(hex)
+    const points = corners.map((p) => `${p.x.toFixed(5)},${p.y.toFixed(5)}`).join(' ')
+
+    polygon.setAttribute('class', HexBoardRenderer.HEX_CLASS)
+    polygon.setAttribute('points', points)
+    polygon.setAttribute('data-coords', `${hex.q},${hex.r},${hex.s}`)
+    return polygon
+  }
+
+  private _createHexText(hex: Hex): SVGTextElement {
+    const text = document.createElementNS(SVG_NAMESPACE, 'text')
+    const center = this._layout.hexToPixel(hex)
+
+    text.setAttribute('x', center.x.toFixed(5))
+    text.setAttribute('y', (center.y - this._layout.size.y * 0.6).toFixed(5))
+    text.setAttribute('class', HexBoardRenderer.COORDS_CLASS)
+    text.textContent = `${hex.q} ${hex.r} ${hex.s}`
+    return text
   }
 
   handleHexClick(hex: Hex): void {
@@ -47,14 +108,24 @@ export default class SvgRenderer {
   }
 
   render(): void {
+    const gameBoardWrapper = document.querySelector(`.${HexBoardRenderer.GAME_BOARD_WRAPPER_CLASS}`)
+    if (!gameBoardWrapper) {
+      console.error('Game board wrapper not found')
+      return
+    }
+    const imgSrc = HexBoardRenderer.BOARD_IMAGES[this._hexBoard.type]
+    if (imgSrc) {
+      gameBoardWrapper.innerHTML = `<img class="hex-board" src="${imgSrc}" alt="Hex board">`
+    }
     this._hexBoard.hexes.forEach((hex) => this.drawHex(hex))
+    gameBoardWrapper.appendChild(this._svg)
   }
 
   private _renderTokenStack(hex: Hex): void {
-    let tokenStackGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r} .${SvgRenderer.TOKEN_STACK_CLASS}`)
+    let tokenStackGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r} .${HexBoardRenderer.TOKEN_STACK_CLASS}`)
     if (!tokenStackGroup) {
-      tokenStackGroup = document.createElementNS(SvgRenderer.SVG_NAMESPACE, 'g')
-      tokenStackGroup.setAttribute('class', SvgRenderer.TOKEN_STACK_CLASS)
+      tokenStackGroup = document.createElementNS(SVG_NAMESPACE, 'g')
+      tokenStackGroup.setAttribute('class', HexBoardRenderer.TOKEN_STACK_CLASS)
       const hexGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r}`)
       if (hexGroup) {
         hexGroup.appendChild(tokenStackGroup)
@@ -65,35 +136,6 @@ export default class SvgRenderer {
 
     this._clearTokenStack(tokenStackGroup as SVGGElement)
     this._renderTokens(hex, tokenStackGroup as SVGGElement)
-  }
-
-  private _createSvgGroup(hex: Hex): SVGGElement {
-    const group = document.createElementNS(SvgRenderer.SVG_NAMESPACE, 'g')
-    group.setAttribute('id', `hex-${hex.q}-${hex.r}`)
-    group.addEventListener('click', () => this.handleHexClick(hex))
-    return group
-  }
-
-  private _createHexPolygon(hex: Hex): SVGPolygonElement {
-    const polygon = document.createElementNS(SvgRenderer.SVG_NAMESPACE, 'polygon')
-    const corners = this._layout.polygonCorners(hex)
-    const points = corners.map((p) => `${p.x.toFixed(5)},${p.y.toFixed(5)}`).join(' ')
-
-    polygon.setAttribute('class', SvgRenderer.HEX_CLASS)
-    polygon.setAttribute('points', points)
-    polygon.setAttribute('data-coords', `${hex.q},${hex.r},${hex.s}`)
-    return polygon
-  }
-
-  private _createHexText(hex: Hex): SVGTextElement {
-    const text = document.createElementNS(SvgRenderer.SVG_NAMESPACE, 'text')
-    const center = this._layout.hexToPixel(hex)
-
-    text.setAttribute('x', center.x.toFixed(5))
-    text.setAttribute('y', (center.y - this._layout.size.y * 0.6).toFixed(5))
-    text.setAttribute('class', SvgRenderer.COORDS_CLASS)
-    text.textContent = `${hex.q} ${hex.r} ${hex.s}`
-    return text
   }
 
   private _getSelectedColor(): string | null {
@@ -129,7 +171,7 @@ export default class SvgRenderer {
   }
 
   private _createSvgTokenElement(tokenClass: string): SVGElement {
-    const svgNamespace = SvgRenderer.SVG_NAMESPACE
+    const svgNamespace = SVG_NAMESPACE
     const svg = document.createElementNS(svgNamespace, 'svg')
     svg.setAttribute('class', tokenClass)
     svg.setAttribute('width', `${this._layout.size.x * 0.95}`)

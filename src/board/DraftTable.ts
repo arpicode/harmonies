@@ -74,9 +74,10 @@ export default class DraftTable {
    * Array of slots, each containing an array of tokens.
    */
   public readonly slots: Token[][] = []
+  public readonly gameMode: GameMode
+  public readonly slotCount: number
 
   private _bag: Bag<Token>
-  private _maxSlots: number
   private _draftedTokens: TokenHolder
 
   /**
@@ -84,17 +85,18 @@ export default class DraftTable {
    * @param bag - The bag containing tokens.
    * @throws UninitializedError if the bag is empty.
    */
-  constructor(bag: Bag<Token>, gameMode?: GameMode) {
+  constructor(bag: Bag<Token>, gameMode: GameMode) {
     if (bag.isEmpty()) throw new UninitializedError()
     this._bag = bag
-    this._maxSlots = gameMode === 'solo' ? DraftTable.MAX_SLOTS_SOLO : DraftTable.MAX_SLOTS_MULTIPLAYER
+    this.slotCount = gameMode === 'solo' ? DraftTable.MAX_SLOTS_SOLO : DraftTable.MAX_SLOTS_MULTIPLAYER
     this._draftedTokens = new TokenHolder()
+    this.gameMode = gameMode
 
     this._initialize()
   }
 
   private _initialize(): void {
-    for (let i = 0; i < this._maxSlots; i++) {
+    for (let i = 0; i < this.slotCount; i++) {
       this.slots.push([])
       this._fillSlot(i)
     }
@@ -119,7 +121,7 @@ export default class DraftTable {
    * @throws InvalidSlotError if the slot number is invalid.
    */
   pickUp(slot: number): Token[] {
-    if (slot < 0 || slot >= this._maxSlots) throw new InvalidSlotError()
+    if (slot < 0 || slot >= this.slotCount) throw new InvalidSlotError()
     const pickedUpTokens = this.slots[slot]
     this.slots[slot] = []
     this._draftedTokens.addMany(pickedUpTokens)
@@ -131,7 +133,7 @@ export default class DraftTable {
    * @throws InsufficientTokensError if there are not enough tokens in the bag.
    */
   refill(): void {
-    for (let i = 0; i < this._maxSlots; i++) {
+    for (let i = 0; i < this.slotCount; i++) {
       this._fillSlot(i)
     }
   }

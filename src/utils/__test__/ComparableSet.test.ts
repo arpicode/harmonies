@@ -35,65 +35,98 @@ describe('ComparableSet', () => {
     item2 = new MockComparable(2)
   })
 
-  it('should initialize an empty set', () => {
-    expect(set.size).toBe(0)
+  describe('constructor', () => {
+    it('should initialize an empty set', () => {
+      expect(set.size).toBe(0)
+    })
+
+    it('should initialize with an iterable', () => {
+      const iterableSet = new ComparableSet<MockComparable>([item1, item2])
+      expect(iterableSet.size).toBe(2)
+      expect(iterableSet.has(item1)).toBe(true)
+      expect(iterableSet.has(item2)).toBe(true)
+    })
   })
 
-  it('should initialize with an iterable', () => {
-    const iterableSet = new ComparableSet<MockComparable>([item1, item2])
-    expect(iterableSet.size).toBe(2)
-    expect(iterableSet.has(item1)).toBe(true)
-    expect(iterableSet.has(item2)).toBe(true)
+  describe('add', () => {
+    it('should add an element to the set', () => {
+      set.add(item1)
+      expect(set.size).toBe(1)
+      expect(set.has(item1)).toBe(true)
+    })
+
+    it('should not add duplicate elements', () => {
+      set.add(item1)
+      set.add(item1)
+      expect(set.size).toBe(1)
+    })
+
+    it('should add multiple elements', () => {
+      set.addMany([item1, item2])
+      expect(set.size).toBe(2)
+      expect(set.has(item1)).toBe(true)
+      expect(set.has(item2)).toBe(true)
+    })
   })
 
-  it('should add an element to the set', () => {
-    set.add(item1)
-    expect(set.size).toBe(1)
-    expect(set.has(item1)).toBe(true)
+  describe('has', () => {
+    it('should check if an element exists', () => {
+      set.add(item1)
+      expect(set.has(item1)).toBe(true)
+      expect(set.has(item2)).toBe(false)
+    })
   })
 
-  it('should not add duplicate elements', () => {
-    set.add(item1)
-    set.add(item1)
-    expect(set.size).toBe(1)
+  describe('delete', () => {
+    it('should delete an element', () => {
+      set.add(item1)
+      expect(set.delete(item1)).toBe(true)
+      expect(set.size).toBe(0)
+      expect(set.has(item1)).toBe(false)
+    })
+
+    it('should not delete a non-existent element', () => {
+      expect(set.delete(item1)).toBe(false)
+    })
+
+    it('should delete an element and remove the key from the map if it was the last element with that hash', () => {
+      const item1Collision = new MockComparableWithCollision(1, 'hash')
+      const collisionSet = new ComparableSet<MockComparableWithCollision>()
+      collisionSet.add(item1Collision)
+      expect(collisionSet.delete(item1Collision)).toBe(true)
+      expect(collisionSet.size).toBe(0)
+      expect(collisionSet.has(item1Collision)).toBe(false)
+    })
+
+    it('should delete an element but keep the key in the map if other elements with the same hash exist', () => {
+      const item1Collision = new MockComparableWithCollision(1, 'hash')
+      const item2Collision = new MockComparableWithCollision(2, 'hash')
+      const collisionSet = new ComparableSet<MockComparableWithCollision>()
+      collisionSet.add(item1Collision)
+      collisionSet.add(item2Collision)
+      expect(collisionSet.delete(item1Collision)).toBe(true)
+      expect(collisionSet.size).toBe(1)
+      expect(collisionSet.has(item1Collision)).toBe(false)
+      expect(collisionSet.has(item2Collision)).toBe(true)
+    })
   })
 
-  it('should add multiple elements', () => {
-    set.addMany([item1, item2])
-    expect(set.size).toBe(2)
-    expect(set.has(item1)).toBe(true)
-    expect(set.has(item2)).toBe(true)
+  describe('clear', () => {
+    it('should clear all elements', () => {
+      set.addMany([item1, item2])
+      set.clear()
+      expect(set.size).toBe(0)
+      expect(set.has(item1)).toBe(false)
+      expect(set.has(item2)).toBe(false)
+    })
   })
 
-  it('should check if an element exists', () => {
-    set.add(item1)
-    expect(set.has(item1)).toBe(true)
-    expect(set.has(item2)).toBe(false)
-  })
-
-  it('should delete an element', () => {
-    set.add(item1)
-    expect(set.delete(item1)).toBe(true)
-    expect(set.size).toBe(0)
-    expect(set.has(item1)).toBe(false)
-  })
-
-  it('should not delete a non-existent element', () => {
-    expect(set.delete(item1)).toBe(false)
-  })
-
-  it('should clear all elements', () => {
-    set.addMany([item1, item2])
-    set.clear()
-    expect(set.size).toBe(0)
-    expect(set.has(item1)).toBe(false)
-    expect(set.has(item2)).toBe(false)
-  })
-
-  it('should return the correct size', () => {
-    expect(set.size).toBe(0)
-    set.add(item1)
-    expect(set.size).toBe(1)
+  describe('size', () => {
+    it('should return the correct size', () => {
+      expect(set.size).toBe(0)
+      set.add(item1)
+      expect(set.size).toBe(1)
+    })
   })
 
   it('should be iterable', () => {
@@ -103,35 +136,46 @@ describe('ComparableSet', () => {
     expect(items).toContain(item2)
   })
 
-  it('should support for...of loops', () => {
-    set.addMany([item1, item2])
-    const items: MockComparable[] = []
+  describe('iteration', () => {
+    it('should be iterable', () => {
+      set.addMany([item1, item2])
+      const items = Array.from(set)
+      expect(items).toContain(item1)
+      expect(items).toContain(item2)
+    })
 
-    for (const item of set) {
-      items.push(item)
-    }
+    it('should support for...of loops', () => {
+      set.addMany([item1, item2])
+      const items: MockComparable[] = []
 
-    expect(items).toContain(item1)
-    expect(items).toContain(item2)
+      for (const item of set) {
+        items.push(item)
+      }
+
+      expect(items).toContain(item1)
+      expect(items).toContain(item2)
+    })
   })
 
-  it('should handle different but equal objects correctly', () => {
-    const item1Copy = new MockComparable(1)
-    set.add(item1)
-    set.add(item1Copy)
-    expect(set.size).toBe(1)
-    expect(set.has(item1)).toBe(true)
-    expect(set.has(item1Copy)).toBe(true)
-  })
+  describe('equality and collision handling', () => {
+    it('should handle different but equal objects correctly', () => {
+      const item1Copy = new MockComparable(1)
+      set.add(item1)
+      set.add(item1Copy)
+      expect(set.size).toBe(1)
+      expect(set.has(item1)).toBe(true)
+      expect(set.has(item1Copy)).toBe(true)
+    })
 
-  it('should handle hash collisions correctly', () => {
-    const item1Collision = new MockComparableWithCollision(1, 'hash')
-    const item2Collision = new MockComparableWithCollision(2, 'hash')
-    const collisionSet = new ComparableSet<MockComparableWithCollision>()
-    collisionSet.add(item1Collision)
-    collisionSet.add(item2Collision)
-    expect(collisionSet.size).toBe(2)
-    expect(collisionSet.has(item1Collision)).toBe(true)
-    expect(collisionSet.has(item2Collision)).toBe(true)
+    it('should handle hash collisions correctly', () => {
+      const item1Collision = new MockComparableWithCollision(1, 'hash')
+      const item2Collision = new MockComparableWithCollision(2, 'hash')
+      const collisionSet = new ComparableSet<MockComparableWithCollision>()
+      collisionSet.add(item1Collision)
+      collisionSet.add(item2Collision)
+      expect(collisionSet.size).toBe(2)
+      expect(collisionSet.has(item1Collision)).toBe(true)
+      expect(collisionSet.has(item2Collision)).toBe(true)
+    })
   })
 })

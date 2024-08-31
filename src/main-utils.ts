@@ -2,12 +2,12 @@ import { HexBoard, HexBoardType } from './board/HexBoard'
 import { Layout, LAYOUT_FLAT } from './board/Layout'
 import ScoreBoard from './board/ScoreBoard'
 import GeneticAlgorithm from './genetic/GeneticAlgorithm'
-import SvgRenderer from './renderers/SvgRenderer'
+import HexBoardRenderer from './renderers/HexBoardRenderer'
 import Animal from './board/Animal'
-import Bag from './board/Bag'
-import Token, { startingTokensMap } from './board/Token'
-import DraftTable from './board/DraftTable'
-import DraftTableRenderer from './renderers/DraftTableRenderer'
+// import Bag from './board/Bag'
+// import Token, { startingTokensMap } from './board/Token'
+// import DraftTable from './board/DraftTable'
+// import DraftTableRenderer from './renderers/DraftTableRenderer'
 
 export function testGaAndBoardRendering() {
   const layout = new Layout(LAYOUT_FLAT, { x: 33, y: 33 }, { x: 124, y: 59 })
@@ -19,7 +19,7 @@ export function testGaAndBoardRendering() {
   const svg = document.getElementById('hex-board') as SVGGElement | null
   if (!svg) throw new Error('No SVG element found')
 
-  const renderer = new SvgRenderer(ch as HexBoard, layout, svg)
+  const renderer = new HexBoardRenderer(ch as HexBoard, layout, svg)
   setHexBoardImage(ch.type)
   renderer.afterHexClick = updateScore
   renderer.render()
@@ -36,7 +36,7 @@ export function testHexBoardSides(side: HexBoardType) {
   const svg = document.getElementById('hex-board') as SVGGElement | null
   if (!svg) throw new Error('No SVG element found')
 
-  const renderer = new SvgRenderer(hexBoard, layout, svg)
+  const renderer = new HexBoardRenderer(hexBoard, layout, svg)
   renderer.afterHexClick = () => {
     console.log(hexBoard.toString())
     console.log('hasPattern:', hexBoard.hasPattern(patternHexBoard))
@@ -46,7 +46,7 @@ export function testHexBoardSides(side: HexBoardType) {
   const { hexBoard: patternHexBoard, layout: patternLayout } = createHexBoard('custom')
   const patternSvg = document.getElementById('hex-pattern') as SVGGElement | null
   if (!patternSvg) throw new Error('No SVG element found')
-  const patternRenderer = new SvgRenderer(patternHexBoard, patternLayout, patternSvg)
+  const patternRenderer = new HexBoardRenderer(patternHexBoard, patternLayout, patternSvg)
   patternRenderer.afterHexClick = () => {
     console.log(patternHexBoard.toString())
     console.log('serialized:', patternHexBoard.serialize())
@@ -111,36 +111,32 @@ export function createHexBoard(hexBoardType: HexBoardType) {
 export function initializeAnimalCards(hexBoard: HexBoard) {
   const animalCards = document.querySelectorAll('.animal-card')
   animalCards.forEach((card) => {
-    card.addEventListener('mouseenter', () => {
+    card.addEventListener('click', () => {
       console.clear()
-      card.classList.toggle('animal-card--selected')
       const animalKey = card.getAttribute('alt')
       if (!animalKey) throw new Error('Missing animal key')
       const animal = new Animal(animalKey)
-      const matched = hexBoard.findAllMatchingPatterns(animal.pattern)
-      if (matched.length === 0) console.log(`No match for: ${animal.name}`)
+      const matchedPatterns = hexBoard.findAllMatchingPatterns(animal.pattern)
+      if (matchedPatterns.length === 0) console.log(`No match for: ${animal.name}`)
       // console.log('Source Board:\n', hexBoard.toString())
       // console.log(`Pattern (${animalKey}):\n`, animal.pattern.toString())
-    })
-    card.addEventListener('mouseleave', () => {
-      card.classList.toggle('animal-card--selected')
     })
   })
 }
 
-export function initializeDraftTable() {
-  const svg = document.getElementById('draft-table') as SVGGElement | null
-  if (!svg) throw new Error('No SVG element found')
+// export function initializeDraftTable() {
+//   const svg = document.getElementById('draft-table') as SVGGElement | null
+//   if (!svg) throw new Error('No SVG element found')
 
-  const bag = new Bag<Token>()
-  for (const [type, count] of startingTokensMap) {
-    for (let i = 0; i < count; i++) {
-      bag.add(new Token(type))
-    }
-  }
-  bag.shuffle()
+//   const bag = new Bag<Token>()
+//   for (const [type, count] of startingTokensMap) {
+//     for (let i = 0; i < count; i++) {
+//       bag.add(new Token(type))
+//     }
+//   }
+//   bag.shuffle()
 
-  const draftTable = new DraftTable(bag)
-  const renderer = new DraftTableRenderer(draftTable, svg)
-  renderer.drawSlots()
-}
+//   const draftTable = new DraftTable(bag)
+//   const renderer = new DraftTableRenderer(draftTable)
+//   renderer._renderSlots()
+// }

@@ -41,3 +41,15 @@
   pointer-events: none;
   stroke: black;
 }
+
+.token-holder-slot {
+  cursor: pointer;
+  svg {
+    width: 48px;
+    height: 32px;
+  }
+}
+
+.dragging {
+  opacity: 0.5;
+}
