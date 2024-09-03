@@ -1,6 +1,5 @@
 import { TokenType } from './Token'
 
-import animalsJson from '../animals.json'
 import { Hex } from './Hex'
 import { HexBoard } from './HexBoard'
 
@@ -19,9 +18,7 @@ export interface IAnimal {
   pattern: IAnimalPattern[]
 }
 
-export type Animals = Record<string, IAnimal>
-
-const animals = animalsJson as Animals
+export type IAnimalCards = Record<string, IAnimal>
 
 export default class Animal {
   public readonly name: string
@@ -29,16 +26,17 @@ export default class Animal {
   public readonly image?: string
   public readonly points: number[]
   public readonly pattern: HexBoard
+  public timestamp?: number
 
-  constructor(key: keyof Animals) {
-    const { name, ecosystem, image, points, pattern: animalPatterns } = animals[key]
+  constructor(animal: IAnimal) {
+    const { name, ecosystem, image, points, pattern } = animal
     this.name = name
     this.ecosystem = ecosystem
     this.image = image
     this.points = points
     this.pattern = new HexBoard(0, 0, 'custom')
 
-    animalPatterns.forEach((animalPattern) => {
+    pattern.forEach((animalPattern) => {
       const hex = Hex.fromJson(animalPattern)
       this.pattern.hexes.set(hex.id, hex)
     })

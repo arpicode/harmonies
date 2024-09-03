@@ -1,9 +1,12 @@
+import AnimalCardDeck from '../board/AnimalCardDeck'
 import Bag from '../board/Bag'
 import DraftTable from '../board/DraftTable'
 import { HexBoard, HexBoardType } from '../board/HexBoard'
 import { Layout, LAYOUT_FLAT } from '../board/Layout'
 import Token, { startingTokensMap } from '../board/Token'
 import { GameMode } from './Game'
+import animalsJson from '../animals.json'
+import { IAnimalCards } from '../board/Animal'
 
 export default class GameState {
   public readonly gameMode: GameMode
@@ -12,6 +15,7 @@ export default class GameState {
   public readonly hexBoard: HexBoard
   public readonly bag: Bag<Token>
   public readonly draftTable: DraftTable
+  public readonly animalCardDeck: AnimalCardDeck
 
   constructor(gameMode: GameMode, hexBoardType: HexBoardType) {
     this.gameMode = gameMode
@@ -20,6 +24,7 @@ export default class GameState {
     this.hexBoard = this._createHexBoard()
     this.bag = this._createBag()
     this.draftTable = this._createDraftTable()
+    this.animalCardDeck = this._createAnimalCardDeck()
   }
 
   private _createLayout(): Layout {
@@ -66,5 +71,9 @@ export default class GameState {
 
   private _createDraftTable(): DraftTable {
     return new DraftTable(this.bag, this.gameMode)
+  }
+
+  private _createAnimalCardDeck(): AnimalCardDeck {
+    return new AnimalCardDeck(animalsJson as IAnimalCards)
   }
 }

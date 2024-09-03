@@ -1,8 +1,8 @@
 export default class Stack<T> {
-  private stack: T[] = []
+  protected items: T[] = []
 
   constructor(items: T[] = []) {
-    this.stack = items
+    this.items = items
   }
 
   /**
@@ -10,7 +10,7 @@ export default class Stack<T> {
    * @param item - The item to be added.
    */
   push(item: T) {
-    this.stack.push(item)
+    this.items.push(item)
   }
 
   /**
@@ -18,7 +18,7 @@ export default class Stack<T> {
    * @returns The last item in the stack, or undefined if the stack is empty.
    */
   pop(): T | undefined {
-    return this.stack.pop()
+    return this.items.pop()
   }
 
   /**
@@ -28,7 +28,7 @@ export default class Stack<T> {
   peek(): T | undefined {
     if (this.isEmpty()) return
 
-    return this.stack[this.stack.length - 1]
+    return this.items[this.items.length - 1]
   }
 
   /**
@@ -36,7 +36,7 @@ export default class Stack<T> {
    * @returns True if the stack is empty, false otherwise.
    */
   isEmpty(): boolean {
-    return this.stack.length === 0
+    return this.items.length === 0
   }
 
   /**
@@ -44,14 +44,14 @@ export default class Stack<T> {
    * @returns The size of the stack.
    */
   size(): number {
-    return this.stack.length
+    return this.items.length
   }
 
   /**
    * Empties the stack.
    */
   clear() {
-    this.stack = []
+    this.items = []
   }
 
   /**
@@ -59,6 +59,6 @@ export default class Stack<T> {
    * @returns An array containing all the items in the stack.
    */
   toArray(): T[] {
-    return this.stack
+    return [...this.items]
   }
 }

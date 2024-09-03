@@ -1,17 +1,20 @@
 import { MockInstance } from 'vitest'
 import { HexBoardType } from '../../board/HexBoard'
 import Game, { GameMode } from '../Game'
-import HexBoardRenderer from '../../renderers/HexBoardRenderer'
 
 describe('Game', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let consoleLogSpy: MockInstance
-  let gameBoardWrapper: HTMLElement
 
   beforeEach(() => {
-    gameBoardWrapper = document.createElement('div')
-    gameBoardWrapper.className = HexBoardRenderer.GAME_BOARD_WRAPPER_CLASS
-    document.body.appendChild(gameBoardWrapper)
+    document.body.innerHTML = `
+      <div class="game-zone">
+        <div class="game-zone-left">
+          <figure class="draft-table-container orientation-player-1"></figure>
+        </div>
+        <figure class="game-board-container"></figure>
+      </div>
+      <dialog class="animal-deck-modal"></dialog>`
 
     consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {
       /* empty body */
@@ -19,7 +22,6 @@ describe('Game', () => {
   })
 
   afterEach(() => {
-    document.body.innerHTML = ''
     vi.restoreAllMocks()
   })
 

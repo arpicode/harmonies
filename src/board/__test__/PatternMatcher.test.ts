@@ -1,8 +1,11 @@
 import { MockInstance } from 'vitest'
-import Animal from '../Animal'
+import Animal, { IAnimalCards } from '../Animal'
 import { HexBoard } from '../HexBoard'
 import Token, { TokenType } from '../Token'
 import { testRiverHexBoard } from './test-data'
+import animalsJson from '../../animals.json'
+
+const animals = animalsJson as IAnimalCards
 
 describe('hasPattern', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -47,7 +50,6 @@ describe('hasPattern', () => {
     patternBoard.addHex(0, 0, [TokenType.Blue])
     patternBoard.addHex(1, 0, [TokenType.Blue])
     patternBoard.addHex(1, -1, [TokenType.Blue])
-    console.log(patternBoard.toString())
     expect(testRiverHexBoard.hasPattern(patternBoard)).toBe(true)
   })
 
@@ -123,7 +125,7 @@ describe('hasPattern', () => {
     })
 
     describe('ladybug', () => {
-      const ladybug = new Animal('ladybug')
+      const ladybug = new Animal(animals.ladybug)
 
       it('should correctly match a ladybug pattern', () => {
         gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Yellow))

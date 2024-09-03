@@ -80,7 +80,8 @@ export default class DraftTableRenderer {
       return
     }
 
-    const imgSrc = DraftTableRenderer.TABLE_IMAGES[this._draftTable.gameMode]
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    const imgSrc = DraftTableRenderer.TABLE_IMAGES[this._draftTable.gameMode as GameMode]
     const img = document.createElement('img')
     img.src = imgSrc
     img.alt = 'Draft Table'

@@ -3,11 +3,13 @@ import { Layout, LAYOUT_FLAT } from './board/Layout'
 import ScoreBoard from './board/ScoreBoard'
 import GeneticAlgorithm from './genetic/GeneticAlgorithm'
 import HexBoardRenderer from './renderers/HexBoardRenderer'
-import Animal from './board/Animal'
+import Animal, { IAnimalCards } from './board/Animal'
+import animalJson from '../src/animals.json'
 // import Bag from './board/Bag'
 // import Token, { startingTokensMap } from './board/Token'
 // import DraftTable from './board/DraftTable'
 // import DraftTableRenderer from './renderers/DraftTableRenderer'
+const animals = animalJson as IAnimalCards
 
 export function testGaAndBoardRendering() {
   const layout = new Layout(LAYOUT_FLAT, { x: 33, y: 33 }, { x: 124, y: 59 })
@@ -113,9 +115,9 @@ export function initializeAnimalCards(hexBoard: HexBoard) {
   animalCards.forEach((card) => {
     card.addEventListener('click', () => {
       console.clear()
-      const animalKey = card.getAttribute('alt')
+      const animalKey = card.getAttribute('src')?.split('/').pop()?.split('.')[0]
       if (!animalKey) throw new Error('Missing animal key')
-      const animal = new Animal(animalKey)
+      const animal = new Animal(animals[animalKey])
       const matchedPatterns = hexBoard.findAllMatchingPatterns(animal.pattern)
       if (matchedPatterns.length === 0) console.log(`No match for: ${animal.name}`)
       // console.log('Source Board:\n', hexBoard.toString())

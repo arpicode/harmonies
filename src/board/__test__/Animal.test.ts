@@ -1,14 +1,17 @@
-import Animal from '../Animal'
+import Animal, { IAnimalCards } from '../Animal'
 import { HexBoard } from '../HexBoard'
 import Token, { TokenType } from '../Token'
 import TokenStack from '../TokenStack'
+
+import animalsJson from '../../animals.json'
+const animals = animalsJson as IAnimalCards
 
 describe('Animal', () => {
   let animal: Animal
 
   describe('constructor', () => {
     beforeAll(() => {
-      animal = new Animal('bee')
+      animal = new Animal(animals.bee)
     })
 
     it('should initialize name correctly', () => {

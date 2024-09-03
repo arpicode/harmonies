@@ -22,6 +22,7 @@
     <input type="radio" id="red-radio" name="color" value="Red">
     <label for="red-radio">Bricks</label>
   </div>
+  <button class="show-deck-btn">Show animal cards</button>
 
   <div class="game-zone">
     <div class="game-zone-left">
@@ -30,15 +31,102 @@
     <figure class="game-board-container"></figure>
   </div>
 
-  <div class="animal-cards-container">
-    <img class="animal-card" src="animals/eagle.png" alt="eagle">
-    <img class="animal-card" src="animals/kingfisher.png" alt="kingfisher">
-    <img class="animal-card" src="animals/ladybug.png" alt="ladybug">
-    <img class="animal-card" src="animals/squirrel.png" alt="squirrel">
-    <img class="animal-card" src="animals/panther.png" alt="panther">
-  </div>
+  <dialog class="animal-deck-modal"></dialog>
 
   <script type="module" src="/src/main.ts"></script>
+  <script type="module">
+    const confirmButton = document.querySelector('.confirm-pick-btn');
+    const cancelButton = document.querySelector('.cancel-pick-btn');
+    const cardPicker = document.querySelector('.card-picker');
+    let animalCards = document.querySelectorAll('.animal-cards-container .animal-card');
+
+    // Function to sort elements by data-timestamp attribute
+    function sortElementsByTimestamp(elements) {
+      return Array.from(elements).sort((a, b) => {
+        return parseInt(a.getAttribute('data-timestamp')) - parseInt(b.getAttribute('data-timestamp'));
+      });
+    }
+
+    // open the dialog
+    document.querySelector('.show-deck-btn').addEventListener('click', () => {
+      document.querySelector('.animal-deck-modal').showModal();
+    });
+
+    // confirm the picked card
+    confirmButton.addEventListener('click', () => {
+      const pickedCard = cardPicker.querySelector('.animal-card');
+      if (!pickedCard) return;
+
+      pickedCard.remove();
+      animalCards = document.querySelectorAll('.animal-cards-container .animal-card');
+      animalCards.forEach(card => {
+        card.setAttribute('draggable', true);
+      });
+
+      cancelButton.disabled = true;
+      confirmButton.disabled = true;
+    });
+
+    // close the dialog
+    document.querySelector('.close-deck-btn').addEventListener('click', () => {
+      document.querySelector('.animal-deck-modal').close();
+      const pickedCard = cardPicker.querySelector('.animal-card');
+      if (!pickedCard) return;
+
+      const container = document.querySelector('.animal-cards-container');
+      const sortedCards = sortElementsByTimestamp(animalCards);
+      sortedCards.forEach(card => {
+        card.setAttribute('draggable', true);
+        container.appendChild(card);
+      });
+
+      cancelButton.disabled = true;
+      confirmButton.disabled = true;
+    });
+
+    // cancel the picked card
+    cancelButton.addEventListener('click', () => {
+      const pickedCard = cardPicker.querySelector('.animal-card');
+      if (!pickedCard) return;
+
+      const container = document.querySelector('.animal-cards-container');
+      const sortedCards = sortElementsByTimestamp(animalCards);
+      sortedCards.forEach(card => {
+        card.setAttribute('draggable', true);
+        container.appendChild(card);
+      });
+
+      cancelButton.disabled = true;
+      confirmButton.disabled = true;
+    });
+
+    // drag and drop
+    animalCards.forEach(card => {
+      card.addEventListener('dragstart', () => {
+        card.classList.add('dragging');
+      });
+
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+      });
+    });
+
+    cardPicker.addEventListener('dragover', (event) => {
+      event.preventDefault();
+    });
+
+    cardPicker.addEventListener('drop', (event) => {
+      const draggedCard = document.querySelector('.dragging');
+      cardPicker.appendChild(draggedCard);
+      animalCards.forEach(card => {
+        card.setAttribute('draggable', false);
+      });
+
+      cancelButton.disabled = false;
+      confirmButton.disabled = false;
+    });
+
+  </script>
 </body>
 
 </html>
