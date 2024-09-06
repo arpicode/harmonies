@@ -14,7 +14,7 @@ describe('DraftTableRenderer', () => {
     vi.clearAllMocks()
   })
 
-  const initializeHexBoard = (gameMode: GameMode): void => {
+  const initializeDraftTable = (gameMode: GameMode): void => {
     document.body.innerHTML = dom
     gameState = new GameState(gameMode, 'river')
     draftTableRenderer = new DraftTableRenderer(gameState)
@@ -25,7 +25,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should create a DraftTableRenderer instance', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     expect(draftTableRenderer).toBeInstanceOf(DraftTableRenderer)
     expect(consoleTimeSpy).toHaveBeenCalledTimes(1)
     expect(consoleTimeEndSpy).toHaveBeenCalledTimes(1)
@@ -47,7 +47,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should throw an error if game zone left container is not found', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     document.querySelector('.game-zone-left')?.classList.remove('game-zone-left')
     expect(() => {
       new DraftTableRenderer(new GameState(gameMode, 'river'))
@@ -59,7 +59,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}        | ${DraftTableRenderer.TABLE_IMAGES.solo}
     ${'multiplayer'} | ${DraftTableRenderer.TABLE_IMAGES.multiplayer}
   `('should render the correct draft table image for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     draftTableRenderer.render()
     const draftTableImage = document.querySelector('.draft-table')
     expect(draftTableImage?.getAttribute('src')).toBe(DraftTableRenderer.TABLE_IMAGES[gameMode])
@@ -70,7 +70,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should create the correct number of slots for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     draftTableRenderer.render()
     const slots = document.querySelectorAll('[data-slot-group-index]')
     const expectedSlots = gameMode === 'solo' ? DraftTable.MAX_SLOTS_SOLO : DraftTable.MAX_SLOTS_MULTIPLAYER
@@ -82,7 +82,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}        | ${DraftTableRenderer.TABLE_IMAGES.solo}
     ${'multiplayer'} | ${DraftTableRenderer.TABLE_IMAGES.multiplayer}
   `('should render the token holder for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     draftTableRenderer.render()
     const tokenHolder = document.querySelector('.token-holder')
     expect(tokenHolder).not.toBeNull()
@@ -93,7 +93,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should render the correct number of tokens for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     draftTableRenderer.render()
     const tokenSlots = document.querySelectorAll('.slot-tokens')
     let totalTokens = 0
@@ -113,7 +113,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should throw an error if token slot is not found', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     document.querySelector('[data-slot-group-index="0"]')?.remove()
     expect(() => {
       draftTableRenderer.render()
@@ -125,7 +125,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should throw an error when slot tokens group is not found', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     document.querySelector('[data-slot-tokens-index="0"]')?.remove()
     expect(() => {
       draftTableRenderer.render()
@@ -137,7 +137,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should add drafted tokens to the token holder for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     const tokens = gameState.draftTable.pickUp(0)
     const freqencyTable = {} as Record<string, number>
     tokens.forEach((token) => {
@@ -162,7 +162,7 @@ describe('DraftTableRenderer', () => {
     ${'solo'}
     ${'multiplayer'}
   `('should throw an error if token holder is not found', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeHexBoard(gameMode)
+    initializeDraftTable(gameMode)
     document.querySelector('.token-holder')?.remove()
     expect(() => {
       draftTableRenderer.render()

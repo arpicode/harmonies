@@ -1,20 +1,14 @@
 import { MockInstance } from 'vitest'
 import { HexBoardType } from '../../board/HexBoard'
 import Game, { GameMode } from '../Game'
+import { dom } from './dom'
 
 describe('Game', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let consoleLogSpy: MockInstance
 
   beforeEach(() => {
-    document.body.innerHTML = `
-      <div class="game-zone">
-        <div class="game-zone-left">
-          <figure class="draft-table-container orientation-player-1"></figure>
-        </div>
-        <figure class="game-board-container"></figure>
-      </div>
-      <dialog class="animal-deck-modal"></dialog>`
+    document.body.innerHTML = dom
 
     consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {
       /* empty body */

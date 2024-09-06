@@ -13,7 +13,7 @@ export interface IAnimalPattern {
 export interface IAnimal {
   name: string
   ecosystem: string
-  image?: string
+  image: string
   points: number[]
   pattern: IAnimalPattern[]
 }
@@ -23,7 +23,7 @@ export type IAnimalCards = Record<string, IAnimal>
 export default class Animal {
   public readonly name: string
   public readonly ecosystem: string
-  public readonly image?: string
+  public readonly image: string
   public readonly points: number[]
   public readonly pattern: HexBoard
   public timestamp?: number

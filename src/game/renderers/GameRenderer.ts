@@ -12,7 +12,7 @@ export default class GameRenderer implements IRenderer {
   constructor(gameState: GameState) {
     this._hexBoardRenderer = new HexBoardRenderer(gameState)
     this._draftTableRenderer = new DraftTableRenderer(gameState)
-    this._animalCardDeckRenderer = new AnimalCardDeckRenderer(gameState.animalCardDeck)
+    this._animalCardDeckRenderer = new AnimalCardDeckRenderer(gameState)
   }
 
   render() {

@@ -1,15 +1,19 @@
 import Animal from '../../board/Animal'
 import AnimalCardDeck from '../../board/AnimalCardDeck'
+import GameState from '../GameState'
 import IRenderer from './interfaces/IRenderer'
 
 export default class AnimalCardDeckRenderer implements IRenderer {
   private _animalCardDeck: AnimalCardDeck
-  constructor(animalCardDeck: AnimalCardDeck) {
-    this._animalCardDeck = animalCardDeck
-    this._initialize()
+  constructor(gameState: GameState) {
+    console.time('AnimalCardDeckRenderer#constructor')
+    this._animalCardDeck = gameState.animalCardDeck
+    this._initializeAnimalCardDeckDOM()
+    console.timeEnd('AnimalCardDeckRenderer#constructor')
   }
 
   render(): void {
+    console.time('AnimalCardDeckRenderer#render')
     const animalCardsContainer = document.querySelector('.animal-cards-container')
     if (!animalCardsContainer) throw new Error('Animal cards container not found')
     this._animalCardDeck.drawnCards.forEach((animal) => {
@@ -17,9 +21,10 @@ export default class AnimalCardDeckRenderer implements IRenderer {
       cardElement.setAttribute('data-timestamp', `${animal.timestamp}`)
       animalCardsContainer.appendChild(cardElement)
     })
+    console.timeEnd('AnimalCardDeckRenderer#render')
   }
 
-  private _initialize(): void {
+  private _initializeAnimalCardDeckDOM(): void {
     const animalDeckModal = this._getAnimalDeckModal()
     const cardsWrapper = this._createCardsWrapper()
     const animalCardsContainer = this._createAnimalCardsContainer()
@@ -51,7 +56,7 @@ export default class AnimalCardDeckRenderer implements IRenderer {
   private _createCardElement(animal: Animal): HTMLImageElement {
     const cardElement = document.createElement('img')
     cardElement.classList.add('animal-card')
-    cardElement.src = animal.image ?? ''
+    cardElement.src = animal.image
     cardElement.alt = animal.name
     cardElement.draggable = true
     return cardElement
