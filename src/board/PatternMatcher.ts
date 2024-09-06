@@ -1,5 +1,5 @@
 import { HexBoard } from './HexBoard'
-import IPatternMatcher from './IPatternMatcher'
+import IPatternMatcher from './interfaces/IPatternMatcher'
 import { Hex } from './Hex'
 
 export default class PatternMatcher implements IPatternMatcher {

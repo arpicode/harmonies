@@ -1,5 +1,5 @@
 import { Hex } from './Hex'
-import ITokenManager from './ITokenManager'
+import ITokenManager from './interfaces/ITokenManager'
 import { TokenType } from './Token'
 
 export default class HexTokenManager implements ITokenManager {

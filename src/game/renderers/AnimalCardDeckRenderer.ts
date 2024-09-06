@@ -1,7 +1,8 @@
-import Animal from '../board/Animal'
-import AnimalCardDeck from '../board/AnimalCardDeck'
+import Animal from '../../board/Animal'
+import AnimalCardDeck from '../../board/AnimalCardDeck'
+import IRenderer from './interfaces/IRenderer'
 
-export default class AnimalCardDeckRenderer {
+export default class AnimalCardDeckRenderer implements IRenderer {
   private _animalCardDeck: AnimalCardDeck
   constructor(animalCardDeck: AnimalCardDeck) {
     this._animalCardDeck = animalCardDeck

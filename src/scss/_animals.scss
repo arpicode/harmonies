@@ -9,7 +9,8 @@
   cursor: pointer;
   z-index: 10;
   width: 100px;
-  height: 172px;
+  // height: 172px;
+  aspect-ratio: 100 / 172;
   opacity: 0.85;
   border-radius: 0.5rem;
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;

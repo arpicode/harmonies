@@ -5,7 +5,7 @@ import { testRiverHexBoard } from './test-data'
 
 describe('ScoreBoard', () => {
   const scoreBoard = new ScoreBoard(testRiverHexBoard)
-  const emptyHexBoard = new HexBoard(5, 5)
+  const emptyHexBoard = new HexBoard(5, 5, 'river')
   const emptyScoreBoard = new ScoreBoard(emptyHexBoard)
 
   describe('treeScore', () => {
@@ -55,7 +55,7 @@ describe('ScoreBoard', () => {
     let islandScoreBoard: ScoreBoard
 
     beforeEach(() => {
-      riverHexBoard = new HexBoard(5, 5)
+      riverHexBoard = new HexBoard(5, 5, 'river')
       riverScoreBoard = new ScoreBoard(riverHexBoard)
       islandHexBoard = new HexBoard(7, 4, 'island')
       islandScoreBoard = new ScoreBoard(islandHexBoard)

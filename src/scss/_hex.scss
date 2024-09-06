@@ -102,6 +102,9 @@ $token-types: (
     .hex-board--#{$board} .hex:hover {
       fill: get-color(map-get($keys, 'hover'), 'hover');
     }
+    .hex-board--#{$board} .hex.drag-over {
+      fill: get-color(map-get($keys, 'hover'), 'hover');
+    }
   }
   @if map-has-key($keys, 'border') {
     .hex-board--#{$board} {
@@ -118,6 +121,7 @@ $token-types: (
 }
 
 .coords {
+  // display: none;
   font-family: Verdana;
   fill: get-color('coords', 'fill');
   font-size: 80%;

@@ -1,5 +1,5 @@
 import { Hex } from './Hex'
-import IPathFinder from './IPathFinder'
+import IPathFinder from './interfaces/IPathFinder'
 import { TokenType } from './Token'
 
 /**

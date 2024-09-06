@@ -1,9 +1,9 @@
 import { Hex } from './Hex'
-import ITokenManager from './ITokenManager'
+import ITokenManager from './interfaces/ITokenManager'
 import HexTokenManager from './HexTokenManager'
-import IPathFinder from './IPathFinder'
+import IPathFinder from './interfaces/IPathFinder'
 import HexPathFinder from './HexPathFinder'
-import IPatternMatcher from './IPatternMatcher'
+import IPatternMatcher from './interfaces/IPatternMatcher'
 import PatternMatcher from './PatternMatcher'
 import Token, { TokenType } from './Token'
 
@@ -32,7 +32,7 @@ export class HexBoard {
   constructor(
     numCols: number,
     numRows: number,
-    type: HexBoardType = 'river',
+    type: HexBoardType,
     tokenManager?: ITokenManager,
     pathFinder?: IPathFinder,
     patternMatcher?: IPatternMatcher

@@ -1,10 +1,12 @@
-import { Hex } from '../board/Hex'
-import { HexBoard, HexBoardType } from '../board/HexBoard'
-import { Layout } from '../board/Layout'
-import Token, { TokenType } from '../board/Token'
-import { SVG_NAMESPACE } from '../utils/utils'
+import { Hex } from '../../board/Hex'
+import { HexBoard, HexBoardType } from '../../board/HexBoard'
+import { Layout } from '../../board/Layout'
+import Token, { TokenType } from '../../board/Token'
+import GameState from '../GameState'
+import { SVG_NAMESPACE } from '../../utils/utils'
+import IRenderer from './interfaces/IRenderer'
 
-export default class HexBoardRenderer {
+export default class HexBoardRenderer implements IRenderer {
   private _hexBoard: HexBoard
   private _layout: Layout
   private _svg: SVGGElement
@@ -20,12 +22,30 @@ export default class HexBoardRenderer {
   private static readonly COORDS_CLASS = 'coords'
   private static readonly TOKEN_STACK_CLASS = 'token-stack'
   private readonly _tokenOffsetFactor: number
+  private readonly _gameState: GameState
 
-  constructor(hexBoard: HexBoard, layout: Layout, svg?: SVGGElement) {
-    this._hexBoard = hexBoard
-    this._layout = layout
-    this._svg = svg ?? this._createHexBoardSVGElement(hexBoard.type)
+  constructor(gameState: GameState, svg?: SVGGElement) {
+    console.time('HexBoardRenderer#constructor')
+    this._gameState = gameState
+    this._hexBoard = gameState.hexBoard
+    this._layout = gameState.layout
+    this._svg = svg ?? this._createHexBoardSVGElement(this._hexBoard.type)
     this._tokenOffsetFactor = 15 / this._layout.size.y
+    this._initializeHexBoardDOM()
+
+    this._gameState.on('hexBoardUpdated', () => this.render())
+    console.timeEnd('HexBoardRenderer#constructor')
+  }
+
+  private _initializeHexBoardDOM(): void {
+    const gameBoardWrapper = document.querySelector(`.${HexBoardRenderer.GAME_BOARD_WRAPPER_CLASS}`)
+    if (!gameBoardWrapper) throw new Error('Game board wrapper not found')
+    const imgSrc = HexBoardRenderer.BOARD_IMAGES[this._hexBoard.type]
+    if (imgSrc) {
+      gameBoardWrapper.innerHTML = `<img class="hex-board" src="${imgSrc}" alt="Hex board" />`
+    }
+    this._hexBoard.hexes.forEach((hex) => this._drawHex(hex))
+    gameBoardWrapper.appendChild(this._svg)
   }
 
   private _createHexBoardSVGElement(type: HexBoardType): SVGGElement {
@@ -37,7 +57,7 @@ export default class HexBoardRenderer {
     return svg
   }
 
-  drawHex(hex: Hex): void {
+  private _drawHex(hex: Hex): void {
     const group = this._createHexSvgGroup(hex)
     const polygon = this._createHexPolygon(hex)
     const text = this._createHexText(hex)
@@ -46,30 +66,19 @@ export default class HexBoardRenderer {
     group.appendChild(text)
 
     this._svg.appendChild(group)
-    this._renderTokenStack(hex)
+    this._renderTokenStackGroup(hex)
+  }
+
+  render(): void {
+    console.time('HexBoardRenderer#render')
+    this._hexBoard.hexes.forEach((hex) => this._renderTokens(hex))
+    console.timeEnd('HexBoardRenderer#render')
   }
 
   private _createHexSvgGroup(hex: Hex): SVGGElement {
     const group = document.createElementNS(SVG_NAMESPACE, 'g')
     group.setAttribute('id', `hex-${hex.q}-${hex.r}`)
     group.addEventListener('click', () => this.handleHexClick(hex))
-    group.addEventListener('dragover', (e) => {
-      e.preventDefault()
-    })
-
-    group.addEventListener('drop', () => {
-      try {
-        const currentToken = document.querySelector('.dragging')
-        if (!currentToken) throw new Error('No token selected')
-
-        hex.tokens.push(new Token(currentToken.getAttribute('data-token-type') as TokenType))
-        this._renderTokenStack(hex)
-        if (this.afterHexClick) this.afterHexClick()
-        currentToken.remove()
-      } catch (error) {
-        console.error((error as Error).message)
-      }
-    })
     return group
   }
 
@@ -100,42 +109,25 @@ export default class HexBoardRenderer {
 
     try {
       hex.tokens.push(new Token(TokenType[selectedColor as keyof typeof TokenType]))
-      this._renderTokenStack(hex)
+      this._renderTokenStackGroup(hex)
       if (this.afterHexClick) this.afterHexClick()
+      this._gameState.notifyHexBoardUpdate()
     } catch (error) {
       console.error((error as Error).message)
     }
   }
 
-  render(): void {
-    const gameBoardWrapper = document.querySelector(`.${HexBoardRenderer.GAME_BOARD_WRAPPER_CLASS}`)
-    if (!gameBoardWrapper) {
-      console.error('Game board wrapper not found')
-      return
-    }
-    const imgSrc = HexBoardRenderer.BOARD_IMAGES[this._hexBoard.type]
-    if (imgSrc) {
-      gameBoardWrapper.innerHTML = `<img class="hex-board" src="${imgSrc}" alt="Hex board">`
-    }
-    this._hexBoard.hexes.forEach((hex) => this.drawHex(hex))
-    gameBoardWrapper.appendChild(this._svg)
-  }
-
-  private _renderTokenStack(hex: Hex): void {
+  private _renderTokenStackGroup(hex: Hex): void {
     let tokenStackGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r} .${HexBoardRenderer.TOKEN_STACK_CLASS}`)
     if (!tokenStackGroup) {
       tokenStackGroup = document.createElementNS(SVG_NAMESPACE, 'g')
       tokenStackGroup.setAttribute('class', HexBoardRenderer.TOKEN_STACK_CLASS)
-      const hexGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r}`)
-      if (hexGroup) {
-        hexGroup.appendChild(tokenStackGroup)
-      } else {
-        console.error(`Hex group not found for hex (${hex.q}, ${hex.r})`)
-      }
-    }
+      tokenStackGroup.setAttribute('data-stack-axial-coords', `${hex.q},${hex.r}`)
 
-    this._clearTokenStack(tokenStackGroup as SVGGElement)
-    this._renderTokens(hex, tokenStackGroup as SVGGElement)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const hexGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r}`)! // we know it exists since we just searched for it
+      hexGroup.appendChild(tokenStackGroup)
+    }
   }
 
   private _getSelectedColor(): string | null {
@@ -147,11 +139,12 @@ export default class HexBoardRenderer {
     return selectedRadioBtn.value
   }
 
-  private _clearTokenStack(tokenStackGroup: SVGGElement): void {
-    tokenStackGroup.innerHTML = ''
-  }
+  private _renderTokens(hex: Hex): void {
+    // TODO: only render tokens of dirty hexes
+    const tokenStackGroup = this._svg.querySelector(`[data-stack-axial-coords="${hex.q},${hex.r}"]`)
+    if (!tokenStackGroup) throw new Error(`Token stack group not found for hex (${hex.q}, ${hex.r})`)
 
-  private _renderTokens(hex: Hex, tokenStackGroup: SVGGElement): void {
+    tokenStackGroup.innerHTML = ''
     const center = this._layout.hexToPixel(hex)
     const tokens = hex.tokens.toArray()
     const tokenHeight = this._layout.size.y

@@ -27,15 +27,15 @@ export default class AnimalCardDeck extends Stack<Animal> {
     let counter = 0
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     while (true) {
-      // Needed to keep the generator running
+      /* Needed to keep the generator running */
       yield Date.now() + counter++
     }
   }
 
   draw(): void {
     if (this.isEmpty()) throw new Error('Deck is empty')
-    const drawnCard = this.pop()
-    if (!drawnCard) return
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const drawnCard = this.pop()! // we know it's not empty
     const newTimestamp = this.timestampGenerator.next().value
     if (newTimestamp) {
       drawnCard.timestamp = newTimestamp

@@ -1,5 +1,5 @@
-import { Hex } from './Hex'
-import { TokenType } from './Token'
+import { Hex } from '../Hex'
+import { TokenType } from '../Token'
 
 export default interface IPathFinder {
   findNeighbors(hex: Hex): Hex[]
