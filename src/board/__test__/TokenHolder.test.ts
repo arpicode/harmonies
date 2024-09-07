@@ -47,6 +47,13 @@ describe('TokenHolder', () => {
     expect(tokenHolder.tokens).not.toContain(token)
   })
 
+  it('should handle softRemove when the TokenHolder is empty', () => {
+    const result = tokenHolder.softRemove(token)
+    expect(result).toBe(tokenHolder)
+    expect(tokenHolder.size()).toBe(0)
+    expect(tokenHolder.tokens).toEqual([])
+  })
+
   it('should restore all soft removed tokens correctly', () => {
     tokenHolder.add(token)
     tokenHolder.softRemove(token)
