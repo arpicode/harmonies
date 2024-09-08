@@ -1,5 +1,4 @@
 import { HexBoardType } from '../board/HexBoard'
-import { initializeAnimalCards } from '../main-utils'
 import GameRenderer from './renderers/GameRenderer'
 import GameState from './GameState'
 import GameInputHandler from './handlers/GameInputHandler'
@@ -17,7 +16,6 @@ export default class Game {
     this._inputHandler = new GameInputHandler(this._gameState)
 
     this._gameRenderer.render()
-    initializeAnimalCards(this._gameState.hexBoard)
     this._inputHandler.initialize()
   }
 
