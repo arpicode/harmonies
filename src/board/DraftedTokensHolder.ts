@@ -1,7 +1,7 @@
 import DraftTable from './DraftTable'
 import Token from './Token'
 
-export default class TokenHolder {
+export default class DraftedTokensHolder {
   private _tokens: Token[] = []
   private _softRemovedTokens: Token[] = []
 

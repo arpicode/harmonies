@@ -49,4 +49,10 @@ export default class AnimalCardDeck extends Stack<Animal> {
       ;[this.items[i], this.items[j]] = [this.items[j], this.items[i]]
     }
   }
+
+  removeDrawnCardByName(name: string): Animal {
+    const index = this.drawnCards.findIndex((card) => card.name === name)
+    const removedCard = this.drawnCards.splice(index, 1)[0]
+    return removedCard
+  }
 }

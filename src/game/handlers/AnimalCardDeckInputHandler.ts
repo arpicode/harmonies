@@ -13,6 +13,7 @@ export enum AnimalCardDeckSelectors {
   REMAINING_ANIMAL_CARDS = '.animal-cards-container .animal-card',
   ANIMAL_CARDS = '.animal-card',
   DRAGGING = '.dragging',
+  DRAG_OVER = '.drag-over',
 }
 
 class DOMSelectorError extends Error {
@@ -46,7 +47,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     this._animalCardsContainer = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.ANIMAL_CARDS_CONTAINER)
   }
 
-  private _querySelector<T extends HTMLElement>(selector: string): T {
+  private _querySelector<T extends HTMLElement>(selector: AnimalCardDeckSelectors): T {
     const element = document.querySelector<T>(selector)
     if (!element) throw new DOMSelectorError(selector)
     return element
@@ -58,82 +59,77 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   private _bindEvents() {
-    this._openButton.addEventListener('click', () => this._handleOpenDeck())
-    this._closeButton.addEventListener('click', () => this._handleCloseDeck())
-    this._confirmButton.addEventListener('click', () => this._handleConfirmPick())
-    this._cancelButton.addEventListener('click', () => this._handleCancelPick())
+    this._openButton.addEventListener('click', this._handleOpenDeck)
+    this._closeButton.addEventListener('click', this._handleCloseDeck)
+    this._confirmButton.addEventListener('click', this._handleConfirmPick)
+    this._cancelButton.addEventListener('click', this._handleCancelPick)
 
     this._animalCards.forEach((card) => {
       card.addEventListener('dragstart', () => this._handleCardDragStart(card))
       card.addEventListener('dragend', () => this._handleCardDragEnd(card))
     })
 
-    // document.querySelector('.animal-cards-container')?.addEventListener('dragstart', (event) => {
-    //   const target = event.target as HTMLImageElement
-    //   if (target.matches('.animal-card')) {
-    //     this._handleCardDragStart(target)
-    //   }
-    // })
-
-    // TODO: Investigate why dragend event isn't firing when delegating envents
-    // document.querySelector('.animal-cards-container')?.addEventListener('dragend', (event) => {
-    //   const target = event.target as HTMLImageElement
-    //   if (target.matches('.animal-card')) {
-    //     this._handleCardDragEnd(target)
-    //   }
-    // })
-
     this._cardPicker.addEventListener('dragover', (event) => this._handleCardPickerDragOver(event))
-    this._cardPicker.addEventListener('drop', () => this._handleCardPickerDrop())
+    this._cardPicker.addEventListener('dragenter', this._handleCardPickerDragEnter)
+    this._cardPicker.addEventListener('dragleave', this._handleCardPickerDragLeave)
+    this._cardPicker.addEventListener('drop', this._handleCardPickerDrop)
   }
 
-  private _handleOpenDeck() {
+  private _handleOpenDeck = () => {
     this._animalDeckModal.showModal()
   }
 
-  private _handleCloseDeck() {
+  private _handleCloseDeck = () => {
     this._animalDeckModal.close()
     this._cancelPick()
   }
 
-  private _handleConfirmPick() {
+  private _handleConfirmPick = () => {
     const pickedCard = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
     if (!pickedCard) return
 
-    // TODO: update game state with picked card
+    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+
+    this._gameState.animalCardDeck.removeDrawnCardByName(pickedCard.alt)
     pickedCard.remove()
+    // TODO: add picked card to player's hand
+    // TODO: notify player's hand update
+    // this._gameState.notifyAnimalCardDeckUpdate()
 
     this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
-    this._animalCards.forEach((card) => {
-      card.setAttribute('draggable', 'true')
-    })
-
+    this._updateCardsDraggableState(true)
     this._updateButtonsDisabledState(true)
   }
 
-  private _handleCancelPick() {
+  private _handleCancelPick = () => {
     this._cancelPick()
   }
 
-  private _handleCardDragStart(card: HTMLImageElement) {
+  private _handleCardDragStart = (card: HTMLImageElement) => {
     card.classList.add(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))
   }
 
-  private _handleCardDragEnd(card: HTMLImageElement) {
+  private _handleCardDragEnd = (card: HTMLImageElement) => {
     card.classList.remove(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))
   }
 
-  private _handleCardPickerDragOver(event: DragEvent) {
+  private _handleCardPickerDragOver = (event: DragEvent) => {
     event.preventDefault()
   }
 
-  private _handleCardPickerDrop() {
+  private _handleCardPickerDragEnter = () => {
+    this._cardPicker.classList.add(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+  }
+
+  private _handleCardPickerDragLeave = () => {
+    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+  }
+
+  private _handleCardPickerDrop = () => {
     const draggedCard = document.querySelector(AnimalCardDeckSelectors.DRAGGING)
     if (!draggedCard) return
     this._cardPicker.appendChild(draggedCard)
-    this._animalCards.forEach((card) => {
-      card.setAttribute('draggable', 'false')
-    })
+    this._updateCardsDraggableState(false)
 
     this._updateButtonsDisabledState(false)
   }
@@ -141,7 +137,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   private _cancelPick() {
     const pickedCard = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
     if (!pickedCard) return
-
+    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
     const sortedCards = this._sortElementsByTimestamp(this._animalCards)
     sortedCards.forEach((card) => {
       card.setAttribute('draggable', 'true')
@@ -154,6 +150,12 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   private _updateButtonsDisabledState(isDisabled: boolean) {
     this._cancelButton.disabled = isDisabled
     this._confirmButton.disabled = isDisabled
+  }
+
+  private _updateCardsDraggableState(isDraggable: boolean) {
+    this._animalCards.forEach((card) => {
+      card.setAttribute('draggable', isDraggable ? 'true' : 'false')
+    })
   }
 
   private _sortElementsByTimestamp(elements: NodeListOf<Element>) {

@@ -39,6 +39,11 @@ export default class GameState extends EventEmitter {
     this.emit('draftTableUpdated')
   }
 
+  notifyAnimalCardDeckUpdate() {
+    console.log('GameState: emitting animalCardDeckUpdated')
+    this.emit('animalCardDeckUpdated')
+  }
+
   private _createLayout(): Layout {
     switch (this.hexBoardType) {
       case 'river':

@@ -40,6 +40,20 @@ describe('AnimalCardDeckRenderer', () => {
     expect(initialCards?.children).toHaveLength(AnimalCardDeck.MAX_DRAWN_CARDS)
   })
 
+  it('should not re-render the same animal cards', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    const initialCards = document.querySelectorAll('.animal-cards-container .animal-card')
+    animalCardDeckRenderer.render()
+    const reRenderedCards = document.querySelectorAll('.animal-cards-container .animal-card')
+    expect(initialCards).toHaveLength(AnimalCardDeck.MAX_DRAWN_CARDS)
+    expect(reRenderedCards).toHaveLength(AnimalCardDeck.MAX_DRAWN_CARDS)
+
+    const initialCardNames = Array.from(initialCards).map((card) => card.getAttribute('alt'))
+    const reRenderedCardNames = Array.from(reRenderedCards).map((card) => card.getAttribute('alt'))
+    expect(initialCardNames).toEqual(reRenderedCardNames)
+  })
+
   it('should throw an error if animal cards container is not found', () => {
     initializeDraftTable()
     document.querySelector('.animal-cards-container')?.classList.remove('animal-cards-container')

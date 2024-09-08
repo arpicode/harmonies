@@ -1,7 +1,7 @@
 import { GameMode } from '../game/Game'
 import Bag from './Bag'
 import Token from './Token'
-import TokenHolder from './TokenHolder'
+import DraftedTokensHolder from './DraftedTokensHolder'
 
 /**
  * Error thrown when the bag is not initialized with tokens.
@@ -78,7 +78,7 @@ export default class DraftTable {
   public readonly slotCount: number
 
   private _bag: Bag<Token>
-  private _draftedTokens: TokenHolder
+  private _draftedTokens: DraftedTokensHolder
 
   /**
    * Creates an instance of DraftTable.
@@ -89,7 +89,7 @@ export default class DraftTable {
     if (bag.isEmpty()) throw new UninitializedError()
     this._bag = bag
     this.slotCount = gameMode === 'solo' ? DraftTable.MAX_SLOTS_SOLO : DraftTable.MAX_SLOTS_MULTIPLAYER
-    this._draftedTokens = new TokenHolder()
+    this._draftedTokens = new DraftedTokensHolder()
     this.gameMode = gameMode
 
     this._initialize()
@@ -138,7 +138,7 @@ export default class DraftTable {
     }
   }
 
-  get draftedTokens(): TokenHolder {
+  get draftedTokens(): DraftedTokensHolder {
     return this._draftedTokens
   }
 }

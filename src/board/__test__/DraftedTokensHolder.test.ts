@@ -1,13 +1,13 @@
 import DraftTable from '../DraftTable'
 import Token, { TokenType } from '../Token'
-import TokenHolder from '../TokenHolder'
+import DraftedTokensHolder from '../DraftedTokensHolder'
 
 describe('TokenHolder', () => {
-  let tokenHolder: TokenHolder
+  let tokenHolder: DraftedTokensHolder
   let token: Token
 
   beforeEach(() => {
-    tokenHolder = new TokenHolder()
+    tokenHolder = new DraftedTokensHolder()
     token = new Token(TokenType.Blue)
   })
 

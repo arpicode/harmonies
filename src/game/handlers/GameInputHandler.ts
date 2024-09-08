@@ -4,7 +4,7 @@ import HexBoardInputHandler from './HexBoardInputHandler'
 import IInputHandler from './interfaces/IInputHandler'
 import AnimalCardDeckInputHandler from './AnimalCardDeckInputHandler'
 
-export default class InputHandler implements IInputHandler {
+export default class GameInputHandler implements IInputHandler {
   private readonly _draftTableInputHandler: DraftTableInputHandler
   private readonly _hexBoardInputHandler: HexBoardInputHandler
   private readonly _animalCardDeckInputHandler: AnimalCardDeckInputHandler
