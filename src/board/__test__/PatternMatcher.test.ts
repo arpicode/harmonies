@@ -1,5 +1,5 @@
 import { MockInstance } from 'vitest'
-import Animal, { IAnimalCards } from '../Animal'
+import AnimalCard, { IAnimalCards } from '../AnimalCard'
 import { HexBoard } from '../HexBoard'
 import Token, { TokenType } from '../Token'
 import { testRiverHexBoard } from './test-data'
@@ -125,7 +125,7 @@ describe('hasPattern', () => {
     })
 
     describe('ladybug', () => {
-      const ladybug = new Animal(animals.ladybug)
+      const ladybug = new AnimalCard(animals.ladybug)
 
       it('should correctly match a ladybug pattern', () => {
         gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Yellow))

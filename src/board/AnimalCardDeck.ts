@@ -1,9 +1,9 @@
 import Stack from '../utils/Stack'
-import Animal, { IAnimalCards } from './Animal'
+import AnimalCard, { IAnimalCards } from './AnimalCard'
 
-export default class AnimalCardDeck extends Stack<Animal> {
+export default class AnimalCardDeck extends Stack<AnimalCard> {
   public static readonly MAX_DRAWN_CARDS = 5
-  public readonly drawnCards: Animal[] = []
+  public readonly drawnCards: AnimalCard[] = []
   private timestampGenerator: Generator<number, void>
 
   constructor(json: IAnimalCards) {
@@ -14,7 +14,7 @@ export default class AnimalCardDeck extends Stack<Animal> {
 
   private _initialize(json: IAnimalCards) {
     Object.keys(json).forEach((key) => {
-      const animal = new Animal(json[key])
+      const animal = new AnimalCard(json[key])
       this.push(animal)
     })
     this.shuffle()
@@ -50,7 +50,7 @@ export default class AnimalCardDeck extends Stack<Animal> {
     }
   }
 
-  removeDrawnCardByName(name: string): Animal {
+  removeDrawnCardByName(name: string): AnimalCard {
     const index = this.drawnCards.findIndex((card) => card.name === name)
     const removedCard = this.drawnCards.splice(index, 1)[0]
     return removedCard

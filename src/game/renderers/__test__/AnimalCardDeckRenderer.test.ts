@@ -1,5 +1,5 @@
 import AnimalCardDeck from '../../../board/AnimalCardDeck'
-import { dom } from '../../__test__/dom'
+import { dom } from '../../../dom'
 import GameState from '../../GameState'
 import AnimalCardDeckRenderer from '../AnimalCardDeckRenderer'
 

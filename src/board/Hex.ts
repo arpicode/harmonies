@@ -1,4 +1,4 @@
-import { IAnimalPattern } from './Animal'
+import { IAnimalPattern } from './AnimalCard'
 import Token from './Token'
 import TokenStack from './TokenStack'
 

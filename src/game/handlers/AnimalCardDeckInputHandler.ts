@@ -3,15 +3,15 @@ import IInputHandler from './interfaces/IInputHandler'
 
 export enum AnimalCardDeckSelectors {
   SHOW_BUTTON = '.show-deck-btn',
-  CLOSE_BUTTON = '.close-deck-btn',
-  CONFIRM_BUTTON = '.confirm-pick-btn',
-  CANCEL_BUTTON = '.cancel-pick-btn',
-  CARD_PICKER = '.card-picker',
-  PICKED_CARD = '.card-picker .animal-card',
+  CLOSE_BUTTON = '.animal-deck-modal .close-deck-btn',
+  CONFIRM_BUTTON = '.animal-deck-modal .confirm-pick-btn',
+  CANCEL_BUTTON = '.animal-deck-modal .cancel-pick-btn',
+  CARD_PICKER = '.animal-deck-modal .card-picker',
+  PICKED_CARD = '.animal-deck-modal .card-picker .animal-card',
   ANIMAL_DECK_MODAL = '.animal-deck-modal',
-  ANIMAL_CARDS_CONTAINER = '.animal-cards-container',
-  REMAINING_ANIMAL_CARDS = '.animal-cards-container .animal-card',
-  ANIMAL_CARDS = '.animal-card',
+  ANIMAL_CARDS_CONTAINER = '.animal-deck-modal .animal-cards-container',
+  REMAINING_ANIMAL_CARDS = '.animal-deck-modal .animal-cards-container .animal-card',
+  ANIMAL_CARDS = '.animal-deck-modal .animal-card',
   DRAGGING = '.dragging',
   DRAG_OVER = '.drag-over',
 }
@@ -85,16 +85,23 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   private _handleConfirmPick = () => {
-    const pickedCard = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
-    if (!pickedCard) return
+    const pickedCardElement = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
+    if (!pickedCardElement) return
 
     this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
 
-    this._gameState.animalCardDeck.removeDrawnCardByName(pickedCard.alt)
-    pickedCard.remove()
-    // TODO: add picked card to player's hand
-    // TODO: notify player's hand update
-    // this._gameState.notifyAnimalCardDeckUpdate()
+    if (this._gameState.pickedCardsHolder.isFull) {
+      this._cancelPick()
+      console.warn('Picked cards holder is full')
+      return
+    }
+    const pickedCard = this._gameState.animalCardDeck.removeDrawnCardByName(pickedCardElement.alt)
+    this._gameState.pickedCardsHolder.add(pickedCard)
+
+    pickedCardElement.remove()
+    console.log(this._gameState.pickedCardsHolder.pickedCards)
+    this._gameState.notifyPickedCardsHolderUpdate()
+    this._gameState.notifyAnimalCardDeckUpdate()
 
     this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
     this._updateCardsDraggableState(true)

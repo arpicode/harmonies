@@ -1,4 +1,4 @@
-import Animal, { IAnimalCards } from '../Animal'
+import AnimalCard, { IAnimalCards } from '../AnimalCard'
 import AnimalCardDeck from '../AnimalCardDeck'
 import animalsJson from '../../animals.json'
 
@@ -21,7 +21,7 @@ describe('AnimalCardDeck', () => {
     deck.draw()
     expect(deck.size()).toBe(initialSize - 1)
     expect(deck.drawnCards).toHaveLength(drawnCardsSize + 1)
-    expect(deck.drawnCards[deck.drawnCards.length - 1]).toBeInstanceOf(Animal)
+    expect(deck.drawnCards[deck.drawnCards.length - 1]).toBeInstanceOf(AnimalCard)
   })
 
   it('should throw an error when drawing from an empty deck', () => {

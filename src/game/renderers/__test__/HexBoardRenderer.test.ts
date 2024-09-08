@@ -3,7 +3,7 @@ import { SVG_NAMESPACE } from '../../../utils/utils'
 import GameState from '../../GameState'
 import { HexBoardType } from '../../../board/HexBoard'
 import Token, { TokenType } from '../../../board/Token'
-import { dom } from '../../__test__/dom'
+import { dom } from '../../../dom'
 
 describe('HexBoardRenderer', () => {
   let svg: SVGGElement

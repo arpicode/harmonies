@@ -1,7 +1,7 @@
 import { MockInstance } from 'vitest'
 import { HexBoardType } from '../../board/HexBoard'
 import Game, { GameMode } from '../Game'
-import { dom } from './dom'
+import { dom } from '../../dom'
 
 describe('Game', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

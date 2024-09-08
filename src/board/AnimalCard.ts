@@ -20,12 +20,13 @@ export interface IAnimal {
 
 export type IAnimalCards = Record<string, IAnimal>
 
-export default class Animal {
+export default class AnimalCard {
   public readonly name: string
   public readonly ecosystem: string
   public readonly image: string
   public readonly points: number[]
   public readonly pattern: HexBoard
+  public animalTokenCount: number
   public timestamp?: number
 
   constructor(animal: IAnimal) {
@@ -35,10 +36,23 @@ export default class Animal {
     this.image = image
     this.points = points
     this.pattern = new HexBoard(0, 0, 'custom')
+    this.animalTokenCount = points.length
 
     pattern.forEach((animalPattern) => {
       const hex = Hex.fromJson(animalPattern)
       this.pattern.hexes.set(hex.id, hex)
     })
+  }
+
+  isCompleted(): boolean {
+    return this.animalTokenCount === 0
+  }
+
+  removeAnimalToken(): void {
+    this.animalTokenCount--
+  }
+
+  value(): number {
+    return this.points[this.points.length - this.animalTokenCount]
   }
 }

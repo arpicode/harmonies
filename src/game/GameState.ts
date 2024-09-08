@@ -6,8 +6,9 @@ import { Layout, LAYOUT_FLAT } from '../board/Layout'
 import Token, { startingTokensMap } from '../board/Token'
 import { GameMode } from './Game'
 import animalsJson from '../animals.json'
-import { IAnimalCards } from '../board/Animal'
+import { IAnimalCards } from '../board/AnimalCard'
 import EventEmitter from './EventEmitter'
+import PickedCardsHolder from '../board/PickedCardsHolder'
 
 export default class GameState extends EventEmitter {
   public readonly gameMode: GameMode
@@ -17,6 +18,7 @@ export default class GameState extends EventEmitter {
   public readonly bag: Bag<Token>
   public readonly draftTable: DraftTable
   public readonly animalCardDeck: AnimalCardDeck
+  public readonly pickedCardsHolder: PickedCardsHolder
 
   constructor(gameMode: GameMode, hexBoardType: HexBoardType) {
     super()
@@ -27,6 +29,7 @@ export default class GameState extends EventEmitter {
     this.bag = this._createBag()
     this.draftTable = this._createDraftTable()
     this.animalCardDeck = this._createAnimalCardDeck()
+    this.pickedCardsHolder = this._createPickedCardsHolder()
   }
 
   notifyHexBoardUpdate() {
@@ -42,6 +45,11 @@ export default class GameState extends EventEmitter {
   notifyAnimalCardDeckUpdate() {
     console.log('GameState: emitting animalCardDeckUpdated')
     this.emit('animalCardDeckUpdated')
+  }
+
+  notifyPickedCardsHolderUpdate() {
+    console.log('GameState: emitting pickedCardsHolderUpdated')
+    this.emit('pickedCardsHolderUpdated')
   }
 
   private _createLayout(): Layout {
@@ -92,5 +100,9 @@ export default class GameState extends EventEmitter {
 
   private _createAnimalCardDeck(): AnimalCardDeck {
     return new AnimalCardDeck(animalsJson as IAnimalCards)
+  }
+
+  private _createPickedCardsHolder(): PickedCardsHolder {
+    return new PickedCardsHolder()
   }
 }

@@ -1,4 +1,4 @@
-import Animal from '../../board/Animal'
+import AnimalCard from '../../board/AnimalCard'
 import AnimalCardDeck from '../../board/AnimalCardDeck'
 import GameState from '../GameState'
 import IRenderer from './interfaces/IRenderer'
@@ -61,7 +61,7 @@ export default class AnimalCardDeckRenderer implements IRenderer {
     return animalCardsContainer
   }
 
-  private _createCardElement(animal: Animal): HTMLImageElement {
+  private _createCardElement(animal: AnimalCard): HTMLImageElement {
     const cardElement = document.createElement('img')
     cardElement.classList.add('animal-card')
     cardElement.src = animal.image

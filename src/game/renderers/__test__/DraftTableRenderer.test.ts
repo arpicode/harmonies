@@ -1,5 +1,5 @@
 import DraftTable from '../../../board/DraftTable'
-import { dom } from '../../__test__/dom'
+import { dom } from '../../../dom'
 import { GameMode } from '../../Game'
 import GameState from '../../GameState'
 import DraftTableRenderer from '../DraftTableRenderer'

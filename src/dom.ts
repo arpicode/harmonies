@@ -1,4 +1,5 @@
 export const dom = `
+  <dialog class="animal-deck-modal"></dialog>
   <button class="show-deck-btn">Show animal cards</button>
 
   <div class="game-zone">
@@ -7,6 +8,5 @@ export const dom = `
     </div>
     <figure class="game-board-container"></figure>
   </div>
-
-  <dialog class="animal-deck-modal"></dialog>
+  <div class="picked-cards-holder"></div>
 `
