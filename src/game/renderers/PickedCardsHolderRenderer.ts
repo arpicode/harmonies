@@ -22,9 +22,8 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     if (!pickedCardsContainer) throw new Error('Picked cards container not found')
     pickedCardsContainer.innerHTML = ''
     for (const animal of this._pickedCardsHolder.pickedCards) {
-      const cardElement = this._createCardElement(animal)
-      console.log('Rendering picked card:', animal.name)
-      pickedCardsContainer.appendChild(cardElement)
+      const fullCard = this._createWrapperContent(animal)
+      pickedCardsContainer.appendChild(fullCard)
     }
     console.timeEnd('PickedCardsHolderRenderer#render')
   }
@@ -48,11 +47,63 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     return pickedCardsContainer
   }
 
+  private _createCardAndActionWrapper(): HTMLDivElement {
+    const cardAndActionWrapper = document.createElement('div')
+    cardAndActionWrapper.classList.add('card-and-action-wrapper')
+    return cardAndActionWrapper
+  }
+
+  private _createCardContainer(): HTMLDivElement {
+    const cardContainer = document.createElement('div')
+    cardContainer.classList.add('card-container')
+    return cardContainer
+  }
+
   private _createCardElement(animal: AnimalCard): HTMLImageElement {
     const cardElement = document.createElement('img')
     cardElement.classList.add('animal-card')
     cardElement.src = animal.image
     cardElement.alt = animal.name
     return cardElement
+  }
+
+  private _createCardSVGOverlay(animal: AnimalCard): SVGElement {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.setAttribute('class', 'svg-card-overlay')
+    svg.setAttribute('width', '100%')
+    svg.setAttribute('height', '100%')
+    svg.setAttribute('viewBox', '0 0 128 220')
+    animal.points.forEach((_, index) => {
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+      rect.setAttribute('x', '107')
+      rect.setAttribute('y', `${index * (32 + 1.8) + 6}`)
+      rect.setAttribute('width', '15')
+      rect.setAttribute('height', '15')
+      rect.setAttribute('fill', '#d2691e')
+      svg.appendChild(rect)
+    })
+    return svg
+  }
+
+  private _createCardActionButton(animal: AnimalCard): HTMLButtonElement {
+    const cardActionButton = document.createElement('button')
+    cardActionButton.classList.add('card-action-button')
+    cardActionButton.innerHTML = `Poser<br>${animal.name}`
+    return cardActionButton
+  }
+
+  private _createWrapperContent(animal: AnimalCard): HTMLDivElement {
+    const cardAndActionWrapper = this._createCardAndActionWrapper()
+    const cardContainer = this._createCardContainer()
+    const cardElement = this._createCardElement(animal)
+    const cardSVGOverlay = this._createCardSVGOverlay(animal)
+    const cardActionButton = this._createCardActionButton(animal)
+
+    cardContainer.appendChild(cardElement)
+    cardContainer.appendChild(cardSVGOverlay)
+    cardAndActionWrapper.appendChild(cardActionButton)
+    cardAndActionWrapper.appendChild(cardContainer)
+
+    return cardAndActionWrapper
   }
 }
