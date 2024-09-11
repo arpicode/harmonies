@@ -9,9 +9,7 @@ describe('HexBoard', () => {
   let consoleLogSpy: MockInstance
 
   beforeEach(() => {
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {
-      /* empty body */
-    })
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
   })
 
   afterEach(() => {
@@ -20,25 +18,25 @@ describe('HexBoard', () => {
 
   describe('constructor', () => {
     it('should initialize with correct dimensions', () => {
-      const board = new HexBoard(2, 5)
+      const board = new HexBoard(2, 5, 'custom')
       expect(board.cols).toBe(2)
       expect(board.rows).toBe(5)
     })
 
     it('should generate the correct number of hexes for the river board', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       expect(board.hexes.size).toBe(board.cols * board.rows - ~~(board.cols / 2))
     })
 
     it('should generate the correct number of hexes for the island board', () => {
-      const board = new HexBoard(7, 4)
+      const board = new HexBoard(7, 4, 'custom')
       expect(board.hexes.size).toBe(board.cols * board.rows - ~~(board.cols / 2))
     })
   })
 
   describe('getHex', () => {
     it('should return the correct hex given valid axial coordinates', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       const hex = board.getHex(1, 1)
       expect(hex).toBeInstanceOf(Hex)
       expect(hex?.q).toBe(1)
@@ -47,7 +45,7 @@ describe('HexBoard', () => {
     })
 
     it('should return undefined for non-existent hex', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       const hex = board.getHex(10, 10)
       expect(hex).toBeUndefined()
     })
@@ -55,13 +53,13 @@ describe('HexBoard', () => {
 
   describe('getEmptyHexes', () => {
     it('should return all hexes with no tokens', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       const emptyHexes = board.getEmptyHexes()
       expect(emptyHexes.length).toBe(board.hexes.size)
     })
 
     it('should return only hexes with no tokens', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       board.getHex(0, 0)?.tokens.push(new Token(TokenType.Blue))
       board.getHex(1, 1)?.tokens.push(new Token(TokenType.Blue))
       const emptyHexes = board.getEmptyHexes()
@@ -71,7 +69,7 @@ describe('HexBoard', () => {
 
   describe('findNeighbors', () => {
     it('should return the correct neighbors for a hex in the middle of the board', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       const hex = board.getHex(2, 2)
       if (hex) {
         const neighbors = new Set(board.hexPathFinder.findNeighbors(hex))
@@ -93,7 +91,7 @@ describe('HexBoard', () => {
     })
 
     it('should return the correct neighbors for a hex on a corner of the board', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       let hex = board.getHex(0, 0)
       if (hex) {
         const neighbors = new Set(board.hexPathFinder.findNeighbors(hex))
@@ -144,7 +142,7 @@ describe('HexBoard', () => {
     })
 
     it('should return the correct neighbors for a hex on the top edge of the board', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       let hex = board.getHex(1, 0)
       if (hex) {
         const neighbors = new Set(board.hexPathFinder.findNeighbors(hex))
@@ -177,7 +175,7 @@ describe('HexBoard', () => {
     })
 
     it('should return the correct neighbors for a hex on the bottom edge of the board', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       let hex = board.getHex(1, 3)
       if (hex) {
         const neighbors = new Set(board.hexPathFinder.findNeighbors(hex))
@@ -222,7 +220,7 @@ describe('HexBoard', () => {
     `(
       'should return an empty array if there are no chains of $TokenType',
       ({ TokenType }: { TokenType: TokenType }) => {
-        const board = new HexBoard(5, 5)
+        const board = new HexBoard(5, 5, 'custom')
         const chains = board.hexPathFinder.findAllChains(TokenType)
         expect(chains.length).toBe(0)
       }
@@ -249,7 +247,7 @@ describe('HexBoard', () => {
     let riverHexBoard: HexBoard
 
     beforeEach(() => {
-      riverHexBoard = new HexBoard(5, 5)
+      riverHexBoard = new HexBoard(5, 5, 'custom')
     })
 
     it('should return an empty array if there are no tokens of type', () => {
@@ -260,7 +258,7 @@ describe('HexBoard', () => {
     })
 
     it('should return an empty array when there is no valid path', () => {
-      const hexBoard = new HexBoard(5, 5)
+      const hexBoard = new HexBoard(5, 5, 'custom')
       const tokenType = TokenType.Blue // Replace with an actual token type
 
       // Mock the findAllChains method to return chains without valid paths
@@ -286,7 +284,7 @@ describe('HexBoard', () => {
     describe('cyclic chains', () => {
       beforeEach(() => {
         // cyclic chain
-        riverHexBoard = new HexBoard(5, 5)
+        riverHexBoard = new HexBoard(5, 5, 'custom')
         riverHexBoard.getHex(2, 2)?.tokens.push(new Token(TokenType.Blue))
         riverHexBoard.getHex(3, 1)?.tokens.push(new Token(TokenType.Blue))
         riverHexBoard.getHex(3, 0)?.tokens.push(new Token(TokenType.Blue))
@@ -356,7 +354,7 @@ describe('HexBoard', () => {
 
   describe('findAllChainsExcluding', () => {
     it('should return one chain when no blue token type', () => {
-      const board = new HexBoard(3, 3)
+      const board = new HexBoard(3, 3, 'custom')
       const chains = board.hexPathFinder.findAllChainsExcludingTokenOfType(TokenType.Blue)
       expect(chains.length).toBe(1)
     })
@@ -369,7 +367,7 @@ describe('HexBoard', () => {
 
   describe('toString', () => {
     it('should return a string representation of the hex board', () => {
-      const board = new HexBoard(2, 2)
+      const board = new HexBoard(2, 2, 'custom')
       let firstHex = '0,0: Hex(0, 0, 0) tokens: <empty>\n'
       let expectedString = `${firstHex}0,1: Hex(0, 1, -1) tokens: <empty>\n1,0: Hex(1, 0, -1) tokens: <empty>\n`
       expect(board.toString()).toBe(expectedString)

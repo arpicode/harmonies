@@ -21,18 +21,23 @@ export default class DraftTableInputHandler implements IInputHandler {
   private _handleClick(event: Event) {
     const target = event.target as SVGElement
     if (!target.classList.contains('draft-table-slot')) return
-
     if (this._gameState.draftTable.draftedTokens.size() !== 0) {
       console.log('Tokens already picked up')
       return
     }
 
     const parent = target.parentElement
-    if (!parent) throw new Error('DraftTableInputHandler.handleClick: parent not found')
-    const slotIndex = parseInt(target.getAttribute('data-slot-index') ?? '', 10)
-    const slotTokens = parent.querySelector('[data-slot-tokens-index]')
-    if (!slotTokens)
-      throw new Error(`DraftTableInputHandler.handleClick: slotTokens not found for slotIndex ${slotIndex}`)
+    const dataSlotIndex = target.getAttribute('data-slot-index')
+    if (!dataSlotIndex) {
+      console.error('No slot index')
+      return
+    }
+    const slotIndex = parseInt(dataSlotIndex, 10)
+    const slotTokens = parent?.querySelector(`[data-slot-tokens-index="${slotIndex}"]`)
+    if (!slotTokens) {
+      console.error(`No slot index ${slotIndex}`)
+      return
+    }
     slotTokens.innerHTML = ''
     this._gameState.draftTable.pickUp(slotIndex)
     this._gameState.notifyDraftTableUpdate()

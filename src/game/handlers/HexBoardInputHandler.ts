@@ -1,3 +1,4 @@
+import ScoreBoard from '../../board/ScoreBoard'
 import Token, { TokenType } from '../../board/Token'
 import GameState from '../GameState'
 import IInputHandler from './interfaces/IInputHandler'
@@ -52,7 +53,9 @@ export default class HexBoardInputHandler implements IInputHandler {
       this._addTokenToHex(hexQ, hexR, currentTokenType)
       this._removeTokenFromDraftedTokens(currentTokenType)
       currentToken.remove()
+      const scorboard = new ScoreBoard(this._gameState.hexBoard)
       if (event.target instanceof SVGElement) event.target.classList.remove('drag-over')
+      console.log(scorboard.toString())
       this._gameState.notifyHexBoardUpdate()
     } catch (error) {
       console.warn((error as Error).message)

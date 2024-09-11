@@ -26,25 +26,25 @@ class DOMSelectorError extends Error {
 
 export default class AnimalCardDeckInputHandler implements IInputHandler {
   private readonly _gameState: GameState
-  private _animalCards: NodeListOf<HTMLImageElement>
+  private readonly _animalDeckModal: HTMLDialogElement
+  private readonly _animalCardsContainer: HTMLDivElement
+  private readonly _cardPicker: HTMLDivElement
   private readonly _openButton: HTMLButtonElement
   private readonly _closeButton: HTMLButtonElement
   private readonly _confirmButton: HTMLButtonElement
   private readonly _cancelButton: HTMLButtonElement
-  private readonly _cardPicker: HTMLDivElement
-  private readonly _animalDeckModal: HTMLDialogElement
-  private readonly _animalCardsContainer: HTMLDivElement
+  private _animalCards: NodeListOf<HTMLImageElement>
 
   constructor(gameState: GameState) {
     this._gameState = gameState
-    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.ANIMAL_CARDS)
+    this._animalDeckModal = this._querySelector<HTMLDialogElement>(AnimalCardDeckSelectors.ANIMAL_DECK_MODAL)
+    this._animalCardsContainer = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.ANIMAL_CARDS_CONTAINER)
+    this._cardPicker = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.CARD_PICKER)
     this._openButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.SHOW_BUTTON)
     this._closeButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CLOSE_BUTTON)
     this._confirmButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CONFIRM_BUTTON)
     this._cancelButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CANCEL_BUTTON)
-    this._cardPicker = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.CARD_PICKER)
-    this._animalDeckModal = this._querySelector<HTMLDialogElement>(AnimalCardDeckSelectors.ANIMAL_DECK_MODAL)
-    this._animalCardsContainer = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.ANIMAL_CARDS_CONTAINER)
+    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.ANIMAL_CARDS)
   }
 
   private _querySelector<T extends HTMLElement>(selector: AnimalCardDeckSelectors): T {
@@ -99,7 +99,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     this._gameState.pickedCardsHolder.add(pickedCard)
 
     pickedCardElement.remove()
-    console.log(this._gameState.pickedCardsHolder.pickedCards)
+
     this._gameState.notifyPickedCardsHolderUpdate()
     this._gameState.notifyAnimalCardDeckUpdate()
 
@@ -134,11 +134,11 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
   private _handleCardPickerDrop = () => {
     const draggedCard = document.querySelector(AnimalCardDeckSelectors.DRAGGING)
-    if (!draggedCard) return
-    this._cardPicker.appendChild(draggedCard)
-    this._updateCardsDraggableState(false)
-
-    this._updateButtonsDisabledState(false)
+    if (draggedCard) {
+      this._cardPicker.appendChild(draggedCard)
+      this._updateCardsDraggableState(false)
+      this._updateButtonsDisabledState(false)
+    }
   }
 
   private _cancelPick() {

@@ -15,7 +15,7 @@ describe('DraftTable', () => {
       }
     })
     standardBag.shuffle()
-    draftTable = new DraftTable(standardBag)
+    draftTable = new DraftTable(standardBag, 'multiplayer')
   })
 
   afterEach(() => {
@@ -32,10 +32,10 @@ describe('DraftTable', () => {
 
   it('should throw an error if the bag is empty during initialization', () => {
     const emptyBag = new Bag<Token>()
-    expect(() => new DraftTable(emptyBag)).toThrow(DraftTable.UNINITIALIZED_ERROR_MESSAGE)
+    expect(() => new DraftTable(emptyBag, 'multiplayer')).toThrow(DraftTable.UNINITIALIZED_ERROR_MESSAGE)
 
     try {
-      new DraftTable(emptyBag)
+      new DraftTable(emptyBag, 'multiplayer')
     } catch (error) {
       expect((error as Error).name).toBe('UninitializedError')
     }
@@ -44,7 +44,7 @@ describe('DraftTable', () => {
   it('should handle the case where the bag does not have enough tokens to initialization all slots', () => {
     const smallBag = new Bag<Token>()
     smallBag.add(new Token(TokenType.Blue))
-    expect(() => new DraftTable(smallBag)).toThrow(DraftTable.INSUFFICIENT_TOKENS_ERROR_MESSAGE)
+    expect(() => new DraftTable(smallBag, 'multiplayer')).toThrow(DraftTable.INSUFFICIENT_TOKENS_ERROR_MESSAGE)
   })
 
   it('should correctly pick up tokens from a valid slot', () => {
@@ -71,7 +71,7 @@ describe('DraftTable', () => {
     vi.spyOn(mockBag, 'draw').mockImplementation(() => {
       throw unexpectedError
     })
-    expect(() => new DraftTable(mockBag)).toThrow(unexpectedError)
+    expect(() => new DraftTable(mockBag, 'multiplayer')).toThrow(unexpectedError)
   })
 
   it('should refill empty slots correctly', () => {
@@ -98,7 +98,7 @@ describe('DraftTable', () => {
         fifteenTokenBag.add(new Token(key))
       }
     })
-    const smallDraftTable = new DraftTable(fifteenTokenBag)
+    const smallDraftTable = new DraftTable(fifteenTokenBag, 'multiplayer')
     smallDraftTable.pickUp(0)
 
     expect(() => smallDraftTable.refill()).toThrow(DraftTable.INSUFFICIENT_TOKENS_ERROR_MESSAGE)

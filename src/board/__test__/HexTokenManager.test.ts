@@ -4,7 +4,7 @@ import Token, { TokenType } from '../Token'
 describe('HexTokenManager', () => {
   describe('calculateTokensOfType', () => {
     it('should return the correct number of tokens of a given type', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       board.getHex(0, 0)?.tokens.push(new Token(TokenType.Blue))
       board.getHex(1, 1)?.tokens.push(new Token(TokenType.Blue))
       board.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
@@ -19,7 +19,7 @@ describe('HexTokenManager', () => {
 
   describe('calculateTokenTypeCounts', () => {
     it('should return the correct token type counts', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       board.getHex(0, 0)?.tokens.push(new Token(TokenType.Blue))
       board.getHex(1, 1)?.tokens.push(new Token(TokenType.Blue))
       board.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
@@ -39,7 +39,7 @@ describe('HexTokenManager', () => {
 
   describe('calculateTotalTokenCount', () => {
     it('should return the correct total token count', () => {
-      const board = new HexBoard(5, 5)
+      const board = new HexBoard(5, 5, 'custom')
       board.getHex(0, 0)?.tokens.push(new Token(TokenType.Blue))
       board.getHex(1, 1)?.tokens.push(new Token(TokenType.Blue))
       board.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))

@@ -119,15 +119,15 @@ export class HexBoard {
     return result
   }
 
-  serialize(): string {
-    const hexes = Array.from(this.hexes.values())
-    const board = hexes
-      .filter((hex) => !hex.tokens.isEmpty())
-      .map((hex) => {
-        return { q: hex.q, r: hex.r, tokens: hex.tokens.toArray().map((t) => t.type) }
-      })
-    return JSON.stringify(board, null, 2)
-  }
+  // serialize(): string {
+  //   const hexes = Array.from(this.hexes.values())
+  //   const board = hexes
+  //     .filter((hex) => !hex.tokens.isEmpty())
+  //     .map((hex) => {
+  //       return { q: hex.q, r: hex.r, tokens: hex.tokens.toArray().map((t) => t.type) }
+  //     })
+  //   return JSON.stringify(board, null, 2)
+  // }
 
   /**
    * Checks if the current HexBoard contains the pattern formed by non-empty hexes in the `other` HexBoard.

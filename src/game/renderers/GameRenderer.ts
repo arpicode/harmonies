@@ -6,10 +6,10 @@ import GameState from '../GameState'
 import PickedCardsHolderRenderer from './PickedCardsHolderRenderer'
 
 export default class GameRenderer implements IRenderer {
-  private readonly _hexBoardRenderer: HexBoardRenderer
-  private readonly _draftTableRenderer: DraftTableRenderer
-  private readonly _animalCardDeckRenderer: AnimalCardDeckRenderer
-  private readonly _pickedCardsHolderRenderer: PickedCardsHolderRenderer
+  private readonly _hexBoardRenderer: IRenderer
+  private readonly _draftTableRenderer: IRenderer
+  private readonly _animalCardDeckRenderer: IRenderer
+  private readonly _pickedCardsHolderRenderer: IRenderer
 
   constructor(gameState: GameState) {
     this._hexBoardRenderer = new HexBoardRenderer(gameState)

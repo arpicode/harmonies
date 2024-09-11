@@ -5,9 +5,9 @@ import IInputHandler from './interfaces/IInputHandler'
 import AnimalCardDeckInputHandler from './AnimalCardDeckInputHandler'
 
 export default class GameInputHandler implements IInputHandler {
-  private readonly _draftTableInputHandler: DraftTableInputHandler
-  private readonly _hexBoardInputHandler: HexBoardInputHandler
-  private readonly _animalCardDeckInputHandler: AnimalCardDeckInputHandler
+  private readonly _draftTableInputHandler: IInputHandler
+  private readonly _hexBoardInputHandler: IInputHandler
+  private readonly _animalCardDeckInputHandler: IInputHandler
 
   constructor(gameState: GameState) {
     this._draftTableInputHandler = new DraftTableInputHandler(gameState)

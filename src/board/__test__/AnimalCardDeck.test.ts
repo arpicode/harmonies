@@ -24,6 +24,18 @@ describe('AnimalCardDeck', () => {
     expect(deck.drawnCards[deck.drawnCards.length - 1]).toBeInstanceOf(AnimalCard)
   })
 
+  it('should remove a drawn card by name', () => {
+    const cardName = deck.drawnCards[0].name
+    const initialDrawnCardsSize = deck.drawnCards.length
+    const removedCard = deck.removeDrawnCardByName(cardName)
+    expect(deck.drawnCards).toHaveLength(initialDrawnCardsSize - 1)
+    expect(removedCard.name).toBe(cardName)
+  })
+
+  it('should throw an error when removing a card by name that is not in the drawn cards', () => {
+    expect(() => deck.removeDrawnCardByName('non-existing')).toThrow('Card name not found')
+  })
+
   it('should throw an error when drawing from an empty deck', () => {
     deck.clear()
     expect(() => deck.draw()).toThrow('Deck is empty')

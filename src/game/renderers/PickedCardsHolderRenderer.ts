@@ -31,7 +31,6 @@ export default class PickedCardsHolderRenderer implements IRenderer {
   private _initializePickedCardsHolderDOM(): void {
     const pickedCardsHolder = this._getPickedCardsHolder()
     const pickedCardsContainer = this._createPickedCardsContainer()
-
     pickedCardsHolder.appendChild(pickedCardsContainer)
   }
 
@@ -62,6 +61,7 @@ export default class PickedCardsHolderRenderer implements IRenderer {
   private _createCardElement(animal: AnimalCard): HTMLImageElement {
     const cardElement = document.createElement('img')
     cardElement.classList.add('animal-card')
+    cardElement.dataset.cardName = animal.name
     cardElement.src = animal.image
     cardElement.alt = animal.name
     return cardElement
@@ -88,6 +88,7 @@ export default class PickedCardsHolderRenderer implements IRenderer {
   private _createCardActionButton(animal: AnimalCard): HTMLButtonElement {
     const cardActionButton = document.createElement('button')
     cardActionButton.classList.add('card-action-button')
+    cardActionButton.dataset.buttonFor = animal.name
     cardActionButton.innerHTML = `Poser<br>${animal.name}`
     return cardActionButton
   }
@@ -103,7 +104,6 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     cardContainer.appendChild(cardSVGOverlay)
     cardAndActionWrapper.appendChild(cardActionButton)
     cardAndActionWrapper.appendChild(cardContainer)
-
     return cardAndActionWrapper
   }
 }

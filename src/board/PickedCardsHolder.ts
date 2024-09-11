@@ -6,7 +6,7 @@ export default class PickedCardsHolder {
   public readonly completedCards: AnimalCard[] = []
 
   public add(card: AnimalCard): boolean {
-    if (this.pickedCards.length < PickedCardsHolder.MAX_PICKED_CARDS) {
+    if (!this.isFull) {
       this.pickedCards.push(card)
       return true
     }

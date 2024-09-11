@@ -3,7 +3,7 @@ import { TokenType } from './Token'
 import { Hex } from './Hex'
 import { HexBoard } from './HexBoard'
 
-export interface IAnimalPattern {
+export interface IAnimalPatternHex {
   q: number
   r: number
   tokenTypes: TokenType[]
@@ -15,7 +15,7 @@ export interface IAnimal {
   ecosystem: string
   image: string
   points: number[]
-  pattern: IAnimalPattern[]
+  pattern: IAnimalPatternHex[]
 }
 
 export type IAnimalCards = Record<string, IAnimal>
@@ -38,8 +38,8 @@ export default class AnimalCard {
     this.pattern = new HexBoard(0, 0, 'custom')
     this.animalTokenCount = points.length
 
-    pattern.forEach((animalPattern) => {
-      const hex = Hex.fromJson(animalPattern)
+    pattern.forEach((animalPatternHex) => {
+      const hex = Hex.fromJson(animalPatternHex)
       this.pattern.hexes.set(hex.id, hex)
     })
   }

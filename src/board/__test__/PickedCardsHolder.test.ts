@@ -78,4 +78,17 @@ describe('PickedCardsHolder', () => {
       expect(holder.pickedCards).toContain(animalCard)
     })
   })
+
+  describe('isFull', () => {
+    it('should return true if card holder is full', () => {
+      for (let i = 0; i < PickedCardsHolder.MAX_PICKED_CARDS; i++) {
+        holder.add(new AnimalCard(animals.bee))
+      }
+      expect(holder.isFull).toBe(true)
+    })
+
+    it('should return false if card holder is not full', () => {
+      expect(holder.isFull).toBe(false)
+    })
+  })
 })

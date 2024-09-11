@@ -1,4 +1,4 @@
-import { IAnimalPattern } from './AnimalCard'
+import { IAnimalPatternHex } from './AnimalCard'
 import Token from './Token'
 import TokenStack from './TokenStack'
 
@@ -33,7 +33,7 @@ export class Hex {
     this._offsetCoords = this.cubeToOddQ()
   }
 
-  public static fromJson(json: IAnimalPattern): Hex {
+  public static fromJson(json: IAnimalPatternHex): Hex {
     const hex = new Hex(json.q, json.r, -json.q - json.r)
     json.tokenTypes.forEach((tokenType) => hex.tokens.push(new Token(tokenType)))
     return hex
