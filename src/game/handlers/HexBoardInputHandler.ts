@@ -36,13 +36,11 @@ export default class HexBoardInputHandler implements IInputHandler {
   }
 
   private _handleDragEnter(event: Event) {
-    if (!(event.target instanceof SVGElement)) return
-    event.target.classList.add('drag-over')
+    ;(event.target as SVGElement).classList.add('drag-over')
   }
 
   private _handleDragLeave(event: Event) {
-    if (!(event.target instanceof SVGElement)) return
-    event.target.classList.remove('drag-over')
+    ;(event.target as SVGElement).classList.remove('drag-over')
   }
 
   private _handleDrop(event: Event) {
