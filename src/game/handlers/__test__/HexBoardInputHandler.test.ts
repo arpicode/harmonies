@@ -5,20 +5,27 @@ import HexBoardInputHandler from '../HexBoardInputHandler'
 import HexBoardRenderer from '~/game/renderers/HexBoardRenderer'
 import { dom } from '~/dom'
 import { createEventWithTarget } from '~/test-utils/test-utils'
+import { MockInstance } from 'vitest'
 
 describe('HexBoardInputHandler', () => {
   document.body.innerHTML = ''
+  let consoleLogSpy: MockInstance<Console['log']>
+  let consoleWarnSpy: MockInstance<Console['warn']>
 
   beforeEach(() => {
     document.body.innerHTML = dom
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(vi.fn())
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   describe('constructor', () => {
     let gameState: GameState
     let hexBoardRenderer: HexBoardRenderer
     let hexBoardInputHandler: HexBoardInputHandler
-
-    const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
 
     beforeEach(() => {
       document.body.innerHTML = dom
@@ -31,6 +38,13 @@ describe('HexBoardInputHandler', () => {
       expect(hexBoardInputHandler).toBeDefined()
       expect(hexBoardInputHandler).toBeInstanceOf(HexBoardInputHandler)
       expect(consoleLogSpy).toHaveBeenCalledTimes(2)
+    })
+
+    it('should throw an error when hex group is not found', () => {
+      const hexGroup = document.querySelector('#hex-0-0')!
+      hexGroup.remove()
+      hexBoardInputHandler = new HexBoardInputHandler(gameState)
+      expect(() => hexBoardInputHandler.initialize()).toThrowError('Hex group not found for hex 0-0')
     })
   })
 
@@ -87,6 +101,93 @@ describe('HexBoardInputHandler', () => {
       const dragLeaveEvent = createEventWithTarget('dragleave', currentHexDropZone)
       currentHexDropZone.dispatchEvent(dragLeaveEvent)
       expect(currentHexDropZone.classList.contains('drag-over')).toBe(false)
+    })
+
+    it('should handle drop on hex when no token is selected', () => {
+      const currentHexDropZone = hexDropZones.item(0)
+      const dropEvent = createEventWithTarget('drop', currentHexDropZone)
+      currentHexDropZone.dispatchEvent(dropEvent)
+      expect(currentHexDropZone.classList.contains('drag-over')).toBe(false)
+      expect(consoleWarnSpy).toHaveBeenCalledWith('No token selected')
+    })
+
+    it('should handle drop on hex when no token type is found', () => {
+      const currentToken = draftedTokens.item(0)
+      const currentHexDropZone = hexDropZones.item(0)
+      expect(currentToken).not.toBeNull()
+      expect(currentHexDropZone).not.toBeNull()
+
+      currentToken.removeAttribute('data-token-type')
+
+      const dragStartEvent = createEventWithTarget('dragstart', currentToken)
+      currentToken.dispatchEvent(dragStartEvent)
+      expect(currentToken.classList.contains('dragging')).toBe(true)
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
+
+      const dropEvent = createEventWithTarget('drop', currentHexDropZone)
+      currentHexDropZone.dispatchEvent(dropEvent)
+      expect(currentHexDropZone.classList.contains('drag-over')).toBe(false)
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Token type not found')
+    })
+
+    it('should handle dropping token on hex when target stack axial coords are not found', () => {
+      const currentToken = draftedTokens.item(0)
+      const currentHexDropZone = hexDropZones.item(0)
+      expect(currentToken).not.toBeNull()
+      expect(currentHexDropZone).not.toBeNull()
+
+      const hexGroupTokenStack = document.querySelector('#hex-0-0 .token-stack')!
+      expect(hexGroupTokenStack).not.toBeNull()
+      hexGroupTokenStack.removeAttribute('data-stack-axial-coords')
+
+      const dragStartEvent = createEventWithTarget('dragstart', currentToken)
+      currentToken.dispatchEvent(dragStartEvent)
+      expect(currentToken.classList.contains('dragging')).toBe(true)
+
+      const dropEvent = createEventWithTarget('drop', currentHexDropZone)
+      currentHexDropZone.dispatchEvent(dropEvent)
+      expect(currentHexDropZone.classList.contains('drag-over')).toBe(false)
+      expect(consoleWarnSpy).toHaveBeenCalledWith('No target hex found')
+    })
+
+    it('should handle dropping token on hex when target hex coordinates are not found', () => {
+      const currentToken = draftedTokens.item(0)
+      const currentHexDropZone = hexDropZones.item(0)
+      expect(currentToken).not.toBeNull()
+      expect(currentHexDropZone).not.toBeNull()
+
+      const hexGroupTokenStack = document.querySelector('#hex-0-0 .token-stack')!
+      expect(hexGroupTokenStack).not.toBeNull()
+      hexGroupTokenStack.setAttribute('data-stack-axial-coords', '')
+
+      const dragStartEvent = createEventWithTarget('dragstart', currentToken)
+      currentToken.dispatchEvent(dragStartEvent)
+      expect(currentToken.classList.contains('dragging')).toBe(true)
+
+      const dropEvent = createEventWithTarget('drop', currentHexDropZone)
+      currentHexDropZone.dispatchEvent(dropEvent)
+      expect(currentHexDropZone.classList.contains('drag-over')).toBe(false)
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Target hex coordinates not found')
+    })
+
+    it('should handle dropping token on hex when hex is not found at coordinates', () => {
+      const currentToken = draftedTokens.item(0)
+      const currentHexDropZone = hexDropZones.item(0)
+      expect(currentToken).not.toBeNull()
+      expect(currentHexDropZone).not.toBeNull()
+
+      const hexGroupTokenStack = document.querySelector('#hex-0-0 .token-stack')!
+      expect(hexGroupTokenStack).not.toBeNull()
+
+      const dragStartEvent = createEventWithTarget('dragstart', currentToken)
+      currentToken.dispatchEvent(dragStartEvent)
+      expect(currentToken.classList.contains('dragging')).toBe(true)
+
+      game.gameState.hexBoard.hexes.delete('0,0')
+      const dropEvent = createEventWithTarget('drop', currentHexDropZone)
+      currentHexDropZone.dispatchEvent(dropEvent)
+      expect(currentHexDropZone.classList.contains('drag-over')).toBe(false)
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Hex not found at coordinates (0, 0)')
     })
 
     it('should handle dropping token on hex', () => {
