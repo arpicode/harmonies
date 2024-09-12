@@ -35,11 +35,10 @@ jobs:
       - run: npm ci
       - run: npm run test:cov
       - name: 'Coverage processing'
-        uses: steffendietz/clover-to-shieldsio-json-action@v1.0
+        uses: steffendietz/clover-to-shieldsio-json-action@v1.0.2
         with:
           path-to-clover: 'coverage/clover.xml'
           path-to-json: 'coverage/shieldsio-coverage.json'
-          style: 'flat-square'
       - name: Create or Update Gist
         env:
           GIST_ID: ${{ secrets.GIST_ID }}
