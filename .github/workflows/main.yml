@@ -34,12 +34,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run test:cov
-      - name: "Coverage processing"
+      - name: 'Coverage processing'
         uses: steffendietz/clover-to-shieldsio-json-action@v1.0
         with:
-          path-to-clover: "coverage/clover.xml"
-          path-to-json: "coverage/shieldsio-coverage.json"
-          style: "flat-square"
+          path-to-clover: 'coverage/clover.xml'
+          path-to-json: 'coverage/shieldsio-coverage.json'
+          style: 'flat-square'
       - name: Create or Update Gist
         env:
           GIST_ID: ${{ secrets.GIST_ID }}
@@ -47,7 +47,7 @@ jobs:
         run: |
           JSON_CONTENT=$(jq -Rs . < coverage/shieldsio-coverage.json)
           curl -X PATCH \
-            -H "Authorization: token $HARMONIES_GITHUB_TOKEN" \
+            -H "Authorization: token $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
             -d "{\"files\": {\"coverage.json\": {\"content\": \"$JSON_CONTENT\"}}}" \
             https://api.github.com/gists/$GIST_ID
