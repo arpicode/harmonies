@@ -45,9 +45,11 @@ jobs:
           GIST_ID: ${{ secrets.GIST_ID }}
           GITHUB_TOKEN: ${{ secrets.HARMONIES_GITHUB_TOKEN }}
         run: |
-          JSON_CONTENT=$(jq -Rs . < coverage/shieldsio-coverage.json)
+          JSON_CONTENT=$(jq -Rs '.' < coverage/shieldsio-coverage.json)
+
           curl -X PATCH \
+            -H "Accept: application/vnd.github+json" \
             -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{\"files\": {\"coverage.json\": {\"content\": \"$JSON_CONTENT\"}}}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -d "{\"files\": {\"coverage.json\": {\"content\": $JSON_CONTENT}}}" \
             https://api.github.com/gists/$GIST_ID
