@@ -104,6 +104,9 @@ export default class HexBoardRenderer implements IRenderer {
     return text
   }
 
+  /* c8 ignore start */
+  /* This block is excluded from test coverage since it's temporary code
+     only used for user interaction in development sandbox */
   handleHexClick(hex: Hex): void {
     const selectedColor = this._getSelectedColor() ?? 'Blue'
 
@@ -117,6 +120,16 @@ export default class HexBoardRenderer implements IRenderer {
     }
   }
 
+  private _getSelectedColor(): string | null {
+    const selectedRadioBtn: HTMLInputElement | null = document.querySelector('input[name="color"]:checked')
+    if (!selectedRadioBtn) {
+      console.error('No color selected')
+      return null
+    }
+    return selectedRadioBtn.value
+  }
+  /* c8 ignore end */
+
   private _renderTokenStackGroup(hex: Hex): void {
     let tokenStackGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r} .${HexBoardRenderer.TOKEN_STACK_CLASS}`)
     if (!tokenStackGroup) {
@@ -128,15 +141,6 @@ export default class HexBoardRenderer implements IRenderer {
       const hexGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r}`)! // we know it exists since we just searched for it
       hexGroup.appendChild(tokenStackGroup)
     }
-  }
-
-  private _getSelectedColor(): string | null {
-    const selectedRadioBtn: HTMLInputElement | null = document.querySelector('input[name="color"]:checked')
-    if (!selectedRadioBtn) {
-      console.error('No color selected')
-      return null
-    }
-    return selectedRadioBtn.value
   }
 
   private _renderTokens(hex: Hex): void {
