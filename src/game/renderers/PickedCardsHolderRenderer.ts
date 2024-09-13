@@ -90,6 +90,18 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     cardActionButton.classList.add('card-action-button')
     cardActionButton.dataset.buttonFor = animal.name
     cardActionButton.innerHTML = `Poser<br>${animal.name}`
+    /* c8 ignore start */
+    // TODO: code for sandbox purposes, will be moved to the PickedCardsHolderInputHandler
+    cardActionButton.addEventListener('click', () => {
+      console.log(`Poser ${animal.name}`)
+      const match = this._gameState.hexBoard.findAllMatchingPatterns(animal.pattern)
+      this._gameState.hexBoard.findSpawnHexFromMatchingPatterns(animal.pattern)
+      if (match.length === 0) {
+        console.log('Aucun pattern trouvé')
+        return
+      }
+    })
+    /* c8 ignore end */
     return cardActionButton
   }
 

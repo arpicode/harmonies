@@ -25,6 +25,7 @@ export class Hex {
   public static rotations: ((q: number, r: number, s: number) => Hex)[]
   public readonly tokens = new TokenStack()
   public readonly id: string
+  public isSpawn?: boolean
   private _offsetCoords: IOffsetCoord
 
   constructor(public q: number, public r: number, public s: number) {
@@ -36,6 +37,7 @@ export class Hex {
   public static fromJson(json: IAnimalPatternHex): Hex {
     const hex = new Hex(json.q, json.r, -json.q - json.r)
     json.tokenTypes.forEach((tokenType) => hex.tokens.push(new Token(tokenType)))
+    hex.isSpawn = json.isSpawn ?? false
     return hex
   }
 

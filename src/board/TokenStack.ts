@@ -7,6 +7,7 @@ type ValidCombinationKeys = 'empty' | 'river' | 'tree' | 'field' | 'mountain' | 
 
 export default class TokenStack extends Stack<Token> {
   public static readonly INVALID_COMBINATION_ERROR = 'Invalid token combination'
+  public static readonly ANIMAL_ON_TOP_ERROR = "Can't place a token on top of a token with an animal"
   public static readonly trie = new Trie()
 
   private static readonly VALID_COMBINATIONS: Record<ValidCombinationKeys, TokenType[][]> = {
@@ -60,6 +61,7 @@ export default class TokenStack extends Stack<Token> {
   }
 
   isTokenPlaceable(token: Token): boolean {
+    if (this.peek()?.hasAnimal) return false
     const tokenCombinationToValidate = this._currentCombination.concat(token.type)
     return TokenStack.trie.isValidTokenCombination(tokenCombinationToValidate)
   }
@@ -91,6 +93,7 @@ export default class TokenStack extends Stack<Token> {
     if (!TokenStack.trie.isValidTokenCombination(combination)) {
       throw new Error(`${TokenStack.INVALID_COMBINATION_ERROR}: ${combination.join(', ')}`)
     }
+    if (this.peek()?.hasAnimal) throw new Error(`${TokenStack.ANIMAL_ON_TOP_ERROR}: ${this.peek()?.type}`)
   }
 
   // TODO: make use of the trie to validate the combination

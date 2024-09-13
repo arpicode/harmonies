@@ -9,12 +9,12 @@ on:
 name: ci
 
 jobs:
-  test:
+  test_and_coverage:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        node: [18, 20]
+        node: [lts/*]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,16 +23,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-
-  coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: npm
-      - run: npm ci
       - run: npm run test:cov
       - name: 'Coverage processing'
         uses: steffendietz/clover-to-shieldsio-json-action@v1.0.2

@@ -105,6 +105,14 @@ describe('TokenStack', () => {
       expect(tokenStack.isTokenPlaceable(bricks)).toBe(true)
     })
 
+    it('should correctly validate if a token is not placeable because of an animal', () => {
+      tokenStack.push(mountain)
+      expect(tokenStack.isTokenPlaceable(mountain)).toBe(true)
+      mountain.hasAnimal = true
+      const newMountain = new Token(TokenType.Gray)
+      expect(tokenStack.isTokenPlaceable(newMountain)).toBe(false)
+    })
+
     it('should return true for mountain combination when conditions are met', () => {
       tokenStack.push(mountain)
       expect(tokenStack.isCombinationOfType('mountain')).toBe(true)
@@ -158,6 +166,13 @@ describe('TokenStack', () => {
       tokenStack.push(bricks)
       tokenStack.push(bricks)
       expect(tokenStack.isCombinationOfType('building')).toBe(true)
+    })
+
+    it('should throw an error when trying to push a token on top of a token with an animal', () => {
+      mountain.hasAnimal = true
+      tokenStack.push(mountain)
+      const newMountain = new Token(TokenType.Gray)
+      expect(() => tokenStack.push(newMountain)).toThrowError(TokenStack.ANIMAL_ON_TOP_ERROR)
     })
 
     it('should throw an error for invalid token combinations', () => {

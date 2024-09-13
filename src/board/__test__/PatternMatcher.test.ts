@@ -8,14 +8,11 @@ import animalsJson from '../../animals.json'
 const animals = animalsJson as IAnimalCards
 
 describe('hasPattern', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let consoleLogSpy: MockInstance
   let patternBoard: HexBoard
 
   beforeEach(() => {
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {
-      /* empty body */
-    })
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
     patternBoard = new HexBoard(0, 0, 'custom')
   })
 
@@ -136,6 +133,7 @@ describe('hasPattern', () => {
         matchedPatterns.forEach((pattern) => {
           expect(pattern.length).toBe(2)
         })
+        expect(consoleLogSpy).toHaveBeenCalledTimes(1)
       })
 
       it('should correctly match 2 overlapping ladybug patterns (form 1)', () => {
@@ -148,6 +146,7 @@ describe('hasPattern', () => {
         matchedPatterns.forEach((pattern) => {
           expect(pattern.length).toBe(2)
         })
+        expect(consoleLogSpy).toHaveBeenCalledTimes(2)
       })
 
       it('should correctly match 2 overlapping ladybug patterns (form 2)', () => {
@@ -227,6 +226,95 @@ describe('hasPattern', () => {
         matchedPatterns.forEach((pattern) => {
           expect(pattern.length).toBe(2)
         })
+      })
+    })
+
+    describe('fenec', () => {
+      const fenec = new AnimalCard(animals.fenec)
+
+      it('should correctly match a fenec pattern', () => {
+        gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 3)?.tokens.push(new Token(TokenType.Yellow))
+        expect(gameBoard.hasPattern(fenec.pattern)).toBe(true)
+        const matchedPatterns = gameBoard.findAllMatchingPatterns(fenec.pattern)
+        expect(matchedPatterns.length).toBe(1)
+        matchedPatterns.forEach((pattern) => {
+          expect(pattern.length).toBe(3)
+        })
+      })
+
+      it('should correctly match 2 overlapping fenec patterns (form 1)', () => {
+        gameBoard.getHex(2, 0)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 3)?.tokens.push(new Token(TokenType.Yellow))
+        expect(gameBoard.hasPattern(fenec.pattern)).toBe(true)
+        const matchedPatterns = gameBoard.findAllMatchingPatterns(fenec.pattern)
+        expect(matchedPatterns.length).toBe(2)
+        matchedPatterns.forEach((pattern) => {
+          expect(pattern.length).toBe(3)
+        })
+      })
+
+      it('should correctly match 2 overlapping fenec patterns (form 2)', () => {
+        gameBoard.getHex(2, 0)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(0, 2)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(1, 2)?.tokens.push(new Token(TokenType.Gray))
+        expect(gameBoard.hasPattern(fenec.pattern)).toBe(true)
+        const matchedPatterns = gameBoard.findAllMatchingPatterns(fenec.pattern)
+        expect(matchedPatterns.length).toBe(2)
+        matchedPatterns.forEach((pattern) => {
+          expect(pattern.length).toBe(3)
+        })
+      })
+
+      it('should correctly find 2 distinct spaws for 2 fenec pattern', () => {
+        gameBoard.getHex(2, 0)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 3)?.tokens.push(new Token(TokenType.Yellow))
+        expect(gameBoard.hasPattern(fenec.pattern)).toBe(true)
+        const spawnHexes = gameBoard.findSpawnHexFromMatchingPatterns(fenec.pattern)
+        expect(spawnHexes.length).toBe(2)
+        const spawn1Coords = `${spawnHexes[0].q},${spawnHexes[0].r}`
+        const spawn2Coords = `${spawnHexes[1].q},${spawnHexes[1].r}`
+        expect(spawn1Coords).toBe('2,2')
+        expect(spawn2Coords).toBe('2,1')
+      })
+
+      it('should correctly find 2 distinct spaws for 3 fenec pattern that share a spawn', () => {
+        gameBoard.getHex(2, 0)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(1, 2)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 3)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(0, 2)?.tokens.push(new Token(TokenType.Yellow))
+        expect(gameBoard.hasPattern(fenec.pattern)).toBe(true)
+        const matchedPatterns = gameBoard.findAllMatchingPatterns(fenec.pattern)
+        expect(matchedPatterns.length).toBe(3)
+
+        const spawnHexes = gameBoard.findSpawnHexFromMatchingPatterns(fenec.pattern)
+        expect(spawnHexes.length).toBe(2)
+        const spawn1Coords = `${spawnHexes[0].q},${spawnHexes[0].r}`
+        const spawn2Coords = `${spawnHexes[1].q},${spawnHexes[1].r}`
+        expect(spawn1Coords).toBe('2,2')
+        expect(spawn2Coords).toBe('2,1')
+      })
+
+      it('should return an empty array when no spawn is found', () => {
+        gameBoard.getHex(2, 0)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(2, 1)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 2)?.tokens.push(new Token(TokenType.Gray))
+        gameBoard.getHex(2, 3)?.tokens.push(new Token(TokenType.Yellow))
+        gameBoard.getHex(0, 2)?.tokens.push(new Token(TokenType.Yellow))
+        expect(gameBoard.hasPattern(fenec.pattern)).toBe(true)
+
+        fenec.pattern.hexes.forEach((hex) => (hex.isSpawn = false))
+        const spawnHexes = gameBoard.findSpawnHexFromMatchingPatterns(fenec.pattern)
+        expect(spawnHexes.length).toBe(0)
       })
     })
   })

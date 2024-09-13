@@ -9,6 +9,16 @@ export default class PatternMatcher implements IPatternMatcher {
     this._hexes = hexes
   }
 
+  /**
+   * Checks if the given pattern exists on the board.
+   *
+   * This method searches for the given pattern on the board by generating all possible
+   * rotations of the pattern and checking if any of these rotations exist at any position
+   * on the board.
+   *
+   * @param pattern - The pattern to check against the board.
+   * @returns `true` if the pattern exists on the board, `false` otherwise.
+   */
   hasPattern(pattern: HexBoard): boolean {
     const patternHexes = Array.from(pattern.hexes.values()).filter((hex) => !hex.tokens.isEmpty())
 
@@ -25,6 +35,17 @@ export default class PatternMatcher implements IPatternMatcher {
     return false
   }
 
+  /**
+   * Finds all matching patterns on the board.
+   *
+   * This method searches for all occurrences of the given pattern on the board by generating
+   * all possible rotations of the pattern and checking for matches at each position on the board.
+   * It returns an array of arrays, where each inner array contains the hexes that match the pattern
+   * at a specific position.
+   *
+   * @param pattern - The pattern to match against the board.
+   * @returns An array of arrays of hexes, where each inner array represents a match of the pattern on the board.
+   */
   findAllMatchingPatterns(pattern: HexBoard): Hex[][] {
     const patternHexes = Array.from(pattern.hexes.values()).filter((hex) => !hex.tokens.isEmpty())
 
@@ -45,6 +66,46 @@ export default class PatternMatcher implements IPatternMatcher {
     })
 
     return matchedHexGroups
+  }
+
+  /**
+   * Finds all hexes on the board that match the spawn hex in the given pattern.
+   *
+   * This method searches for hexes on the board that correspond to the spawn hex
+   * in the provided pattern. The method generates all possible rotations of the pattern and
+   * checks for matches at each position on the board. If a match is found, the
+   * corresponding hex on the board is added to the result.
+   *
+   * @param pattern - The pattern to match against the board.
+   * @returns An array of unique hexes on the board that match the spawn hex in the pattern.
+   */
+  findSpawnHexFromMatchingPatterns(pattern: HexBoard): Hex[] {
+    const spawnHexInPattern = Array.from(pattern.hexes.values()).find((hex) => hex.isSpawn)
+
+    if (!spawnHexInPattern) return []
+
+    // Generate rotated patterns for the entire pattern
+    const patternHexes = Array.from(pattern.hexes.values()).filter((hex) => !hex.tokens.isEmpty())
+    const rotatedPatterns = this._generateRotatedPatterns(patternHexes)
+
+    const matchedSpawnHexes: Hex[] = []
+    for (const hex of this._hexes.values()) {
+      const matchesAtPosition = this._findMatchesAtPosition(hex, rotatedPatterns)
+      for (const match of matchesAtPosition) {
+        // Find the corresponding hex on the board that matches the pattern's spawn hex and add it to the result if not already present
+        const spawnHexIndex = patternHexes.indexOf(spawnHexInPattern)
+        if (spawnHexIndex !== -1) {
+          if (!matchedSpawnHexes.some((hex) => hex.equals(match[spawnHexIndex])))
+            matchedSpawnHexes.push(match[spawnHexIndex])
+        }
+      }
+    }
+
+    matchedSpawnHexes.forEach((hex, index) => {
+      console.log(`Spawn hex matched at hex [Match ${index + 1}]: ${hex.toString()}`)
+    })
+
+    return matchedSpawnHexes
   }
 
   private _generateRotatedPatterns(patternHexes: Hex[]): Hex[][] {

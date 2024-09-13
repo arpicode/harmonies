@@ -1,3 +1,8 @@
+// @font-face {
+//   font-family: 'Xilosa';
+//   src: url('./assets/fonts/xilosa/xilosa_.ttf');
+// }
+
 :root {
   font-family: system-ui, sans-serif;
   line-height: 1.5;
@@ -25,6 +30,7 @@ body {
   // place-items: center;
   // justify-content: center;
   // flex-direction: column;
+  min-height: 100vh;
 }
 
 svg,

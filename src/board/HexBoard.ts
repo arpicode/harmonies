@@ -147,4 +147,13 @@ export class HexBoard {
   public findAllMatchingPatterns(other: HexBoard): Hex[][] {
     return this.patternMatcher.findAllMatchingPatterns(other)
   }
+
+  /**
+   * Finds the spawn hex from the `other` HexBoard that matches the patterns in the current HexBoard.
+   * @param other - The `other` HexBoard containing the pattern to search for.
+   * @returns An array of hexes that match the pattern.
+   */
+  public findSpawnHexFromMatchingPatterns(other: HexBoard): Hex[] {
+    return this.patternMatcher.findSpawnHexFromMatchingPatterns(other)
+  }
 }
