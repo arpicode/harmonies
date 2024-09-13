@@ -679,10 +679,10 @@
       }
     ]
   },
-  "lizard": {
-    "name": "Lézard",
+  "gekko": {
+    "name": "Gekko",
     "ecosystem": "Bricks",
-    "image": "animals/lizard.png",
+    "image": "animals/gekko.png",
     "points": [16, 10, 5],
     "pattern": [
       {
