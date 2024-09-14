@@ -6,9 +6,10 @@ import { Layout, LAYOUT_FLAT } from '../board/Layout'
 import Token, { startingTokensMap } from '../board/Token'
 import { GameMode } from './Game'
 import animalsJson from '../animals.json'
-import { IAnimalCards } from '../board/AnimalCard'
+import AnimalCard, { IAnimalCards } from '../board/AnimalCard'
 import EventEmitter from './EventEmitter'
 import PickedCardsHolder from '../board/PickedCardsHolder'
+import { Hex } from '~/board/Hex'
 
 export default class GameState extends EventEmitter {
   public readonly gameMode: GameMode
@@ -50,6 +51,21 @@ export default class GameState extends EventEmitter {
   notifyPickedCardsHolderUpdate() {
     console.log('GameState: emitting pickedCardsHolderUpdated')
     this.emit('pickedCardsHolderUpdated')
+  }
+
+  notifyPlaceAnimalStart(animalCard: AnimalCard, spawnHexes: Hex[]) {
+    console.log('GameState: emitting placeAnimalStart')
+    this.emit('placeAnimalStart', animalCard, spawnHexes)
+  }
+
+  notifyPlaceAnimalCancel(animalCard: AnimalCard) {
+    console.log('GameState: emitting placeAnimalCancel')
+    this.emit('placeAnimalCancel', animalCard)
+  }
+
+  notifyPlaceAnimalEnd(animalCard: AnimalCard, hex: Hex) {
+    console.log('GameState: emitting placeAnimalEnd')
+    this.emit('placeAnimalEnd', animalCard, hex)
   }
 
   private _createLayout(): Layout {

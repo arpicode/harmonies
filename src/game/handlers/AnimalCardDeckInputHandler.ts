@@ -16,10 +16,10 @@ export enum AnimalCardDeckSelectors {
   DRAG_OVER = '.drag-over',
 }
 
-class DOMSelectorError extends Error {
+class AnimalCardDeckDOMException extends Error {
   constructor(selector: string) {
     super()
-    this.name = 'DOMSelectorError'
+    this.name = 'AnimalCardDeckDOMException'
     this.message = `Element with selector "${selector}" not found`
   }
 }
@@ -49,7 +49,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
   private _querySelector<T extends HTMLElement>(selector: AnimalCardDeckSelectors): T {
     const element = document.querySelector<T>(selector)
-    if (!element) throw new DOMSelectorError(selector)
+    if (!element) throw new AnimalCardDeckDOMException(selector)
     return element
   }
 

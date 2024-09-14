@@ -95,7 +95,7 @@ export default class PatternMatcher implements IPatternMatcher {
         // Find the corresponding hex on the board that matches the pattern's spawn hex and add it to the result if not already present
         const spawnHexIndex = patternHexes.indexOf(spawnHexInPattern)
         if (spawnHexIndex !== -1) {
-          if (!matchedSpawnHexes.some((hex) => hex.equals(match[spawnHexIndex])))
+          if (!matchedSpawnHexes.some((hex) => hex.equals(match[spawnHexIndex])) && !match[spawnHexIndex].isSpawn)
             matchedSpawnHexes.push(match[spawnHexIndex])
         }
       }

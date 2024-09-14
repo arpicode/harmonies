@@ -5,6 +5,7 @@ import Token, { TokenType } from '../../board/Token'
 import GameState from '../GameState'
 import { SVG_NAMESPACE } from '../../utils/utils'
 import IRenderer from './interfaces/IRenderer'
+import AnimalCard from '~/board/AnimalCard'
 
 export default class HexBoardRenderer implements IRenderer {
   private _hexBoard: HexBoard
@@ -34,7 +35,25 @@ export default class HexBoardRenderer implements IRenderer {
     this._initializeHexBoardDOM()
 
     this._gameState.on('hexBoardUpdated', () => this.render())
+    this._gameState.on('placeAnimalStart', (animalCard: AnimalCard, spawnHexes: Hex[]) =>
+      this._renderSpawnHexesHighlight(animalCard, spawnHexes)
+    )
+    this._gameState.on('placeAnimalCancel', () => this._clearHighlightedSpawnHexes())
+    this._gameState.on('placeAnimalEnd', (animalCard: AnimalCard, hex: Hex) => this._renderAnimalToken(animalCard, hex))
     console.timeEnd('HexBoardRenderer#constructor')
+  }
+
+  private _renderSpawnHexesHighlight(animal: AnimalCard, spawnHexes: Hex[]): void {
+    spawnHexes.forEach((hex) => {
+      const hexElement: SVGGElement | null = this._svg.querySelector(`#hex-${hex.q}-${hex.r} .hex`)
+      hexElement?.classList.add(`highlight-ecosystem-${animal.ecosystem.toLowerCase()}`)
+      hexElement?.setAttribute('data-spawn-for', animal.name)
+    })
+  }
+
+  private _clearHighlightedSpawnHexes(): void {
+    const highlightedHexes = this._svg.querySelectorAll('[class*="highlight-ecosystem-"]')
+    highlightedHexes.forEach((hex) => hex.setAttribute('class', HexBoardRenderer.HEX_CLASS))
   }
 
   private _initializeHexBoardDOM(): void {
@@ -71,14 +90,17 @@ export default class HexBoardRenderer implements IRenderer {
 
   render(): void {
     console.time('HexBoardRenderer#render')
-    this._hexBoard.hexes.forEach((hex) => this._renderTokens(hex))
+    this._hexBoard.hexes.forEach((hex) => {
+      this._renderTokens(hex)
+      // this._renderAnimalToken(hex)
+    })
     console.timeEnd('HexBoardRenderer#render')
   }
 
   private _createHexSvgGroup(hex: Hex): SVGGElement {
     const group = document.createElementNS(SVG_NAMESPACE, 'g')
     group.setAttribute('id', `hex-${hex.q}-${hex.r}`)
-    group.addEventListener('click', () => this.handleHexClick(hex))
+    group.addEventListener('contextmenu', (e) => this.handleHexClick(e, hex))
     return group
   }
 
@@ -107,7 +129,8 @@ export default class HexBoardRenderer implements IRenderer {
   /* c8 ignore start */
   /* This block is excluded from test coverage since it's temporary code
      only used for user interaction in development sandbox */
-  handleHexClick(hex: Hex): void {
+  handleHexClick(e: Event, hex: Hex): void {
+    e.preventDefault()
     const selectedColor = this._getSelectedColor() ?? 'Blue'
 
     try {
@@ -165,6 +188,23 @@ export default class HexBoardRenderer implements IRenderer {
       )
       tokenStackGroup.appendChild(tokenSvg)
     })
+  }
+
+  private _renderAnimalToken(animal: AnimalCard, hex: Hex): void {
+    if (!hex.isSpawn) return
+    console.log('Rendering animal token:', animal.name)
+    const hexGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r}`)
+    if (!hexGroup) throw new Error(`Hex group not found for hex (${hex.q}, ${hex.r})`)
+
+    const center = this._layout.hexToPixel(hex)
+    // create a circle for now
+    const animalTokenSvg = document.createElementNS(SVG_NAMESPACE, 'circle')
+    animalTokenSvg.setAttribute('cx', center.x.toFixed(5))
+    animalTokenSvg.setAttribute('cy', (center.y - this._layout.size.y * 0.6).toFixed(5))
+    animalTokenSvg.setAttribute('r', (this._layout.size.x / 5).toFixed(2))
+    animalTokenSvg.setAttribute('fill', '#d2691e')
+    hexGroup.appendChild(animalTokenSvg)
+    this._clearHighlightedSpawnHexes()
   }
 
   private _createSvgTokenElement(tokenClass: string): SVGElement {

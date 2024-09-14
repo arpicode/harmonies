@@ -61,7 +61,7 @@ describe('AnimalCardDeckInputHandler', () => {
         try {
           new AnimalCardDeckInputHandler(gameState)
         } catch (error) {
-          expect((error as Error).name).toBe('DOMSelectorError')
+          expect((error as Error).name).toBe('AnimalCardDeckDOMException')
           expect((error as Error).message).toBe(`Element with selector "${selector}" not found`)
         }
       }

@@ -13,6 +13,9 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     this._pickedCardsHolder = gameState.pickedCardsHolder
     this._initializePickedCardsHolderDOM()
     this._gameState.on('pickedCardsHolderUpdated', () => this.render())
+    this._gameState.on('placeAnimalStart', (animal: AnimalCard) => this._renderCancelButton(animal))
+    this._gameState.on('placeAnimalCancel', (animal: AnimalCard) => this._renderActiveButton(animal))
+    this._gameState.on('placeAnimalEnd', (animal: AnimalCard) => this._renderActiveButton(animal))
     console.timeEnd('PickedCardsHolderRenderer#constructor')
   }
 
@@ -26,6 +29,24 @@ export default class PickedCardsHolderRenderer implements IRenderer {
       pickedCardsContainer.appendChild(fullCard)
     }
     console.timeEnd('PickedCardsHolderRenderer#render')
+  }
+
+  private _renderCancelButton(animal: AnimalCard): void {
+    const cardActionButton = document.querySelector<HTMLButtonElement>(
+      `.card-action-button[data-button-for="${animal.name}"]`
+    )
+    if (!cardActionButton) throw new Error('Card action button not found')
+    cardActionButton.innerHTML = 'Annuler'
+    cardActionButton.setAttribute('data-state', 'cancel')
+  }
+
+  private _renderActiveButton(animal: AnimalCard): void {
+    const cardActionButton = document.querySelector<HTMLButtonElement>(
+      `.card-action-button[data-button-for="${animal.name}"]`
+    )
+    if (!cardActionButton) throw new Error('Card action button not found')
+    cardActionButton.innerHTML = `Poser<br>${animal.name}`
+    cardActionButton.setAttribute('data-state', 'active')
   }
 
   private _initializePickedCardsHolderDOM(): void {
@@ -90,18 +111,6 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     cardActionButton.classList.add('card-action-button')
     cardActionButton.dataset.buttonFor = animal.name
     cardActionButton.innerHTML = `Poser<br>${animal.name}`
-    /* c8 ignore start */
-    // TODO: code for sandbox purposes, will be moved to the PickedCardsHolderInputHandler
-    cardActionButton.addEventListener('click', () => {
-      console.log(`Poser ${animal.name}`)
-      const match = this._gameState.hexBoard.findAllMatchingPatterns(animal.pattern)
-      this._gameState.hexBoard.findSpawnHexFromMatchingPatterns(animal.pattern)
-      if (match.length === 0) {
-        console.log('Aucun pattern trouvé')
-        return
-      }
-    })
-    /* c8 ignore end */
     return cardActionButton
   }
 

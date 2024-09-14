@@ -135,3 +135,33 @@ $token-types: (
   stroke-width: calc(1rem / 16);
   pointer-events: none;
 }
+
+#hex-board .hex {
+  &[class*='highlight-ecosystem-'] {
+    cursor: pointer;
+  }
+
+  &.highlight-ecosystem-river {
+    fill: #adc1dd;
+  }
+
+  &.highlight-ecosystem-leaves {
+    fill: #a4cd98;
+  }
+
+  &.highlight-ecosystem-wood {
+    fill: #c4a276;
+  }
+
+  &.highlight-ecosystem-field {
+    fill: #f3d98b;
+  }
+
+  &.highlight-ecosystem-bricks {
+    fill: #e7aeae;
+  }
+
+  &.highlight-ecosystem-mountain {
+    fill: #b9b8b8;
+  }
+}

@@ -3,11 +3,25 @@ import Token, { TokenType } from '../../board/Token'
 import GameState from '../GameState'
 import IInputHandler from './interfaces/IInputHandler'
 
+export enum HexBoardSelectors {
+  HEX_BOARD = '#hex-board',
+}
+
+class HexBoardDOMException extends Error {
+  constructor(selector: string) {
+    super()
+    this.name = 'HexBoardDOMException'
+    this.message = `Element with selector "${selector}" not found`
+  }
+}
+
 export default class HexBoardInputHandler implements IInputHandler {
   private _gameState: GameState
+  private _hexBoardSVG: SVGElement
 
   constructor(gameState: GameState) {
     this._gameState = gameState
+    this._hexBoardSVG = this._querySelector<SVGElement>(HexBoardSelectors.HEX_BOARD)
   }
 
   initialize() {
@@ -16,6 +30,13 @@ export default class HexBoardInputHandler implements IInputHandler {
       const hexGroup = this._getHexSVGGroup(hex.q, hex.r)
       this._bindEvents(hexGroup)
     })
+    this._hexBoardSVG.addEventListener('click', (event) => this._handleSpawnHexClick(event))
+  }
+
+  private _querySelector<T extends HTMLElement | SVGElement>(selector: HexBoardSelectors): T {
+    const element = document.querySelector<T>(selector)
+    if (!element) throw new HexBoardDOMException(selector)
+    return element
   }
 
   private _bindEvents(hexGroup: SVGElement) {
@@ -29,6 +50,29 @@ export default class HexBoardInputHandler implements IInputHandler {
     const hexGroup = document.querySelector(`#hex-${q}-${r}`)
     if (!hexGroup) throw new Error(`Hex group not found for hex ${q}-${r}`)
     return hexGroup as SVGElement
+  }
+
+  private _handleSpawnHexClick(event: Event) {
+    const target = event.target as SVGElement
+    if (!target.matches('[class*="highlight-ecosystem-"]')) return
+
+    // get token stack
+    const coords = target
+      .getAttribute('data-coords')
+      ?.split(',')
+      .map((coord) => parseInt(coord, 10))
+    if (!coords) throw new Error('Coordinates not found')
+    const hexQ = coords[0]
+    const hexR = coords[1]
+    const hex = this._gameState.hexBoard.getHex(hexQ, hexR)
+    if (!hex) throw new Error(`Hex not found at coordinates (${hexQ}, ${hexR})`)
+    const animalName = target.getAttribute('data-spawn-for')
+    hex.isSpawn = true
+    console.log(hex)
+    const animalCard = this._gameState.pickedCardsHolder.pickedCards.find((card) => card.name === animalName)
+    if (!animalCard) throw new Error('Animal card not found')
+    // this._gameState.notifyPlaceAnimalCancel()
+    this._gameState.notifyPlaceAnimalEnd(animalCard, hex)
   }
 
   private _handleDragOver(event: Event) {

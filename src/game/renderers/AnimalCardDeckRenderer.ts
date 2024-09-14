@@ -79,22 +79,17 @@ export default class AnimalCardDeckRenderer implements IRenderer {
   private _createModalFooter(): HTMLElement {
     const footer = document.createElement('footer')
 
-    const confirmPickBtn = document.createElement('button')
-    confirmPickBtn.classList.add('confirm-pick-btn')
-    confirmPickBtn.disabled = true
-    confirmPickBtn.textContent = 'Confirmer'
-    footer.appendChild(confirmPickBtn)
+    const createButton = (className: string, textContent: string, disabled = false): HTMLButtonElement => {
+      const button = document.createElement('button')
+      button.classList.add(className)
+      button.textContent = textContent
+      button.disabled = disabled
+      return button
+    }
 
-    const cancelPickBtn = document.createElement('button')
-    cancelPickBtn.classList.add('cancel-pick-btn')
-    cancelPickBtn.disabled = true
-    cancelPickBtn.textContent = 'Annuler'
-    footer.appendChild(cancelPickBtn)
-
-    const closeDeckBtn = document.createElement('button')
-    closeDeckBtn.classList.add('close-deck-btn')
-    closeDeckBtn.textContent = 'Fermer'
-    footer.appendChild(closeDeckBtn)
+    footer.appendChild(createButton('confirm-pick-btn', 'Confirmer', true))
+    footer.appendChild(createButton('cancel-pick-btn', 'Annuler', true))
+    footer.appendChild(createButton('close-deck-btn', 'Fermer'))
 
     return footer
   }
