@@ -22,7 +22,7 @@ export default class DraftTableInputHandler implements IInputHandler {
     const target = event.target as SVGElement
     if (!target.classList.contains('draft-table-slot')) return
     if (this._gameState.draftTable.draftedTokens.size() !== 0) {
-      console.log('Tokens already picked up')
+      console.log('%c[Info] %cToken slot is empty', 'color: #2cc2e8;', 'color: #8ecfe0;')
       return
     }
 

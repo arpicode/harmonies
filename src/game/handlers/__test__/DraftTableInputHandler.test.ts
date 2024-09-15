@@ -81,7 +81,7 @@ describe('DraftTableInputHandler', () => {
     expect(gameState.draftTable.draftedTokens.size()).toBe(3)
 
     slot.dispatchEvent(clickEvent)
-    expect(consoleLogSpy).toHaveBeenCalledWith('Tokens already picked up')
+    expect(consoleLogSpy).toHaveBeenCalledWith('%c[Info] %cToken slot is empty', 'color: #2cc2e8;', 'color: #8ecfe0;')
   })
 
   it('should log an error if slot index is not found', () => {

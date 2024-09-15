@@ -56,7 +56,7 @@ export default class PickedCardsHolderInputHandler implements IInputHandler {
 
       const spawnHexes = this._gameState.hexBoard.findSpawnHexFromMatchingPatterns(animalCard.pattern)
       if (spawnHexes.length === 0) {
-        console.log('No animal spawn hexes found')
+        console.log('%c[Info] %cNo animal spawn hexes found', 'color: #2cc2e8;', 'color: #8ecfe0;')
         return
       }
 

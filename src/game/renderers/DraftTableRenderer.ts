@@ -19,20 +19,20 @@ export default class DraftTableRenderer implements IRenderer {
   private _svg: SVGGElement
 
   constructor(gameState: GameState) {
-    console.time('DraftTableRenderer#constructor')
+    console.time('[Initialize] DraftTable')
     this._gameState = gameState
     this._draftTable = gameState.draftTable
     this._svg = this._createDraftTableSVGElement()
     this._initializeDraftTableDOM()
     this._gameState.on('draftTableUpdated', () => this.render())
-    console.timeEnd('DraftTableRenderer#constructor')
+    console.timeEnd('[Initialize] DraftTable')
   }
 
   render(): void {
-    console.time('DraftTableRenderer#render')
+    console.time('[Render] DraftTable')
     this._appendTokensToAllSlots()
     this._appendTokensToTokenHolder()
-    console.timeEnd('DraftTableRenderer#render')
+    console.timeEnd('[Render] DraftTable')
   }
 
   private _initializeDraftTableDOM(): void {

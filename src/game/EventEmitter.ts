@@ -35,6 +35,7 @@ export default class EventEmitter implements IEventEmitter {
   emit<T extends unknown[]>(event: string, ...args: T) {
     const handlers = this._events.get(event)
     if (!handlers) return
+    console.log(`%c[EventEmitter] %c${event}`, 'color: #61d10e;', 'color: #94e08e;')
     handlers.forEach((handler) => handler(...args))
   }
 }

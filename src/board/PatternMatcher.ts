@@ -102,7 +102,11 @@ export default class PatternMatcher implements IPatternMatcher {
     }
 
     matchedSpawnHexes.forEach((hex, index) => {
-      console.log(`Spawn hex matched at hex [Match ${index + 1}]: ${hex.toString()}`)
+      console.log(
+        `%c[Info] %cSpawn hex matched at hex [Match ${index + 1}]: ${hex.toString()}`,
+        'color: #2cc2e8;',
+        'color: #8ecfe0;'
+      )
     })
 
     return matchedSpawnHexes

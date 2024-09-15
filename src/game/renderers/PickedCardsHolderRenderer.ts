@@ -8,7 +8,7 @@ export default class PickedCardsHolderRenderer implements IRenderer {
   private _pickedCardsHolder: PickedCardsHolder
 
   constructor(gameState: GameState) {
-    console.time('PickedCardsHolderRenderer#constructor')
+    console.time('[Initialize] PickedCardsHolder')
     this._gameState = gameState
     this._pickedCardsHolder = gameState.pickedCardsHolder
     this._initializePickedCardsHolderDOM()
@@ -16,11 +16,11 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     this._gameState.on('placeAnimalStart', (animalCard: AnimalCard) => this._renderPlaceAnimalStart(animalCard))
     this._gameState.on('placeAnimalCancel', (animalCard: AnimalCard) => this._renderPlaceAnimalCancel(animalCard))
     this._gameState.on('placeAnimalEnd', (animalCard: AnimalCard) => this._renderPlaceAnimalEnd(animalCard))
-    console.timeEnd('PickedCardsHolderRenderer#constructor')
+    console.timeEnd('[Initialize] PickedCardsHolder')
   }
 
   render(): void {
-    console.time('PickedCardsHolderRenderer#render')
+    console.time('[Render] PickedCardsHolder')
     const pickedCardsContainer = document.querySelector<HTMLDivElement>('.picked-cards-holder .picked-cards-container')
     if (!pickedCardsContainer) throw new Error('Picked cards container not found')
     pickedCardsContainer.innerHTML = ''
@@ -28,7 +28,7 @@ export default class PickedCardsHolderRenderer implements IRenderer {
       const fullCard = this._createWrapperContent(animal)
       pickedCardsContainer.appendChild(fullCard)
     }
-    console.timeEnd('PickedCardsHolderRenderer#render')
+    console.timeEnd('[Render] PickedCardsHolder')
   }
 
   private _renderPlaceAnimalStart(animalCard: AnimalCard): void {

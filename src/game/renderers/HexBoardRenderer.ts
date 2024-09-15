@@ -26,7 +26,7 @@ export default class HexBoardRenderer implements IRenderer {
   private readonly _gameState: GameState
 
   constructor(gameState: GameState, svg?: SVGGElement) {
-    console.time('HexBoardRenderer#constructor')
+    console.time('[Initialize] HexBoard')
     this._gameState = gameState
     this._hexBoard = gameState.hexBoard
     this._layout = gameState.layout
@@ -40,7 +40,7 @@ export default class HexBoardRenderer implements IRenderer {
     )
     this._gameState.on('placeAnimalCancel', () => this._clearHighlightedSpawnHexes())
     this._gameState.on('placeAnimalEnd', (animalCard: AnimalCard, hex: Hex) => this._renderAnimalToken(animalCard, hex))
-    console.timeEnd('HexBoardRenderer#constructor')
+    console.timeEnd('[Initialize] HexBoard')
   }
 
   private _renderSpawnHexesHighlight(animal: AnimalCard, spawnHexes: Hex[]): void {
@@ -89,11 +89,11 @@ export default class HexBoardRenderer implements IRenderer {
   }
 
   render(): void {
-    console.time('HexBoardRenderer#render')
+    console.time('[Render] HexBoard')
     this._hexBoard.hexes.forEach((hex) => {
       this._renderTokens(hex)
     })
-    console.timeEnd('HexBoardRenderer#render')
+    console.timeEnd('[Render] HexBoard')
   }
 
   private _createHexSvgGroup(hex: Hex): SVGGElement {

@@ -95,7 +95,7 @@ export default class HexBoardInputHandler implements IInputHandler {
       currentToken.remove()
       const scorboard = new ScoreBoard(this._gameState.hexBoard)
       if (event.target instanceof SVGElement) event.target.classList.remove('drag-over')
-      console.log(scorboard.toString())
+      console.log(`%c[ScoreBoard] %c${scorboard.toString()}`, 'color: #e8ac2d;', 'color: #e0d28e;')
       this._gameState.notifyHexBoardUpdate()
     } catch (error) {
       console.warn((error as Error).message)

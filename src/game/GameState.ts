@@ -34,37 +34,30 @@ export default class GameState extends EventEmitter {
   }
 
   notifyHexBoardUpdate() {
-    console.log('GameState: emitting hexBoardUpdated')
     this.emit('hexBoardUpdated')
   }
 
   notifyDraftTableUpdate() {
-    console.log('GameState: emitting draftTableUpdated')
     this.emit('draftTableUpdated')
   }
 
   notifyAnimalCardDeckUpdate() {
-    console.log('GameState: emitting animalCardDeckUpdated')
     this.emit('animalCardDeckUpdated')
   }
 
   notifyPickedCardsHolderUpdate() {
-    console.log('GameState: emitting pickedCardsHolderUpdated')
     this.emit('pickedCardsHolderUpdated')
   }
 
   notifyPlaceAnimalStart(animalCard: AnimalCard, spawnHexes: Hex[]) {
-    console.log('GameState: emitting placeAnimalStart')
     this.emit('placeAnimalStart', animalCard, spawnHexes)
   }
 
   notifyPlaceAnimalCancel(animalCard: AnimalCard) {
-    console.log('GameState: emitting placeAnimalCancel')
     this.emit('placeAnimalCancel', animalCard)
   }
 
   notifyPlaceAnimalEnd(animalCard: AnimalCard, hex: Hex) {
-    console.log('GameState: emitting placeAnimalEnd')
     this.emit('placeAnimalEnd', animalCard, hex)
   }
 

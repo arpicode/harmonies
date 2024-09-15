@@ -8,16 +8,16 @@ export default class AnimalCardDeckRenderer implements IRenderer {
   private _animalCardDeck: AnimalCardDeck
 
   constructor(gameState: GameState) {
-    console.time('AnimalCardDeckRenderer#constructor')
+    console.time('[Initialize] AnimalCardDeckRenderer')
     this._gameState = gameState
     this._animalCardDeck = gameState.animalCardDeck
     this._initializeAnimalCardDeckDOM()
     this._gameState.on('animalCardDeckUpdated', () => this.render())
-    console.timeEnd('AnimalCardDeckRenderer#constructor')
+    console.timeEnd('[Initialize] AnimalCardDeckRenderer')
   }
 
   render(): void {
-    console.time('AnimalCardDeckRenderer#render')
+    console.time('[Render] AnimalCardDeckRenderer')
     const animalCardsContainer = document.querySelector('.animal-cards-container')
     if (!animalCardsContainer) throw new Error('Animal cards container not found')
     const animalCardNames = Array.from(animalCardsContainer.querySelectorAll<HTMLImageElement>('.animal-card')).map(
@@ -29,7 +29,7 @@ export default class AnimalCardDeckRenderer implements IRenderer {
       cardElement.setAttribute('data-timestamp', `${animal.timestamp}`)
       animalCardsContainer.appendChild(cardElement)
     }
-    console.timeEnd('AnimalCardDeckRenderer#render')
+    console.timeEnd('[Render] AnimalCardDeckRenderer')
   }
 
   private _initializeAnimalCardDeckDOM(): void {
