@@ -15,8 +15,8 @@ export default class HexBoardRenderer implements IRenderer {
 
   public static readonly GAME_BOARD_WRAPPER_CLASS = 'game-board-container'
   public static readonly BOARD_IMAGES = {
-    river: 'river_map_800.png',
-    island: 'island_map_800.png',
+    river: 'river_map_800.webp',
+    island: 'island_map_800.webp',
   } as Record<HexBoardType, string>
   public static readonly IMAGE_SIZE = { w: 800, h: 642 }
   private static readonly HEX_CLASS = 'hex'

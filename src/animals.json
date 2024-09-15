@@ -2,7 +2,7 @@
   "hedgehog": {
     "name": "Hérisson",
     "ecosystem": "Bricks",
-    "image": "animals/hedgehog.png",
+    "image": "animals/hedgehog.webp",
     "points": [12, 5],
     "pattern": [
       {
@@ -26,7 +26,7 @@
   "eagle": {
     "name": "Aigle",
     "ecosystem": "Mountain",
-    "image": "animals/eagle.png",
+    "image": "animals/eagle.webp",
     "points": [11, 5],
     "pattern": [
       {
@@ -45,7 +45,7 @@
   "kingfisher": {
     "name": "Martin-pêcheur",
     "ecosystem": "Leaves",
-    "image": "animals/kingfisher.png",
+    "image": "animals/kingfisher.webp",
     "points": [18, 11, 5],
     "pattern": [
       {
@@ -69,7 +69,7 @@
   "squirrel": {
     "name": "Écureuil",
     "ecosystem": "Bricks",
-    "image": "animals/squirrel.png",
+    "image": "animals/squirrel.webp",
     "points": [15, 9, 4],
     "pattern": [
       {
@@ -88,7 +88,7 @@
   "panther": {
     "name": "Panthère",
     "ecosystem": "Field",
-    "image": "animals/panther.png",
+    "image": "animals/panther.webp",
     "points": [11, 5],
     "pattern": [
       {
@@ -112,7 +112,7 @@
   "fenec": {
     "name": "Fennec",
     "ecosystem": "Mountain",
-    "image": "animals/fenec.png",
+    "image": "animals/fenec.webp",
     "points": [16, 9, 4],
     "pattern": [
       {
@@ -136,7 +136,7 @@
   "bear": {
     "name": "Ours",
     "ecosystem": "Leaves",
-    "image": "animals/bear.png",
+    "image": "animals/bear.webp",
     "points": [11, 5],
     "pattern": [
       {
@@ -160,7 +160,7 @@
   "meerkat": {
     "name": "Suricate",
     "ecosystem": "Mountain",
-    "image": "animals/meerkat.png",
+    "image": "animals/meerkat.webp",
     "points": [14, 9, 5, 2],
     "pattern": [
       {
@@ -179,7 +179,7 @@
   "peafowl": {
     "name": "Paon",
     "ecosystem": "Bricks",
-    "image": "animals/peafowl.png",
+    "image": "animals/peafowl.webp",
     "points": [17, 10, 5],
     "pattern": [
       {
@@ -203,7 +203,7 @@
   "wolf": {
     "name": "Loup",
     "ecosystem": "Leaves",
-    "image": "animals/wolf.png",
+    "image": "animals/wolf.webp",
     "points": [16, 10, 4],
     "pattern": [
       {
@@ -227,7 +227,7 @@
   "lama": {
     "name": "Lama",
     "ecosystem": "Field",
-    "image": "animals/lama.png",
+    "image": "animals/lama.webp",
     "points": [12, 5],
     "pattern": [
       {
@@ -251,7 +251,7 @@
   "shrew": {
     "name": "Musaraigne",
     "ecosystem": "Bricks",
-    "image": "animals/shrew.png",
+    "image": "animals/shrew.webp",
     "points": [17, 10, 5],
     "pattern": [
       {
@@ -275,7 +275,7 @@
   "crocodile": {
     "name": "Crocodile",
     "ecosystem": "River",
-    "image": "animals/crocodile.png",
+    "image": "animals/crocodile.webp",
     "points": [15, 9, 4],
     "pattern": [
       {
@@ -299,7 +299,7 @@
   "ray": {
     "name": "Raie",
     "ecosystem": "River",
-    "image": "animals/ray.png",
+    "image": "animals/ray.webp",
     "points": [16, 10, 4],
     "pattern": [
       {
@@ -323,7 +323,7 @@
   "hare": {
     "name": "Lièvre",
     "ecosystem": "Leaves",
-    "image": "animals/hare.png",
+    "image": "animals/hare.webp",
     "points": [17, 10, 5],
     "pattern": [
       {
@@ -347,7 +347,7 @@
   "trout": {
     "name": "Truite",
     "ecosystem": "River",
-    "image": "animals/trout.png",
+    "image": "animals/trout.webp",
     "points": [16, 10, 6, 3],
     "pattern": [
       {
@@ -366,7 +366,7 @@
   "flamingo": {
     "name": "Flamant",
     "ecosystem": "River",
-    "image": "animals/flamingo.png",
+    "image": "animals/flamingo.webp",
     "points": [16, 10, 4],
     "pattern": [
       {
@@ -390,7 +390,7 @@
   "boar": {
     "name": "Sanglier",
     "ecosystem": "Leaves",
-    "image": "animals/boar.png",
+    "image": "animals/boar.webp",
     "points": [13, 8, 4],
     "pattern": [
       {
@@ -409,7 +409,7 @@
   "koala": {
     "name": "Koala",
     "ecosystem": "Leaves",
-    "image": "animals/koala.png",
+    "image": "animals/koala.webp",
     "points": [15, 10, 6, 3],
     "pattern": [
       {
@@ -428,7 +428,7 @@
   "bat": {
     "name": "Chauve-souris",
     "ecosystem": "Mountain",
-    "image": "animals/bat.png",
+    "image": "animals/bat.webp",
     "points": [15, 10, 6, 3],
     "pattern": [
       {
@@ -447,7 +447,7 @@
   "raven": {
     "name": "Corbeau",
     "ecosystem": "Field",
-    "image": "animals/raven.png",
+    "image": "animals/raven.webp",
     "points": [9, 4],
     "pattern": [
       {
@@ -471,7 +471,7 @@
   "raccoon": {
     "name": "Raton laveur",
     "ecosystem": "Field",
-    "image": "animals/raccoon.png",
+    "image": "animals/raccoon.webp",
     "points": [12, 6],
     "pattern": [
       {
@@ -500,7 +500,7 @@
   "ladybug": {
     "name": "Coccinelle",
     "ecosystem": "Field",
-    "image": "animals/ladybug.png",
+    "image": "animals/ladybug.webp",
     "points": [17, 12, 8, 5, 2],
     "pattern": [
       {
@@ -519,7 +519,7 @@
   "frog": {
     "name": "Grenouille",
     "ecosystem": "River",
-    "image": "animals/frog.png",
+    "image": "animals/frog.webp",
     "points": [15, 10, 6, 4, 2],
     "pattern": [
       {
@@ -538,7 +538,7 @@
   "articWolf": {
     "name": "Loup arctique",
     "ecosystem": "Field",
-    "image": "animals/artic_wolf.png",
+    "image": "animals/artic_wolf.webp",
     "points": [17, 10, 5],
     "pattern": [
       {
@@ -562,7 +562,7 @@
   "duck": {
     "name": "Canard",
     "ecosystem": "River",
-    "image": "animals/duck.png",
+    "image": "animals/duck.webp",
     "points": [13, 8, 4, 2],
     "pattern": [
       {
@@ -581,7 +581,7 @@
   "parrot": {
     "name": "Perroquet",
     "ecosystem": "Leaves",
-    "image": "animals/parrot.png",
+    "image": "animals/parrot.webp",
     "points": [14, 9, 4],
     "pattern": [
       {
@@ -605,7 +605,7 @@
   "japaneseMacaque": {
     "name": "Macaque japonais",
     "ecosystem": "Mountain",
-    "image": "animals/japanese_macaque.png",
+    "image": "animals/japanese_macaque.webp",
     "points": [11, 5],
     "pattern": [
       {
@@ -629,7 +629,7 @@
   "otter": {
     "name": "Loutre",
     "ecosystem": "River",
-    "image": "animals/otter.png",
+    "image": "animals/otter.webp",
     "points": [16, 10, 5],
     "pattern": [
       {
@@ -653,7 +653,7 @@
   "bee": {
     "name": "Abeille",
     "ecosystem": "Leaves",
-    "image": "animals/bee.png",
+    "image": "animals/bee.webp",
     "points": [18, 8],
     "pattern": [
       {
@@ -682,7 +682,7 @@
   "gekko": {
     "name": "Gekko",
     "ecosystem": "Bricks",
-    "image": "animals/gekko.png",
+    "image": "animals/gekko.webp",
     "points": [16, 10, 5],
     "pattern": [
       {
@@ -706,7 +706,7 @@
   "penguin": {
     "name": "Pinguin",
     "ecosystem": "River",
-    "image": "animals/penguin.png",
+    "image": "animals/penguin.webp",
     "points": [16, 10, 4],
     "pattern": [
       {
