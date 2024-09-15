@@ -32,7 +32,6 @@ export default class PickedCardsHolderInputHandler implements IInputHandler {
   }
 
   initialize() {
-    this._setPickedCardsState('active')
     this._bindEvents()
   }
 
@@ -63,12 +62,6 @@ export default class PickedCardsHolderInputHandler implements IInputHandler {
 
       this._gameState.notifyPlaceAnimalStart(animalCard, spawnHexes)
     }
-  }
-
-  private _setPickedCardsState(state: 'active' | 'cancel') {
-    this._cardActionButtons.forEach((card) => {
-      card.setAttribute('data-state', state)
-    })
   }
 
   private _hasCancelStateButtons() {

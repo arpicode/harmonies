@@ -121,7 +121,7 @@ $token-types: (
 }
 
 .coords {
-  // display: none;
+  display: none;
   font-family: Verdana;
   fill: get-color('coords', 'fill');
   font-size: 80%;
@@ -164,4 +164,11 @@ $token-types: (
   &.highlight-ecosystem-mountain {
     fill: #b9b8b8;
   }
+}
+
+.cube-token,
+.placed-cube-token {
+  fill: rgba(255, 106, 0, 0.75);
+  stroke: #b14a00;
+  stroke: 1px;
 }

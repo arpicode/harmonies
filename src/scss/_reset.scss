@@ -37,3 +37,12 @@ svg,
 img {
   user-select: none;
 }
+
+// for development
+#token-menu {
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-block: 1rem;
+}

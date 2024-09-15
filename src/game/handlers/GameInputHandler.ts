@@ -24,5 +24,8 @@ export default class GameInputHandler implements IInputHandler {
     this._hexBoardInputHandler.initialize()
     this._animalCardDeckInputHandler.initialize()
     this._pickedCardsHolderInputHandler.initialize()
+    document.addEventListener('contextmenu', (event) => {
+      if (event.target instanceof HTMLImageElement || event.target instanceof SVGElement) event.preventDefault()
+    })
   }
 }

@@ -13,9 +13,9 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     this._pickedCardsHolder = gameState.pickedCardsHolder
     this._initializePickedCardsHolderDOM()
     this._gameState.on('pickedCardsHolderUpdated', () => this.render())
-    this._gameState.on('placeAnimalStart', (animal: AnimalCard) => this._renderCancelButton(animal))
-    this._gameState.on('placeAnimalCancel', (animal: AnimalCard) => this._renderActiveButton(animal))
-    this._gameState.on('placeAnimalEnd', (animal: AnimalCard) => this._renderActiveButton(animal))
+    this._gameState.on('placeAnimalStart', (animalCard: AnimalCard) => this._renderPlaceAnimalStart(animalCard))
+    this._gameState.on('placeAnimalCancel', (animalCard: AnimalCard) => this._renderPlaceAnimalCancel(animalCard))
+    this._gameState.on('placeAnimalEnd', (animalCard: AnimalCard) => this._renderPlaceAnimalEnd(animalCard))
     console.timeEnd('PickedCardsHolderRenderer#constructor')
   }
 
@@ -31,22 +31,67 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     console.timeEnd('PickedCardsHolderRenderer#render')
   }
 
-  private _renderCancelButton(animal: AnimalCard): void {
+  private _renderPlaceAnimalStart(animalCard: AnimalCard): void {
+    this._renderCancelButton(animalCard)
+    this._setActiveButtonsDisabledState(true)
+  }
+
+  private _renderPlaceAnimalCancel(animalCard: AnimalCard): void {
+    this._renderActiveButton(animalCard)
+    this._setActiveButtonsDisabledState(false)
+  }
+
+  private _renderCancelButton(animalCard: AnimalCard): void {
     const cardActionButton = document.querySelector<HTMLButtonElement>(
-      `.card-action-button[data-button-for="${animal.name}"]`
+      `.card-action-button[data-button-for="${animalCard.name}"]`
     )
     if (!cardActionButton) throw new Error('Card action button not found')
     cardActionButton.innerHTML = 'Annuler'
     cardActionButton.setAttribute('data-state', 'cancel')
   }
 
-  private _renderActiveButton(animal: AnimalCard): void {
+  private _setActiveButtonsDisabledState(disabled: boolean): void {
+    const cardActionButtons = document.querySelectorAll<HTMLButtonElement>('.card-action-button[data-state="active"]')
+    cardActionButtons.forEach((button) => (button.disabled = disabled))
+  }
+
+  private _renderActiveButton(animalCard: AnimalCard): void {
     const cardActionButton = document.querySelector<HTMLButtonElement>(
-      `.card-action-button[data-button-for="${animal.name}"]`
+      `.card-action-button[data-button-for="${animalCard.name}"]`
     )
     if (!cardActionButton) throw new Error('Card action button not found')
-    cardActionButton.innerHTML = `Poser<br>${animal.name}`
+    cardActionButton.innerHTML = `Poser<br>${animalCard.name}`
     cardActionButton.setAttribute('data-state', 'active')
+  }
+
+  private _renderPlaceAnimalEnd(animalCard: AnimalCard): void {
+    this._removeCubeTokens(animalCard)
+    this._setActiveButtonsDisabledState(false)
+  }
+
+  private _removeCubeTokens(animalCard: AnimalCard): void {
+    const cubes = document.querySelectorAll<SVGGElement>(
+      `.cube-group[data-cube-group-for="${animalCard.name}"] .cube-token`
+    )
+
+    cubes[cubes.length - 1].remove()
+
+    if (cubes.length - 1 <= 0) {
+      const img = document.querySelector<HTMLImageElement>(`.picked-cards-holder [data-card-name="${animalCard.name}"]`)
+      if (!img) throw new Error('Card image not found')
+      img.classList.add('animal-card--completed')
+      this._removeCancelButton(animalCard)
+    } else {
+      this._renderActiveButton(animalCard)
+    }
+  }
+
+  private _removeCancelButton(animalCard: AnimalCard): void {
+    const cardActionButton = document.querySelector<HTMLButtonElement>(
+      `.card-action-button[data-button-for="${animalCard.name}"]`
+    )
+    if (!cardActionButton) throw new Error('Card action button not found')
+    cardActionButton.remove()
   }
 
   private _initializePickedCardsHolderDOM(): void {
@@ -79,51 +124,65 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     return cardContainer
   }
 
-  private _createCardElement(animal: AnimalCard): HTMLImageElement {
+  private _createCardElement(animalCard: AnimalCard): HTMLImageElement {
     const cardElement = document.createElement('img')
     cardElement.classList.add('animal-card')
-    cardElement.dataset.cardName = animal.name
-    cardElement.src = animal.image
-    cardElement.alt = animal.name
+    if (animalCard.animalTokenCount === 0) cardElement.classList.add('animal-card--completed')
+    cardElement.dataset.cardName = animalCard.name
+    cardElement.src = animalCard.image
+    cardElement.alt = animalCard.name
     return cardElement
   }
 
-  private _createCardSVGOverlay(animal: AnimalCard): SVGElement {
+  private _createCardSVGOverlay(animalCard: AnimalCard): SVGElement | null {
+    if (animalCard.animalTokenCount === 0) return null
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     svg.setAttribute('class', 'svg-card-overlay')
     svg.setAttribute('width', '100%')
     svg.setAttribute('height', '100%')
     svg.setAttribute('viewBox', '0 0 128 220')
-    animal.points.forEach((_, index) => {
-      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
-      rect.setAttribute('x', '107')
-      rect.setAttribute('y', `${index * (32 + 1.8) + 6}`)
-      rect.setAttribute('width', '15')
-      rect.setAttribute('height', '15')
-      rect.setAttribute('fill', '#d2691e')
-      svg.appendChild(rect)
-    })
+
+    const cubeGroup = this._createCubeGroup(animalCard)
+    svg.appendChild(cubeGroup)
     return svg
   }
 
-  private _createCardActionButton(animal: AnimalCard): HTMLButtonElement {
+  private _createCubeGroup(animalCard: AnimalCard): SVGGElement {
+    const cubeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+    cubeGroup.setAttribute('class', 'cube-group')
+    cubeGroup.setAttribute('data-cube-group-for', animalCard.name)
+    for (let i = 0; i < animalCard.animalTokenCount; i++) {
+      const cube = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+      cube.setAttribute('x', '107')
+      cube.setAttribute('y', `${i * (32 + 1.8) + 6}`)
+      cube.setAttribute('width', '15')
+      cube.setAttribute('height', '15')
+      cube.setAttribute('class', 'cube-token')
+      cubeGroup.appendChild(cube)
+    }
+    return cubeGroup
+  }
+
+  private _createCardActionButton(animalCard: AnimalCard): HTMLButtonElement | null {
+    if (animalCard.animalTokenCount === 0) return null
     const cardActionButton = document.createElement('button')
     cardActionButton.classList.add('card-action-button')
-    cardActionButton.dataset.buttonFor = animal.name
-    cardActionButton.innerHTML = `Poser<br>${animal.name}`
+    cardActionButton.dataset.buttonFor = animalCard.name
+    cardActionButton.innerHTML = `Poser<br>${animalCard.name}`
+    cardActionButton.setAttribute('data-state', 'active')
     return cardActionButton
   }
 
-  private _createWrapperContent(animal: AnimalCard): HTMLDivElement {
+  private _createWrapperContent(animalCard: AnimalCard): HTMLDivElement {
     const cardAndActionWrapper = this._createCardAndActionWrapper()
     const cardContainer = this._createCardContainer()
-    const cardElement = this._createCardElement(animal)
-    const cardSVGOverlay = this._createCardSVGOverlay(animal)
-    const cardActionButton = this._createCardActionButton(animal)
+    const cardElement = this._createCardElement(animalCard)
+    const cardSVGOverlay = this._createCardSVGOverlay(animalCard)
+    const cardActionButton = this._createCardActionButton(animalCard)
 
     cardContainer.appendChild(cardElement)
-    cardContainer.appendChild(cardSVGOverlay)
-    cardAndActionWrapper.appendChild(cardActionButton)
+    if (cardSVGOverlay) cardContainer.appendChild(cardSVGOverlay)
+    if (cardActionButton) cardAndActionWrapper.appendChild(cardActionButton)
     cardAndActionWrapper.appendChild(cardContainer)
     return cardAndActionWrapper
   }

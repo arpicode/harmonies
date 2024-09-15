@@ -92,7 +92,6 @@ export default class HexBoardRenderer implements IRenderer {
     console.time('HexBoardRenderer#render')
     this._hexBoard.hexes.forEach((hex) => {
       this._renderTokens(hex)
-      // this._renderAnimalToken(hex)
     })
     console.timeEnd('HexBoardRenderer#render')
   }
@@ -192,18 +191,23 @@ export default class HexBoardRenderer implements IRenderer {
 
   private _renderAnimalToken(animal: AnimalCard, hex: Hex): void {
     if (!hex.isSpawn) return
-    console.log('Rendering animal token:', animal.name)
     const hexGroup = this._svg.querySelector(`#hex-${hex.q}-${hex.r}`)
     if (!hexGroup) throw new Error(`Hex group not found for hex (${hex.q}, ${hex.r})`)
 
     const center = this._layout.hexToPixel(hex)
-    // create a circle for now
+
+    // Create a circle for the animal token
     const animalTokenSvg = document.createElementNS(SVG_NAMESPACE, 'circle')
     animalTokenSvg.setAttribute('cx', center.x.toFixed(5))
     animalTokenSvg.setAttribute('cy', (center.y - this._layout.size.y * 0.6).toFixed(5))
     animalTokenSvg.setAttribute('r', (this._layout.size.x / 5).toFixed(2))
-    animalTokenSvg.setAttribute('fill', '#d2691e')
+    animalTokenSvg.setAttribute('class', 'placed-cube-token')
+
+    const titleElement = document.createElementNS(SVG_NAMESPACE, 'title')
+    titleElement.textContent = animal.name
+    animalTokenSvg.appendChild(titleElement)
     hexGroup.appendChild(animalTokenSvg)
+
     this._clearHighlightedSpawnHexes()
   }
 

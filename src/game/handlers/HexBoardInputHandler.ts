@@ -56,7 +56,6 @@ export default class HexBoardInputHandler implements IInputHandler {
     const target = event.target as SVGElement
     if (!target.matches('[class*="highlight-ecosystem-"]')) return
 
-    // get token stack
     const coords = target
       .getAttribute('data-coords')
       ?.split(',')
@@ -68,10 +67,9 @@ export default class HexBoardInputHandler implements IInputHandler {
     if (!hex) throw new Error(`Hex not found at coordinates (${hexQ}, ${hexR})`)
     const animalName = target.getAttribute('data-spawn-for')
     hex.isSpawn = true
-    console.log(hex)
     const animalCard = this._gameState.pickedCardsHolder.pickedCards.find((card) => card.name === animalName)
     if (!animalCard) throw new Error('Animal card not found')
-    // this._gameState.notifyPlaceAnimalCancel()
+    animalCard.removeAnimalToken()
     this._gameState.notifyPlaceAnimalEnd(animalCard, hex)
   }
 
