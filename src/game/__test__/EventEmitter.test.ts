@@ -5,6 +5,7 @@ describe('EventEmitter', () => {
   const handler1 = vi.fn()
   const handler2 = vi.fn()
   const handler3 = vi.fn()
+  const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
 
   beforeEach(() => {
     emitter = new EventEmitter()
@@ -78,6 +79,7 @@ describe('EventEmitter', () => {
       emitter.emit('testEvent', 'arg1', 'arg2')
       expect(handler1).toHaveBeenCalledTimes(1)
       expect(handler1).toHaveBeenCalledWith('arg1', 'arg2')
+      expect(consoleLogSpy).not.toHaveBeenCalledWith('testEvent')
     })
 
     it('should handle event emission with no arguments', () => {

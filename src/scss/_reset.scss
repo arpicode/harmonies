@@ -1,7 +1,7 @@
-// @font-face {
-//   font-family: 'Xilosa';
-//   src: url('./assets/fonts/xilosa/xilosa_.ttf');
-// }
+@font-face {
+  font-family: 'Xilosa';
+  src: url('./assets/fonts/xilosa/xilosa_.ttf');
+}
 
 :root {
   font-family: system-ui, sans-serif;
@@ -26,6 +26,7 @@
 
 body {
   margin: 0;
+  padding: 1rem 1rem 0 1rem;
   // display: flex;
   // place-items: center;
   // justify-content: center;
@@ -44,5 +45,15 @@ img {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
-  padding-block: 1rem;
+}
+
+.rules-link {
+  font-family: 'Xilosa';
+  font-size: 1.5rem;
+  color: coral;
+  text-decoration: none;
+
+  &:hover {
+    color: gold;
+  }
 }
