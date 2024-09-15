@@ -27,7 +27,7 @@ describe('Animal', () => {
     })
 
     it('should initialize image correctly', () => {
-      expect(animal.image).toBe('animals/bee.png')
+      expect(animal.image).toBe('animals/bee.webp')
     })
 
     it('should initialize pattern as a HexBoard', () => {

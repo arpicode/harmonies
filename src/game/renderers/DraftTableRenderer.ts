@@ -7,8 +7,8 @@ import IRenderer from './interfaces/IRenderer'
 export default class DraftTableRenderer implements IRenderer {
   public static readonly DRAFT_TABLE_CONTAINER_CLASS = 'draft-table-container'
   public static readonly TABLE_IMAGES = {
-    solo: 'draft_table_solo.png',
-    multiplayer: 'draft_table.png',
+    solo: 'draft_table_solo.webp',
+    multiplayer: 'draft_table.webp',
   } as Record<GameMode, string>
   public static readonly WIDTH = 666
   public static readonly HEIGHT = 675
