@@ -43,6 +43,14 @@ export default class HexBoardRenderer implements IRenderer {
     console.timeEnd('[Initialize] HexBoard')
   }
 
+  render(): void {
+    console.time('[Render] HexBoard')
+    this._hexBoard.hexes.forEach((hex) => {
+      this._renderTokens(hex)
+    })
+    console.timeEnd('[Render] HexBoard')
+  }
+
   private _renderSpawnHexesHighlight(animal: AnimalCard, spawnHexes: Hex[]): void {
     spawnHexes.forEach((hex) => {
       const hexElement: SVGGElement | null = this._svg.querySelector(`#hex-${hex.q}-${hex.r} .hex`)
@@ -86,14 +94,6 @@ export default class HexBoardRenderer implements IRenderer {
 
     this._svg.appendChild(group)
     this._renderTokenStackGroup(hex)
-  }
-
-  render(): void {
-    console.time('[Render] HexBoard')
-    this._hexBoard.hexes.forEach((hex) => {
-      this._renderTokens(hex)
-    })
-    console.timeEnd('[Render] HexBoard')
   }
 
   private _createHexSvgGroup(hex: Hex): SVGGElement {

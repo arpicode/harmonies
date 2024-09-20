@@ -54,21 +54,33 @@ export default class HexBoardInputHandler implements IInputHandler {
 
   private _handleSpawnHexClick(event: Event) {
     const target = event.target as SVGElement
-    if (!target.matches('[class*="highlight-ecosystem-"]')) return
+    if (!target.matches('[class*="highlight-ecosystem-"]')) {
+      console.log('Not a spawn hex')
+      return
+    }
 
     const coords = target
       .getAttribute('data-coords')
       ?.split(',')
       .map((coord) => parseInt(coord, 10))
-    if (!coords) throw new Error('Coordinates not found')
+    if (!coords) {
+      console.error('[InvalidDOM] data-coords attribute not found on spawn hex element')
+      return
+    }
     const hexQ = coords[0]
     const hexR = coords[1]
     const hex = this._gameState.hexBoard.getHex(hexQ, hexR)
-    if (!hex) throw new Error(`Hex not found at coordinates (${hexQ}, ${hexR})`)
+    if (!hex) {
+      console.error(`[InvalidState] Hex not found at coordinates (${hexQ}, ${hexR})`)
+      return
+    }
     const animalName = target.getAttribute('data-spawn-for')
-    hex.isSpawn = true
     const animalCard = this._gameState.pickedCardsHolder.pickedCards.find((card) => card.name === animalName)
-    if (!animalCard) throw new Error('Animal card not found')
+    if (!animalCard) {
+      console.error(`[InvalidState] Animal card not found for ${animalName}`)
+      return
+    }
+    hex.isSpawn = true
     animalCard.removeAnimalToken()
     this._gameState.notifyPlaceAnimalEnd(animalCard, hex)
   }

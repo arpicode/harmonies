@@ -45,7 +45,10 @@ export default class PickedCardsHolderInputHandler implements IInputHandler {
 
     if (targetCardName) {
       const animalCard = this._gameState.pickedCardsHolder.pickedCards.find((card) => card.name === targetCardName)
-      if (!animalCard) throw new Error('Animal card not found')
+      if (!animalCard) {
+        console.error('%c[InvalidDOM] %cInvalid data-button-for', 'color: #ff4d4f;', 'color: #ff7a45;')
+        return
+      }
 
       if (this._hasCancelStateButtons()) {
         if (target.getAttribute('data-state') === 'cancel') {

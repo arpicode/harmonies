@@ -41,6 +41,11 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     this._setActiveButtonsDisabledState(false)
   }
 
+  private _renderPlaceAnimalEnd(animalCard: AnimalCard): void {
+    this._removeCubeTokens(animalCard)
+    this._setActiveButtonsDisabledState(false)
+  }
+
   private _renderCancelButton(animalCard: AnimalCard): void {
     const cardActionButton = document.querySelector<HTMLButtonElement>(
       `.card-action-button[data-button-for="${animalCard.name}"]`
@@ -62,11 +67,6 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     if (!cardActionButton) throw new Error('Card action button not found')
     cardActionButton.innerHTML = `Poser<br>${animalCard.name}`
     cardActionButton.setAttribute('data-state', 'active')
-  }
-
-  private _renderPlaceAnimalEnd(animalCard: AnimalCard): void {
-    this._removeCubeTokens(animalCard)
-    this._setActiveButtonsDisabledState(false)
   }
 
   private _removeCubeTokens(animalCard: AnimalCard): void {
