@@ -32,11 +32,20 @@ describe('PickedCardsHolderRenderer', () => {
     expect(consoleTimeEndSpy).toHaveBeenCalledTimes(1)
   })
 
-  it('should throw an error if picked cards holder is not found', () => {
+  it('should throw an error if picked cards wrapper is not found', () => {
     document.body.innerHTML = ''
     expect(() => {
       new PickedCardsHolderRenderer(new GameState('multiplayer', 'river'))
-    }).toThrowError('Picked cards holder not found')
+    }).toThrowError('Picked cards wrapper not found')
+  })
+
+  it('should throw an error if completed cards wrapper is not found', () => {
+    initializePickedCardsHolder()
+    const completedCardsWrapper = document.querySelector('.completed-cards-wrapper')
+    completedCardsWrapper?.remove()
+    expect(() => {
+      pickedCardsHolderRenderer.render()
+    }).toThrowError('Completed cards wrapper not found')
   })
 
   it('should not render the card SVG overlay if the animal has no points', () => {
@@ -47,57 +56,80 @@ describe('PickedCardsHolderRenderer', () => {
     })
     gameState.pickedCardsHolder.add(animalCard)
     pickedCardsHolderRenderer.render()
-    const cardSVGOverlay = document.querySelector('.picked-cards-container .card-svg-overlay')
+    const cardSVGOverlay = document.querySelector('.picked-cards-wrapper .card-svg-overlay')
     expect(cardSVGOverlay).toBeNull()
   })
 
-  it('should throw an error if the cancel card action button is not found after placing last animal token', () => {
+  it('should throw an error when picked cards wrapper is not found after initialization', () => {
     initializePickedCardsHolder()
-    const animalCard = new AnimalCard(animals.bee)
-    gameState.pickedCardsHolder.add(animalCard)
-    pickedCardsHolderRenderer.render()
-    gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
-    const actionButton = document.querySelector('.card-action-button')
-    actionButton?.remove()
-    expect(() => {
-      gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
-    }).toThrowError('Card action button not found')
-  })
-
-  it('should throw an error if picked cards container is not found', () => {
-    initializePickedCardsHolder()
-    const pickedCardsHolder = document.querySelector('.picked-cards-holder')
+    const pickedCardsHolder = document.querySelector('.picked-cards-wrapper')
     pickedCardsHolder?.remove()
     expect(() => {
       pickedCardsHolderRenderer.render()
-    }).toThrowError('Picked cards container not found')
+    }).toThrowError('Picked cards wrapper not found')
   })
 
-  it('should render the initial picked cards holder with no cards', () => {
+  it('should render the initial picked cards wrapper with no cards', () => {
     initializePickedCardsHolder()
     pickedCardsHolderRenderer.render()
-    const initialCards = document.querySelector('.picked-cards-container')
+    const initialCards = document.querySelector('.picked-cards-wrapper')
     expect(initialCards?.children).toHaveLength(0)
   })
 
-  it('should render the picked cards holder with the correct number of cards', () => {
+  it('should render the initial completed cards wrapper with no cards', () => {
+    initializePickedCardsHolder()
+    pickedCardsHolderRenderer.render()
+    const initialCards = document.querySelector('.completed-cards-wrapper')
+    expect(initialCards?.children).toHaveLength(0)
+  })
+
+  it('should render the picked cards wrapper with the correct number of cards', () => {
     initializePickedCardsHolder()
     for (let i = 0; i < PickedCardsHolder.MAX_PICKED_CARDS; i++) {
       gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
       pickedCardsHolderRenderer.render()
-      const cards = document.querySelectorAll('.picked-cards-holder .animal-card')
+      const cards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
       expect(cards).toHaveLength(i + 1)
     }
   })
 
-  it('should not render the picked cards holder with more than the max allowed number of cards', () => {
+  it('should render the completed cards wrapper with the correct number of cards', () => {
+    initializePickedCardsHolder()
+    const beeCard = new AnimalCard(animals.bee)
+    beeCard.points.forEach(() => {
+      beeCard.removeAnimalToken()
+    })
+    const eagleCard = new AnimalCard(animals.eagle)
+    eagleCard.points.forEach(() => {
+      eagleCard.removeAnimalToken()
+    })
+    gameState.pickedCardsHolder.add(beeCard)
+    gameState.pickedCardsHolder.add(eagleCard)
+    pickedCardsHolderRenderer.render()
+    let cards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
+    expect(cards).toHaveLength(2)
+
+    gameState.pickedCardsHolder.transferCompletedCards()
+    pickedCardsHolderRenderer.render()
+    cards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
+    expect(cards).toHaveLength(0)
+
+    const completedCards = document.querySelectorAll('.completed-cards-wrapper .animal-card')
+    expect(completedCards).toHaveLength(2)
+    completedCards.forEach((card, index) => {
+      expect(card.classList).toContain('completed-card')
+      expect(card.classList).toContain(`card-${index + 1}`)
+    })
+  })
+
+  it('should not render the picked cards wrapper with more than the max allowed number of cards', () => {
     initializePickedCardsHolder()
     for (let i = 0; i < PickedCardsHolder.MAX_PICKED_CARDS + 1; i++) {
       gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
     }
 
     pickedCardsHolderRenderer.render()
-    const cards = document.querySelector('.picked-cards-container')
+    const cards = document.querySelector('.picked-cards-wrapper')
     expect(cards?.children).toHaveLength(PickedCardsHolder.MAX_PICKED_CARDS)
   })
 
@@ -105,7 +137,7 @@ describe('PickedCardsHolderRenderer', () => {
     initializePickedCardsHolder()
     gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
     pickedCardsHolderRenderer.render()
-    const card = document.querySelector('.picked-cards-holder .animal-card')
+    const card = document.querySelector('.picked-cards-wrapper .animal-card')
     expect(card?.getAttribute('data-card-name')).toBe(animals.bee.name)
   })
 
@@ -113,21 +145,21 @@ describe('PickedCardsHolderRenderer', () => {
     initializePickedCardsHolder()
     gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
     pickedCardsHolderRenderer.render()
-    const actionButton = document.querySelector('.picked-cards-holder .card-action-button')
+    const actionButton = document.querySelector('.picked-cards-wrapper .card-action-button')
     expect(actionButton?.getAttribute('data-button-for')).toBe(animals.bee.name)
   })
 
   describe('animal placement', () => {
-    it('should render the picked cards holder with the correct number of cards', () => {
+    it('should render the picked cards wrapper with the correct number of cards', () => {
       initializePickedCardsHolder()
       gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
       pickedCardsHolderRenderer.render()
-      let cards = document.querySelectorAll('.picked-cards-holder .animal-card')
+      let cards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
       expect(cards).toHaveLength(1)
 
       gameState.pickedCardsHolder.add(new AnimalCard(animals.eagle))
       gameState.notifyPickedCardsHolderUpdate()
-      cards = document.querySelectorAll('.picked-cards-holder .animal-card')
+      cards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
       expect(cards).toHaveLength(2)
     })
 
@@ -148,25 +180,28 @@ describe('PickedCardsHolderRenderer', () => {
       expect(consoleLogSpy).toHaveBeenCalledTimes(1)
     })
 
-    it('should add the animal-card--completed class when the animal is placed', () => {
+    it('should add the completed-card class when the animal is placed', () => {
       initializePickedCardsHolder()
       gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
       pickedCardsHolderRenderer.render()
-      let animalCardElement = document.querySelector('.picked-cards-container .animal-card')
-      expect(animalCardElement?.classList).not.toContain('animal-card--completed')
+      let animalCardElement = document.querySelector('.picked-cards-wrapper .animal-card')
+      expect(animalCardElement?.classList).not.toContain('completed-card')
       const animalCard = gameState.pickedCardsHolder.pickedCards[0]
 
       gameState.notifyPlaceAnimalStart(animalCard, [new Hex(0, 0, 0)])
       gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
-      animalCardElement = document.querySelector('.picked-cards-container .animal-card')
-      expect(animalCardElement?.classList).not.toContain('animal-card--completed')
+      animalCardElement = document.querySelector('.picked-cards-wrapper .animal-card')
+      expect(animalCardElement).not.toBeNull()
+      expect(animalCardElement?.classList).not.toContain('completed-card')
 
       gameState.notifyPlaceAnimalStart(animalCard, [new Hex(0, 0, 0)])
       gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
-      animalCardElement = document.querySelector('.picked-cards-container .animal-card')
-      expect(animalCardElement?.classList).toContain('animal-card--completed')
+      animalCardElement = document.querySelector('.completed-cards-wrapper .animal-card')
+      expect(animalCardElement?.classList).toContain('completed-card')
+      animalCardElement = document.querySelector('.picked-cards-wrapper .animal-card')
+      expect(animalCardElement).toBeNull()
 
-      const cardSVGOverlay = document.querySelector('.picked-cards-container .card-svg-overlay')
+      const cardSVGOverlay = document.querySelector('.completed-cards-wrapper .card-svg-overlay')
       expect(cardSVGOverlay).toBeNull()
     })
 
@@ -234,8 +269,44 @@ describe('PickedCardsHolderRenderer', () => {
       pickedCardsHolderRenderer.render()
       const animalCard = gameState.pickedCardsHolder.pickedCards[0]
       gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
-      const img = document.querySelector('.picked-cards-container .animal-card')
+      const img = document.querySelector('.picked-cards-wrapper .animal-card')
       img?.remove()
+      expect(() => {
+        gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+      }).toThrowError('Card image not found')
+    })
+
+    it('should throw while moving a completed card when the completed cards wrapper is not found', () => {
+      initializePickedCardsHolder()
+      const beeCard = new AnimalCard(animals.bee)
+      // remove all but 1 point
+      beeCard.points.forEach((_, index) => {
+        if (index === beeCard.points.length - 1) return
+        beeCard.removeAnimalToken()
+      })
+      gameState.pickedCardsHolder.add(beeCard)
+      pickedCardsHolderRenderer.render()
+      const animalCard = gameState.pickedCardsHolder.pickedCards[0]
+      const completedCardsWrapper = document.querySelector('.completed-cards-wrapper')
+      completedCardsWrapper?.remove()
+      expect(() => {
+        gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+      }).toThrowError('Completed cards wrapper not found')
+    })
+
+    it('should throw while moving a completed card when the animal card element is not found', () => {
+      initializePickedCardsHolder()
+      const beeCard = new AnimalCard(animals.bee)
+      // remove all but 1 point
+      beeCard.points.forEach((_, index) => {
+        if (index === beeCard.points.length - 1) return
+        beeCard.removeAnimalToken()
+      })
+      gameState.pickedCardsHolder.add(beeCard)
+      pickedCardsHolderRenderer.render()
+      const animalCard = gameState.pickedCardsHolder.pickedCards[0]
+      const animalCardElement = document.querySelector('.animal-card')
+      animalCardElement?.remove()
       expect(() => {
         gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
       }).toThrowError('Card image not found')

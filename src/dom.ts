@@ -1,12 +1,40 @@
 export const dom = `
   <dialog class="animal-deck-modal"></dialog>
-  <button class="show-deck-btn">Show animal cards</button>
 
-  <div class="game-zone">
-    <div class="game-zone-left">
-      <figure class="draft-table-container orientation-player-1"></figure>
+  <div class="game-wrapper">
+
+    <div class="column column-left">
+      <div class="draft-table-wrapper">
+      </div>
+      <div class="picked-tokens-wrapper">
+      </div>
+
+      <div class="completed-cards-wrapper">
+      </div>
     </div>
-    <figure class="game-board-container"></figure>
+
+    <div class="column column-center">
+      <div class="picked-cards-wrapper">
+      </div>
+      <div class="hex-board-wrapper">
+      </div>
+    </div>
+
+    <div class="column column-right">
+      <div class="preview-box-wrapper">
+        <img class="preview preview--visible" src="./images/helper_river.webp" alt="Preview image" />
+      </div>
+      <div class="info-box">
+        <div class="button-menu">
+          <div class="top-row">
+            <button class="button options-button" title="Options">Options</button>
+            <button class="button fullscreen-toggle-button" title="Plein écran">Fullscreen</button>
+          </div>
+          <button class="button show-cards-button">Afficher la Pioche</button>
+          <button class="button end-turn-button" title="Finir le tour">Terminer le Tour</button>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div class="picked-cards-holder"></div>
 `

@@ -35,24 +35,24 @@ describe('DraftTableRenderer', () => {
     gameMode
     ${'solo'}
     ${'multiplayer'}
-  `('should throw an error if draft table container is not found', ({ gameMode }: { gameMode: GameMode }) => {
+  `('should throw an error if draft table wrapper is not found', ({ gameMode }: { gameMode: GameMode }) => {
     document.body.innerHTML = ''
     expect(() => {
       new DraftTableRenderer(new GameState(gameMode, 'river'))
-    }).toThrowError('No draft table container found')
+    }).toThrowError('No draft table wrapper found')
   })
 
-  it.each`
-    gameMode
-    ${'solo'}
-    ${'multiplayer'}
-  `('should throw an error if game zone left container is not found', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeDraftTable(gameMode)
-    document.querySelector('.game-zone-left')?.classList.remove('game-zone-left')
-    expect(() => {
-      new DraftTableRenderer(new GameState(gameMode, 'river'))
-    }).toThrowError('No game-zone-left container found')
-  })
+  // it.each`
+  //   gameMode
+  //   ${'solo'}
+  //   ${'multiplayer'}
+  // `('should throw an error if game zone left container is not found', ({ gameMode }: { gameMode: GameMode }) => {
+  //   initializeDraftTable(gameMode)
+  //   document.querySelector('.game-zone-left')?.classList.remove('game-zone-left')
+  //   expect(() => {
+  //     new DraftTableRenderer(new GameState(gameMode, 'river'))
+  //   }).toThrowError('No game-zone-left container found')
+  // })
 
   it.each`
     gameMode         | imageSrc
@@ -61,7 +61,7 @@ describe('DraftTableRenderer', () => {
   `('should render the correct draft table image for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
     initializeDraftTable(gameMode)
     draftTableRenderer.render()
-    const draftTableImage = document.querySelector('.draft-table')
+    const draftTableImage = document.querySelector('.draft-table-image')
     expect(draftTableImage?.getAttribute('src')).toBe(DraftTableRenderer.TABLE_IMAGES[gameMode])
   })
 
@@ -81,10 +81,10 @@ describe('DraftTableRenderer', () => {
     gameMode         | imageSrc
     ${'solo'}        | ${DraftTableRenderer.TABLE_IMAGES.solo}
     ${'multiplayer'} | ${DraftTableRenderer.TABLE_IMAGES.multiplayer}
-  `('should render the token holder for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
+  `('should render the token holder wrapper for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
     initializeDraftTable(gameMode)
     draftTableRenderer.render()
-    const tokenHolder = document.querySelector('.token-holder')
+    const tokenHolder = document.querySelector('.picked-tokens-wrapper')
     expect(tokenHolder).not.toBeNull()
   })
 
@@ -136,36 +136,39 @@ describe('DraftTableRenderer', () => {
     gameMode
     ${'solo'}
     ${'multiplayer'}
-  `('should add drafted tokens to the token holder for $gameMode game mode', ({ gameMode }: { gameMode: GameMode }) => {
-    initializeDraftTable(gameMode)
-    const tokens = gameState.draftTable.pickUp(0)
-    const freqencyTable = {} as Record<string, number>
-    tokens.forEach((token) => {
-      if (token.type in freqencyTable) {
-        freqencyTable[token.type]++
-      } else {
-        freqencyTable[token.type] = 1
+  `(
+    'should add drafted tokens to the wrapper wrapper for $gameMode game mode',
+    ({ gameMode }: { gameMode: GameMode }) => {
+      initializeDraftTable(gameMode)
+      const tokens = gameState.draftTable.pickUp(0)
+      const freqencyTable = {} as Record<string, number>
+      tokens.forEach((token) => {
+        if (token.type in freqencyTable) {
+          freqencyTable[token.type]++
+        } else {
+          freqencyTable[token.type] = 1
+        }
+      })
+      draftTableRenderer.render()
+      for (const key in freqencyTable) {
+        const tokenCount = freqencyTable[key]
+        const tokenHolder = document.querySelectorAll(`[data-token-type="${key}"]`)
+        expect(tokenHolder).toHaveLength(tokenCount)
       }
-    })
-    draftTableRenderer.render()
-    for (const key in freqencyTable) {
-      const tokenCount = freqencyTable[key]
-      const tokenHolder = document.querySelectorAll(`[data-token-type="${key}"]`)
-      expect(tokenHolder).toHaveLength(tokenCount)
+      const tokenHolder = document.querySelector('.picked-tokens-wrapper')
+      expect(tokenHolder?.children).toHaveLength(DraftTable.MAX_SLOT_SIZE)
     }
-    const tokenHolder = document.querySelector('.token-holder')
-    expect(tokenHolder?.children).toHaveLength(DraftTable.MAX_SLOT_SIZE)
-  })
+  )
 
   it.each`
     gameMode
     ${'solo'}
     ${'multiplayer'}
-  `('should throw an error if token holder is not found', ({ gameMode }: { gameMode: GameMode }) => {
+  `('should throw an error if wrapper wrapper is not found', ({ gameMode }: { gameMode: GameMode }) => {
     initializeDraftTable(gameMode)
-    document.querySelector('.token-holder')?.remove()
+    document.querySelector('.picked-tokens-wrapper')?.remove()
     expect(() => {
       draftTableRenderer.render()
-    }).toThrowError('No token holder found')
+    }).toThrowError('No picked tokens wrapper found')
   })
 })

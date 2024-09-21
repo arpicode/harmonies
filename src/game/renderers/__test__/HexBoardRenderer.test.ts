@@ -85,7 +85,7 @@ describe('HexBoardRenderer', () => {
     ({ type, imageSrc }: { type: HexBoardType; imageSrc: string }) => {
       initializeHexBoard(type)
       hexBoardRenderer.render()
-      const image = document.querySelector('.hex-board')
+      const image = document.querySelector('.hex-board-image')
       expect(image?.getAttribute('src')).toBe(imageSrc)
       expect(document.contains(svg)).toBe(true)
     }

@@ -50,7 +50,7 @@ describe('AnimalCardDeckInputHandler', () => {
       ${AnimalCardDeckSelectors.ANIMAL_DECK_MODAL}      | ${'animal-deck-modal'}
       ${AnimalCardDeckSelectors.ANIMAL_CARDS_CONTAINER} | ${'animal-cards-container'}
       ${AnimalCardDeckSelectors.CARD_PICKER}            | ${'card-picker'}
-      ${AnimalCardDeckSelectors.SHOW_BUTTON}            | ${'show-deck-btn'}
+      ${AnimalCardDeckSelectors.SHOW_BUTTON}            | ${'show-cards-button'}
       ${AnimalCardDeckSelectors.CLOSE_BUTTON}           | ${'close-deck-btn'}
       ${AnimalCardDeckSelectors.CONFIRM_BUTTON}         | ${'confirm-pick-btn'}
       ${AnimalCardDeckSelectors.CANCEL_BUTTON}          | ${'cancel-pick-btn'}

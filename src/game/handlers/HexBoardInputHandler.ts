@@ -4,7 +4,7 @@ import GameState from '../GameState'
 import IInputHandler from './interfaces/IInputHandler'
 
 export enum HexBoardSelectors {
-  HEX_BOARD = '#hex-board',
+  HEX_BOARD = '.hex-board-svg-overlay',
 }
 
 class HexBoardDOMException extends Error {
@@ -54,10 +54,7 @@ export default class HexBoardInputHandler implements IInputHandler {
 
   private _handleSpawnHexClick(event: Event) {
     const target = event.target as SVGElement
-    if (!target.matches('[class*="highlight-ecosystem-"]')) {
-      console.log('Not a spawn hex')
-      return
-    }
+    if (!target.matches('[class*="highlight-ecosystem-"]')) return
 
     const coords = target
       .getAttribute('data-coords')
@@ -82,6 +79,7 @@ export default class HexBoardInputHandler implements IInputHandler {
     }
     hex.isSpawn = true
     animalCard.removeAnimalToken()
+    this._gameState.pickedCardsHolder.transferCompletedCards()
     this._gameState.notifyPlaceAnimalEnd(animalCard, hex)
   }
 

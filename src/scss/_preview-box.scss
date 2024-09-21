@@ -1,0 +1,10 @@
+.preview-box-wrapper {
+  // aspect-ratio: 7 / 12;
+  width: 100%;
+  .preview {
+    visibility: hidden;
+    &.preview--visible {
+      visibility: visible;
+    }
+  }
+}

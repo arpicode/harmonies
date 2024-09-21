@@ -1,0 +1,16 @@
+.hex-board-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 1;
+  height: var(--hex-board-wrapper-height);
+}
+
+.hex-board-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

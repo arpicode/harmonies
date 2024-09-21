@@ -1,0 +1,160 @@
+$animal-card-width: 100;
+$animal-card-height: 172;
+// $card-picker-width: $animal-card-width + 31px;
+// $card-picker-height: 221px;
+
+.animal-deck-modal {
+  --animal-card-width: 120px;
+  --animal-card-height: 172px;
+  background-color: #1d1d1d;
+  padding: 2rem;
+  padding-bottom: 1rem;
+  border: calc(1rem / 16) solid #ae65a7;
+  // border-radius: 0.25rem;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(3px);
+  }
+
+  footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 20px;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      margin: 0;
+    }
+
+    button {
+      cursor: pointer;
+      user-select: none;
+      background-color: rgb(190, 116, 182);
+      color: rgb(255, 245, 255);
+      border: 1px solid rgb(157, 78, 149);
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
+
+      &:hover {
+        background-color: rgba(187, 74, 175, 0.85);
+        color: #ffe3ff;
+      }
+
+      &[disabled] {
+        background-color: rgb(195, 171, 195);
+        color: #6b6868;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.animal-cards-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+
+  .animal-card {
+    z-index: 10;
+    width: var(--animal-card-width);
+    aspect-ratio: 100 / 172;
+    opacity: 0.85;
+    border-radius: 0.5rem;
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+
+    &[draggable='true'] {
+      cursor: grab;
+    }
+
+    &[draggable='true']:active {
+      cursor: grabbing;
+    }
+
+    &:hover {
+      z-index: 100;
+      opacity: 1;
+      transform: scale(1.05);
+      box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.25);
+
+      &.dragging {
+        opacity: 0.25;
+      }
+    }
+  }
+}
+
+.card-picker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  // width: 119px;
+  // height: 193px;
+  width: calc(var(--animal-card-width) + 31px);
+  height: calc((var(--animal-card-width) + 27px) * 172 / 100);
+  background-color: #272727;
+  border: 2px dashed #ae65a7;
+  border-radius: 0.5rem;
+
+  &::before {
+    content: 'glisser/déposer\Aune carte';
+    white-space: pre-wrap;
+    position: absolute;
+    top: 2rem;
+    display: block;
+    font-size: 0.9rem;
+    color: #ae65a7;
+    text-align: center;
+  }
+
+  &::after {
+    content: '+';
+    position: absolute;
+    bottom: 2rem;
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 100%;
+    border: 2px dotted rgb(174, 101, 167, 0.7);
+    font-size: 2rem;
+    font-family: auto;
+    color: rgb(174, 101, 167, 0.7);
+  }
+
+  &.drag-over {
+    border: 2px solid rgb(174, 101, 167, 0.7);
+
+    &::before,
+    &::after {
+      all: unset;
+    }
+  }
+
+  .animal-card {
+    width: 140px;
+    aspect-ratio: 100 / 172;
+    opacity: 1;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+.cards-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: calc(var(--animal-card-width) + 31px + var(--animal-card-width) * 5 + 1.5rem + 0.5rem * 4);
+
+  & > * {
+    flex-shrink: 0;
+  }
+}

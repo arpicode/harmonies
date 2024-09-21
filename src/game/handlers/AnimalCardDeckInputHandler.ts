@@ -2,7 +2,7 @@ import GameState from '../GameState'
 import IInputHandler from './interfaces/IInputHandler'
 
 export enum AnimalCardDeckSelectors {
-  SHOW_BUTTON = '.show-deck-btn',
+  SHOW_BUTTON = '.show-cards-button',
   CLOSE_BUTTON = '.animal-deck-modal .close-deck-btn',
   CONFIRM_BUTTON = '.animal-deck-modal .confirm-pick-btn',
   CANCEL_BUTTON = '.animal-deck-modal .cancel-pick-btn',

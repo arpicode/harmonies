@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Xilosa';
-  src: url('./assets/fonts/xilosa/xilosa_.ttf');
+  src: url('./assets/fonts/xilosa/xilosa_.ttf') format('truetype');
 }
 
 :root {
@@ -10,28 +10,44 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  // background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --base-spacing: calc(16vw * 100 / 1280);
+  --cards-spacing: calc(var(--base-spacing) / 2);
+  --tokens-spacing: calc(var(--base-spacing) / 2);
+  --col-left-spacing: calc(40vw * 100 / 1280);
+  --hex-board-wrapper-height: calc(421vw * 100 / 1280);
+  --card-wrapper-border-radius: calc(10vw * 100 / 1280);
+  --card-wrapper-border: calc(1rem / 16) solid #000000;
+  --btn-font-size: calc(28vw * 100 / 1280);
+  --bg-color-800: #1f1f1f;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 1rem 1rem 0 1rem;
-  // display: flex;
-  // place-items: center;
-  // justify-content: center;
-  // flex-direction: column;
-  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+img {
+  display: block;
+  width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 svg,

@@ -9,7 +9,7 @@ export default class DraftTableInputHandler implements IInputHandler {
   }
 
   initialize() {
-    const draftTable = document.querySelector('#draft-table')
+    const draftTable = document.querySelector('.draft-table-svg-overlay')
     if (!draftTable) throw new Error('Draft table not found')
     this._bindEvents(draftTable as SVGElement)
   }
@@ -45,7 +45,7 @@ export default class DraftTableInputHandler implements IInputHandler {
   }
 
   private _bindEventsToTokensInTokenHolder() {
-    const tokens = document.querySelectorAll('.token-holder-slot')
+    const tokens = document.querySelectorAll('.picked-token')
     tokens.forEach((token) => {
       token.addEventListener('dragstart', () => {
         token.classList.add('dragging')

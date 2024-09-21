@@ -1,7 +1,11 @@
 @import 'scss/reset';
-@import 'scss/game-board';
-@import 'scss/hex';
+@import 'scss/layout';
+@import 'scss/ui-elements';
 @import 'scss/draft-table';
-@import 'scss/game-zone';
-@import 'scss/animal-deck-modal';
 @import 'scss/picked-card-holder';
+@import 'scss/hex-board';
+@import 'scss/hex';
+@import 'scss/preview-box';
+@import 'scss/info-box';
+// @import 'scss/game-zone';
+@import 'scss/animal-deck-modal';

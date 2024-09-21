@@ -2,8 +2,8 @@ import GameState from '../GameState'
 import IInputHandler from './interfaces/IInputHandler'
 
 export enum PickedCardsHolderSelectors {
-  PICKED_CARDS_HOLDER = '.picked-cards-holder .picked-cards-container',
-  CARD_ACTION_BUTTONS = '.picked-cards-holder .card-action-button',
+  PICKED_CARDS_HOLDER = '.picked-cards-wrapper',
+  CARD_ACTION_BUTTONS = '.picked-cards-wrapper .card-action-button',
 }
 
 class PickedCardsHolderDOMException extends Error {

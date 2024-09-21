@@ -1,0 +1,25 @@
+.game-wrapper {
+  aspect-ratio: 16 / 9;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: var(--base-spacing);
+  width: 100vw;
+  background-color: var(--bg-color-800);
+  padding: var(--base-spacing);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-spacing);
+
+  &.column-left {
+    justify-content: space-between;
+    gap: var(--col-left-spacing);
+  }
+
+  &.column-right {
+    gap: var(--cards-spacing);
+    justify-content: space-between;
+  }
+}

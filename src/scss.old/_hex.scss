@@ -136,7 +136,7 @@ $token-types: (
   pointer-events: none;
 }
 
-.hex-board-svg-overlay .hex {
+#hex-board .hex {
   &[class*='highlight-ecosystem-'] {
     cursor: pointer;
   }

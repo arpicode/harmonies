@@ -1,0 +1,63 @@
+.info-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.button-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cards-spacing);
+
+  .top-row {
+    display: flex;
+    gap: var(--cards-spacing);
+  }
+
+  .show-cards-button {
+    flex-grow: 1;
+    background-color: gold;
+    color: rgb(94, 71, 14);
+    border: calc(1vw * 100 / 1280) solid rgb(255, 238, 145);
+  }
+
+  .fullscreen-toggle-button {
+    background-color: #2e5794;
+    color: white;
+    border: 1px solid #396dbb;
+  }
+
+  .end-turn-button {
+    background-color: #2a8b2a;
+    color: white;
+    border: calc(1vw * 100 / 1280) solid #509c50;
+  }
+
+  .options-button {
+    flex-grow: 1;
+    background-color: coral;
+    color: rgb(78, 37, 24);
+    border: 1px solid rgb(255, 144, 103);
+  }
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .harmonies-logo {
+    width: 60%;
+  }
+
+  .author {
+    font-size: calc(16vw * 100 / 1280);
+    font-family: 'Xilosa', sans-serif;
+    color: #2e5794;
+    transition: color 250ms ease-in-out;
+
+    &:hover {
+      color: rgba(255, 127, 80, 0.705);
+    }
+  }
+}

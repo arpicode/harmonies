@@ -5,7 +5,7 @@ import { SVG_NAMESPACE } from '../../utils/utils'
 import IRenderer from './interfaces/IRenderer'
 
 export default class DraftTableRenderer implements IRenderer {
-  public static readonly DRAFT_TABLE_CONTAINER_CLASS = 'draft-table-container'
+  public static readonly DRAFT_TABLE_WRAPPER_CLASS = 'draft-table-wrapper'
   public static readonly TABLE_IMAGES = {
     solo: 'draft_table_solo.webp',
     multiplayer: 'draft_table.webp',
@@ -15,14 +15,14 @@ export default class DraftTableRenderer implements IRenderer {
   public static readonly SLOT_RADIUS = 235
 
   private _gameState: GameState
-  private _draftTable: DraftTable
+  private _draftTableState: DraftTable
   private _svg: SVGGElement
 
   constructor(gameState: GameState) {
     console.time('[Initialize] DraftTable')
     this._gameState = gameState
-    this._draftTable = gameState.draftTable
-    this._svg = this._createDraftTableSVGElement()
+    this._draftTableState = gameState.draftTable
+    this._svg = this._createDraftTableSVGOverlayElement()
     this._initializeDraftTableDOM()
     this._gameState.on('draftTableUpdated', () => this.render())
     console.timeEnd('[Initialize] DraftTable')
@@ -36,32 +36,30 @@ export default class DraftTableRenderer implements IRenderer {
   }
 
   private _initializeDraftTableDOM(): void {
-    const draftTableContainer = document.querySelector(`.${DraftTableRenderer.DRAFT_TABLE_CONTAINER_CLASS}`)
-    if (!draftTableContainer) throw new Error('No draft table container found')
+    const draftTableWrapper = document.querySelector(`.${DraftTableRenderer.DRAFT_TABLE_WRAPPER_CLASS}`)
+    if (!draftTableWrapper) throw new Error('No draft table wrapper found')
 
     const img = this._createDraftTableImageElement()
-    draftTableContainer.appendChild(img)
-    draftTableContainer.appendChild(this._svg)
+    draftTableWrapper.appendChild(img)
+    draftTableWrapper.appendChild(this._svg)
     this._createGradientDefs()
     this._createSlotGroups()
     this._createTokenGroups()
-
-    this._createTokenHolder()
   }
 
   private _createDraftTableImageElement(): HTMLImageElement {
     const img = document.createElement('img')
-    img.src = DraftTableRenderer.TABLE_IMAGES[this._draftTable.gameMode]
+    img.className = 'draft-table-image'
+    img.src = DraftTableRenderer.TABLE_IMAGES[this._draftTableState.gameMode]
     img.alt = 'Draft table'
-    img.className = 'draft-table'
     return img
   }
 
-  private _createDraftTableSVGElement(): SVGGElement {
+  private _createDraftTableSVGOverlayElement(): SVGGElement {
     const svg = document.createElementNS(SVG_NAMESPACE, 'svg') as SVGGElement
-    svg.setAttribute('xmlns', SVG_NAMESPACE)
-    svg.setAttribute('id', 'draft-table')
+    svg.setAttribute('class', 'draft-table-svg-overlay')
     svg.setAttribute('viewBox', `0 0 ${DraftTableRenderer.WIDTH} ${DraftTableRenderer.HEIGHT}`)
+    svg.setAttribute('xmlns', SVG_NAMESPACE)
     return svg
   }
 
@@ -98,7 +96,7 @@ export default class DraftTableRenderer implements IRenderer {
     const angleOffset = Math.PI / 2
     const angle = (2 * Math.PI) / DraftTable.MAX_SLOTS_MULTIPLAYER
 
-    for (let i = 0; i < this._draftTable.slotCount; i++) {
+    for (let i = 0; i < this._draftTableState.slotCount; i++) {
       const adjustedAngle = angle * i - angleOffset
       const { x: adjX, y: adjY } = this._adjustSlotCenter(i)
       const x = centerX + adjX + DraftTableRenderer.SLOT_RADIUS * Math.cos(adjustedAngle)
@@ -120,23 +118,23 @@ export default class DraftTableRenderer implements IRenderer {
     }
   }
 
-  private _createTokenHolder(): void {
-    const container = document.querySelector('.game-zone-left')
-    if (!container) throw new Error('No game-zone-left container found')
+  // private _createTokenHolder(): void {
+  //   const container = document.querySelector('.picked-tokens-wrapper')
+  //   if (!container) throw new Error('No picked tokens wrapper found')
 
-    const tokenHolder = document.createElement('div')
-    tokenHolder.className = 'token-holder'
-    container.appendChild(tokenHolder)
-  }
+  //   const tokenHolder = document.createElement('div')
+  //   tokenHolder.className = 'token-holder'
+  //   container.appendChild(tokenHolder)
+  // }
 
   private _appendTokensToTokenHolder(): void {
-    const tokenHolder = document.querySelector('.token-holder')
-    if (!tokenHolder) throw new Error('No token holder found')
+    const tokenHolder = document.querySelector('.picked-tokens-wrapper')
+    if (!tokenHolder) throw new Error('No picked tokens wrapper found')
     tokenHolder.innerHTML = ''
 
-    this._draftTable.draftedTokens.tokens.forEach((token) => {
+    this._draftTableState.draftedTokens.tokens.forEach((token) => {
       const tokenHolderSlot = document.createElement('div')
-      tokenHolderSlot.className = 'token-holder-slot'
+      tokenHolderSlot.className = 'picked-token'
       tokenHolderSlot.setAttribute('draggable', 'true')
       const tokenType = token.type.toLowerCase()
       const tokenTypeCapitalized = tokenType.charAt(0).toUpperCase() + tokenType.slice(1)
@@ -150,7 +148,7 @@ export default class DraftTableRenderer implements IRenderer {
   }
 
   private _createTokenGroups(): void {
-    this._draftTable.slots.forEach((_, i) => {
+    this._draftTableState.slots.forEach((_, i) => {
       const slotTokensGroup = document.createElementNS(SVG_NAMESPACE, 'g')
       slotTokensGroup.setAttribute('class', 'slot-tokens')
       slotTokensGroup.setAttribute('data-slot-tokens-index', i.toString())
@@ -167,7 +165,7 @@ export default class DraftTableRenderer implements IRenderer {
     const slotTokens = slotTokensGroup.querySelector(`[data-slot-tokens-index="${slotIndex}"]`)
     if (!slotTokens) throw new Error(`No slot tokens found for slot ${slotIndex}`)
 
-    this._draftTable.slots[slotIndex].forEach((token, i) => {
+    this._draftTableState.slots[slotIndex].forEach((token, i) => {
       const tokenClass = token.type.toLowerCase()
       const svgToken = this._createSvgTokenElement(tokenClass)
 
@@ -200,7 +198,7 @@ export default class DraftTableRenderer implements IRenderer {
   }
 
   private _appendTokensToAllSlots(): void {
-    this._draftTable.slots.forEach((_, i) => this._appendTokensToSlot(i))
+    this._draftTableState.slots.forEach((_, i) => this._appendTokensToSlot(i))
   }
 
   private _createSvgTokenElement(tokenClass: string): SVGElement {
@@ -243,7 +241,7 @@ export default class DraftTableRenderer implements IRenderer {
   }
 
   private _adjustSlotCenter(slot: number): { x: number; y: number } {
-    if (this._draftTable.gameMode === 'solo') {
+    if (this._draftTableState.gameMode === 'solo') {
       switch (slot) {
         case 0:
           return { x: -106, y: 165 }

@@ -1,0 +1,55 @@
+.draft-table-container {
+  &.orientation-player-1 {
+    img {
+      transform: rotate(0deg);
+    }
+  }
+
+  &.orientation-player-2 {
+    img {
+      transform: rotate(90deg);
+    }
+  }
+
+  &.orientation-player-3 {
+    img {
+      transform: rotate(180deg);
+    }
+  }
+
+  &.orientation-player-4 {
+    img {
+      transform: rotate(270deg);
+    }
+  }
+}
+
+.draft-table-slot {
+  cursor: pointer;
+  fill: transparent;
+
+  &:hover {
+    fill: url(#hover-gradient);
+
+    & ~ .slot-tokens {
+      stroke-width: calc(2rem / 16);
+    }
+  }
+}
+
+.slot-tokens {
+  pointer-events: none;
+  stroke: black;
+}
+
+.token-holder-slot {
+  cursor: pointer;
+  svg {
+    width: 48px;
+    height: 32px;
+  }
+}
+
+.dragging {
+  opacity: 0.5;
+}

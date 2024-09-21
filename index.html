@@ -9,7 +9,6 @@
 </head>
 
 <body>
-  <dialog class="animal-deck-modal"></dialog>
   <div id="token-menu">
     <label for="blue-radio">
       <input type="radio" id="blue-radio" name="color" value="Blue" checked />
@@ -36,16 +35,84 @@
       Bricks
     </label>
   </div>
-  <button class="show-deck-btn">Show animal cards</button>
 
-  <div class="game-zone">
-    <div class="game-zone-left">
-      <figure class="draft-table-container orientation-player-1"></figure>
+  <dialog class="animal-deck-modal"></dialog>
+
+  <div class="game-wrapper">
+
+    <div class="column column-left">
+      <div class="draft-table-wrapper">
+      </div>
+      <div class="picked-tokens-wrapper">
+        <div class="picked-token">
+          <img src="https://placehold.co/40x25/3F3F3F/5C5C5C/svg" alt="Token 1" />
+        </div>
+        <div class="picked-token">
+          <img src="https://placehold.co/40x25/3F3F3F/5C5C5C/svg" alt="Token 2" />
+        </div>
+        <div class="picked-token">
+          <img src="https://placehold.co/40x25/3F3F3F/5C5C5C/svg" alt="Token 3" />
+        </div>
+      </div>
+
+      <div class="completed-cards-wrapper">
+        <!-- <img class="animal-card completed-card card-1" src="./animals/artic_wolf.webp" alt="Completed card 1" />
+        <img class="animal-card completed-card card-2" src="./animals/bat.webp" alt="Completed card 2" />
+        <img class="animal-card completed-card card-3" src="./animals/bear.webp" alt="Completed card 3" />
+        <img class="animal-card completed-card card-4" src="./animals/crocodile.webp" alt="Completed card 4" />
+        <img class="animal-card completed-card card-5" src="./animals/boar.webp" alt="Completed card 5" />
+        <img class="animal-card completed-card card-6" src="./animals/bee.webp" alt="Completed card 6" /> -->
+      </div>
     </div>
-    <figure class="game-board-container"></figure>
-    <img src="/helper_river.webp" width="25%" style="aspect-ratio: 100 / 172;" alt="River score helper">
+
+    <div class="column column-center">
+      <div class="picked-cards-wrapper">
+        <div class="picked-card-wrapper">
+          <img class="animal-card" src="./images/animals/eagle.webp" alt="Card 1" />
+          <button class="button card-action-button" data-state="active">Placer</button>
+        </div>
+        <div class="picked-card-wrapper">
+          <img class="animal-card" src="./images/animals/fenec.webp" alt="Card 2" />
+          <button class="button card-action-button" data-state="cancel">Annuler</button>
+        </div>
+        <div class="picked-card-wrapper">
+          <img class="animal-card" src="./images/animals/flamingo.webp" alt="Card 3" />
+          <button class="button card-action-button" data-state="active" disabled>Placer</button>
+        </div>
+        <div class="picked-card-wrapper">
+          <img class="animal-card" src="./images/animals/frog.webp" alt="Card 4" />
+          <button class="button card-action-button" data-state="active">Placer</button>
+        </div>
+      </div>
+      <div class="hex-board-wrapper">
+        <img class="hex-board-image" src="./images/river_map_800.webp" alt="Board image" />
+      </div>
+    </div>
+
+    <div class="column column-right">
+      <div class="preview-box-wrapper">
+        <img class="preview preview--visible" src="./helper_river.webp" alt="Preview image" />
+        <!-- <img class="preview preview--visible" src="https://placehold.co/350x600/3F3F3F/5C5C5C/svg" alt="Preview image" />-->
+
+      </div>
+      <div class="info-box">
+        <div class="button-menu">
+          <div class="top-row">
+            <button class="button options-button" title="Options" disabled>Options</button>
+            <button class="button fullscreen-toggle-button" title="Plein écran" disabled>Fullscreen</button>
+          </div>
+          <button class="button show-cards-button">Afficher la Pioche</button>
+          <button class="button end-turn-button" title="Finir le tour" disabled>Terminer le Tour</button>
+        </div>
+
+        <!-- <div class="title"> -->
+        <!-- <img class="harmonies-logo" src="./images/harmonies.webp" alt="Harmonies logo" /> -->
+        <!-- <p class="author">JOHAN BENVENUTO</p> -->
+        <!-- </div> -->
+      </div>
+    </div>
+
   </div>
-  <div class="picked-cards-holder"></div>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

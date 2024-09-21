@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/harmonies_logo_256.png" />
+  <title>Harmonies</title>
+</head>
+
+<body>
+  <dialog class="animal-deck-modal"></dialog>
+  <div id="token-menu">
+    <label for="blue-radio">
+      <input type="radio" id="blue-radio" name="color" value="Blue" checked />
+      River
+    </label>
+    <label for="gray-radio">
+      <input type="radio" id="gray-radio" name="color" value="Gray" />
+      Mountain
+    </label>
+    <label for="brown-radio">
+      <input type="radio" id="brown-radio" name="color" value="Brown" />
+      Wood
+    </label>
+    <label for="green-radio">
+      <input type="radio" id="green-radio" name="color" value="Green" />
+      Leaves
+    </label>
+    <label for="yellow-radio">
+      <input type="radio" id="yellow-radio" name="color" value="Yellow" />
+      Field
+    </label>
+    <label for="red-radio">
+      <input type="radio" id="red-radio" name="color" value="Red" />
+      Bricks
+    </label>
+  </div>
+  <button class="show-deck-btn">Show animal cards</button>
+
+  <div class="game-zone">
+    <div class="game-zone-left">
+      <figure class="draft-table-container orientation-player-1"></figure>
+    </div>
+    <figure class="game-board-container"></figure>
+    <img src="/helper_river.webp" width="25%" style="aspect-ratio: 100 / 172;" alt="River score helper">
+  </div>
+  <div class="picked-cards-holder"></div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

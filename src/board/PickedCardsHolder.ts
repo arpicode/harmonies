@@ -22,7 +22,8 @@ export default class PickedCardsHolder {
   }
 
   public transferCompletedCards(): void {
-    this.pickedCards.forEach((card) => {
+    const pickedCardsCopy = [...this.pickedCards]
+    pickedCardsCopy.forEach((card) => {
       if (card.isCompleted()) {
         this.completedCards.push(card)
         this.pickedCards.splice(this.pickedCards.indexOf(card), 1)

@@ -13,7 +13,7 @@ export default class HexBoardRenderer implements IRenderer {
   private _svg: SVGGElement
   public afterHexClick?: () => void
 
-  public static readonly GAME_BOARD_WRAPPER_CLASS = 'game-board-container'
+  public static readonly GAME_BOARD_WRAPPER_CLASS = 'hex-board-wrapper'
   public static readonly BOARD_IMAGES = {
     river: 'river_map_800.webp',
     island: 'island_map_800.webp',
@@ -69,7 +69,7 @@ export default class HexBoardRenderer implements IRenderer {
     if (!gameBoardWrapper) throw new Error('Game board wrapper not found')
     const imgSrc = HexBoardRenderer.BOARD_IMAGES[this._hexBoard.type]
     if (imgSrc) {
-      gameBoardWrapper.innerHTML = `<img class="hex-board" src="${imgSrc}" alt="Hex board" />`
+      gameBoardWrapper.innerHTML = `<img class="hex-board-image" src="${imgSrc}" alt="Hex board" />`
     }
     this._hexBoard.hexes.forEach((hex) => this._drawHex(hex))
     gameBoardWrapper.appendChild(this._svg)
@@ -77,10 +77,9 @@ export default class HexBoardRenderer implements IRenderer {
 
   private _createHexBoardSVGElement(type: HexBoardType): SVGGElement {
     const svg = document.createElementNS(SVG_NAMESPACE, 'svg') as SVGGElement
-    svg.setAttribute('xmlns', SVG_NAMESPACE)
-    svg.setAttribute('id', 'hex-board')
-    svg.setAttribute('class', `hex-board--${type}`)
+    svg.classList.add('hex-board-svg-overlay', `hex-board--${type}`)
     svg.setAttribute('viewBox', `0 0 ${HexBoardRenderer.IMAGE_SIZE.w} ${HexBoardRenderer.IMAGE_SIZE.h}`)
+    svg.setAttribute('xmlns', SVG_NAMESPACE)
     return svg
   }
 

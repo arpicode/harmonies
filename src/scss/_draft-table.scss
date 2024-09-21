@@ -1,27 +1,14 @@
-.draft-table-container {
-  &.orientation-player-1 {
-    img {
-      transform: rotate(0deg);
-    }
-  }
+.draft-table-wrapper {
+  position: relative;
+  width: 100%;
+}
 
-  &.orientation-player-2 {
-    img {
-      transform: rotate(90deg);
-    }
-  }
-
-  &.orientation-player-3 {
-    img {
-      transform: rotate(180deg);
-    }
-  }
-
-  &.orientation-player-4 {
-    img {
-      transform: rotate(270deg);
-    }
-  }
+.draft-table-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .draft-table-slot {
@@ -44,9 +31,32 @@
 
 .token-holder-slot {
   cursor: pointer;
+
   svg {
     width: 48px;
     height: 32px;
+  }
+}
+
+.picked-tokens-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  stroke: black;
+
+  .picked-token {
+    width: 48px;
+    height: 32px;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      transition: transform 150ms ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
   }
 }
 

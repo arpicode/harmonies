@@ -42,7 +42,7 @@ describe('DraftTableInputHandler', () => {
     draftTableInputHandler.initialize()
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const draftTableElement: SVGElement = document.querySelector('#draft-table')!
+    const draftTableElement: SVGElement = document.querySelector('.draft-table-svg-overlay')!
     expect(draftTableElement).toBeDefined()
 
     const clickEvent = createEventWithTarget('click', draftTableElement)
@@ -123,7 +123,7 @@ describe('DraftTableInputHandler', () => {
     const clickEvent = createEventWithTarget('click', slot)
     slot.dispatchEvent(clickEvent)
 
-    const tokens = document.querySelectorAll('.token-holder-slot')
+    const tokens = document.querySelectorAll('.picked-token')
     expect(tokens).toBeDefined()
 
     tokens.forEach((token) => {
