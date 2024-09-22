@@ -10,6 +10,7 @@ import AnimalCard, { IAnimalCards } from '../board/AnimalCard'
 import EventEmitter from './EventEmitter'
 import PickedCardsHolder from '../board/PickedCardsHolder'
 import { Hex } from '~/board/Hex'
+import ScoreBoard from '~/board/ScoreBoard'
 
 export default class GameState extends EventEmitter {
   public readonly gameMode: GameMode
@@ -20,6 +21,7 @@ export default class GameState extends EventEmitter {
   public readonly draftTable: DraftTable
   public readonly animalCardDeck: AnimalCardDeck
   public readonly pickedCardsHolder: PickedCardsHolder
+  public readonly scoreBoard: ScoreBoard
 
   constructor(gameMode: GameMode, hexBoardType: HexBoardType) {
     super()
@@ -31,6 +33,7 @@ export default class GameState extends EventEmitter {
     this.draftTable = this._createDraftTable()
     this.animalCardDeck = this._createAnimalCardDeck()
     this.pickedCardsHolder = this._createPickedCardsHolder()
+    this.scoreBoard = this._createScoreBoard()
   }
 
   notifyHexBoardUpdate() {
@@ -113,5 +116,9 @@ export default class GameState extends EventEmitter {
 
   private _createPickedCardsHolder(): PickedCardsHolder {
     return new PickedCardsHolder()
+  }
+
+  private _createScoreBoard(): ScoreBoard {
+    return new ScoreBoard(this.hexBoard, this.pickedCardsHolder)
   }
 }

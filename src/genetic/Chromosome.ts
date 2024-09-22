@@ -1,3 +1,4 @@
+import PickedCardsHolder from '~/board/PickedCardsHolder'
 import Bag from '../board/Bag'
 import { Hex } from '../board/Hex'
 import { HexBoard } from '../board/HexBoard'
@@ -33,7 +34,7 @@ export default class Chromosome extends HexBoard {
   }
 
   evaluateFitness(): number {
-    const scoreBoard = new ScoreBoard(this)
+    const scoreBoard = new ScoreBoard(this, new PickedCardsHolder())
     return scoreBoard.totalScore()
   }
 

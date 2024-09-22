@@ -65,9 +65,11 @@ describe('Animal', () => {
   describe('value', () => {
     it('should return the correct point value based on animalTokenCount', () => {
       animal = new AnimalCard(animals.bee)
-      expect(animal.value()).toBe(18)
+      expect(animal.value()).toBe(0)
       animal.removeAnimalToken()
       expect(animal.value()).toBe(8)
+      animal.removeAnimalToken()
+      expect(animal.value()).toBe(18)
     })
 
     it('should set isCompleted to true when animalTokenCount reaches 0', () => {

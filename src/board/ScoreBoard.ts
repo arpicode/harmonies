@@ -1,5 +1,6 @@
 import { Hex } from './Hex'
 import { HexBoard } from './HexBoard'
+import PickedCardsHolder from './PickedCardsHolder'
 import { TokenType } from './Token'
 
 const TREE_SCORES = [1, 3, 7]
@@ -11,16 +12,20 @@ const ISLAND_SCORE = 5
 
 export default class ScoreBoard {
   private _hexBoard: HexBoard
+  private _pickedCardsHolder: PickedCardsHolder
 
-  constructor(hexBoard: HexBoard) {
+  constructor(hexBoard: HexBoard, pickedCardsHolder: PickedCardsHolder) {
     this._hexBoard = hexBoard
+    this._pickedCardsHolder = pickedCardsHolder
   }
 
-  private _calculateTreeScore(tokenType: TokenType, scoreMapping: number[]) {
+  private _calculateTokenScore(tokenType: TokenType, scoreMapping: number[], minChainLength = 1) {
     const chains = this._hexBoard.hexPathFinder.findAllChains(tokenType)
     let result = 0
 
     for (const chain of chains) {
+      if (chain.length < minChainLength) continue
+
       chain.forEach((hex) => {
         const size = hex.tokens.size()
         if (size > 0 && size <= scoreMapping.length) {
@@ -33,25 +38,11 @@ export default class ScoreBoard {
   }
 
   treeScore() {
-    return this._calculateTreeScore(TokenType.Green, TREE_SCORES)
+    return this._calculateTokenScore(TokenType.Green, TREE_SCORES)
   }
 
   mountainScore() {
-    const chains = this._hexBoard.hexPathFinder.findAllChains(TokenType.Gray)
-    let result = 0
-
-    for (const chain of chains) {
-      if (chain.length < 2) continue
-
-      chain.forEach((hex) => {
-        const size = hex.tokens.size()
-        if (size > 0 && size <= MOUNTAIN_SCORES.length) {
-          result += MOUNTAIN_SCORES[size - 1]
-        }
-      })
-    }
-
-    return result
+    return this._calculateTokenScore(TokenType.Gray, MOUNTAIN_SCORES, 2)
   }
 
   fieldScore() {
@@ -86,12 +77,24 @@ export default class ScoreBoard {
     return this._hexBoard.hexPathFinder.findAllChainsExcludingTokenOfType(TokenType.Blue).length * ISLAND_SCORE
   }
 
-  totalScore() {
-    return this.treeScore() + this.mountainScore() + this.fieldScore() + this.buildingScore() + this.riverScore()
+  animalCardsScores(): Record<string, number> {
+    const scores = {} as Record<string, number>
+
+    const allCards = [...this._pickedCardsHolder.pickedCards, ...this._pickedCardsHolder.completedCards]
+
+    allCards.forEach((animalCard) => {
+      const score = animalCard.value()
+      scores[animalCard.name] = score
+    })
+
+    // Calculate total score for animal cards
+    scores.total = Object.values(scores).reduce((acc, score) => acc + score, 0)
+
+    return scores
   }
 
-  toString() {
-    const total = {
+  tokensScores() {
+    const scores = {
       tree: this.treeScore(),
       mountain: this.mountainScore(),
       field: this.fieldScore(),
@@ -99,8 +102,31 @@ export default class ScoreBoard {
       river: this.riverScore(),
     } as Record<string, number>
 
-    total.total = Object.values(total).reduce((acc, score) => acc + score, 0)
+    // Calculate total score for tokens
+    scores.total = Object.values(scores).reduce((acc, score) => acc + score, 0)
 
-    return JSON.stringify(total)
+    return scores
+  }
+
+  totalScore() {
+    const tokensScores = this.tokensScores()
+    const animalCardsScores = this.animalCardsScores()
+
+    return tokensScores.total + animalCardsScores.total
+  }
+
+  toString() {
+    const tokensScores = this.tokensScores()
+    const animalCardsScores = this.animalCardsScores()
+
+    const totalScore = tokensScores.total + animalCardsScores.total
+
+    const result = {
+      tokens: tokensScores,
+      animals: animalCardsScores,
+      total: totalScore,
+    }
+
+    return JSON.stringify(result, null, 2)
   }
 }

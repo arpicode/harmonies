@@ -2,11 +2,16 @@ import Token, { TokenType } from '../Token'
 import { HexBoard } from '../HexBoard'
 import ScoreBoard from '../ScoreBoard'
 import { testRiverHexBoard } from './test-data'
+import PickedCardsHolder from '../PickedCardsHolder'
+
+import animalsJson from '../../animals.json'
+import AnimalCard, { IAnimalCards } from '../AnimalCard'
+const animals = animalsJson as IAnimalCards
 
 describe('ScoreBoard', () => {
-  const scoreBoard = new ScoreBoard(testRiverHexBoard)
+  const scoreBoard = new ScoreBoard(testRiverHexBoard, new PickedCardsHolder())
   const emptyHexBoard = new HexBoard(5, 5, 'river')
-  const emptyScoreBoard = new ScoreBoard(emptyHexBoard)
+  const emptyScoreBoard = new ScoreBoard(emptyHexBoard, new PickedCardsHolder())
 
   describe('treeScore', () => {
     it('should calculate the tree score correctly when there are no trees', () => {
@@ -49,6 +54,7 @@ describe('ScoreBoard', () => {
   })
 
   describe('riverScore', () => {
+    const pickedCardsHolder = new PickedCardsHolder()
     let riverHexBoard: HexBoard
     let riverScoreBoard: ScoreBoard
     let islandHexBoard: HexBoard
@@ -56,9 +62,9 @@ describe('ScoreBoard', () => {
 
     beforeEach(() => {
       riverHexBoard = new HexBoard(5, 5, 'river')
-      riverScoreBoard = new ScoreBoard(riverHexBoard)
+      riverScoreBoard = new ScoreBoard(riverHexBoard, pickedCardsHolder)
       islandHexBoard = new HexBoard(7, 4, 'island')
-      islandScoreBoard = new ScoreBoard(islandHexBoard)
+      islandScoreBoard = new ScoreBoard(islandHexBoard, pickedCardsHolder)
     })
 
     it('should calculate the river token score correctly for a river with 0 or 1 token', () => {
@@ -169,20 +175,249 @@ describe('ScoreBoard', () => {
     })
   })
 
+  describe('animal cards score', () => {
+    let pickedCardsHolder: PickedCardsHolder
+
+    beforeEach(() => {
+      pickedCardsHolder = new PickedCardsHolder()
+    })
+
+    it('should calculate the animal cards score correctly when there are no animal cards', () => {
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+      expect(scoreBoard.animalCardsScores()).toEqual({ total: 0 })
+    })
+
+    it('should calculate the animal cards score correctly when cards have all their tokens remaining', () => {
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+      expect(scoreBoard.animalCardsScores()).toEqual({
+        Hérisson: 0,
+        Aigle: 0,
+        'Martin-pêcheur': 0,
+        total: 0,
+      })
+    })
+
+    it('should calculate the animal cards score correctly when cards have some tokens removed', () => {
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+      hedgehogCard.removeAnimalToken()
+      eagleCard.removeAnimalToken()
+      kingfisherCard.removeAnimalToken()
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+      expect(scoreBoard.animalCardsScores()).toEqual({
+        Hérisson: 5,
+        Aigle: 5,
+        'Martin-pêcheur': 5,
+        total: 15,
+      })
+    })
+
+    it('should calculate the animal cards score correctly when some cards are completed', () => {
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+
+      hedgehogCard.removeAnimalToken()
+      expect(hedgehogCard.isCompleted()).toBe(false)
+
+      eagleCard.points.forEach(() => {
+        eagleCard.removeAnimalToken()
+      })
+      expect(eagleCard.isCompleted()).toBe(true)
+
+      kingfisherCard.removeAnimalToken()
+      kingfisherCard.removeAnimalToken()
+      expect(kingfisherCard.isCompleted()).toBe(false)
+
+      pickedCardsHolder.transferCompletedCards()
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+      expect(scoreBoard.animalCardsScores()).toEqual({
+        Hérisson: 5,
+        Aigle: 11,
+        'Martin-pêcheur': 11,
+        total: 27,
+      })
+    })
+
+    it('should calculate the animal cards score correctly when all cards are completed', () => {
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+
+      hedgehogCard.points.forEach(() => {
+        hedgehogCard.removeAnimalToken()
+      })
+      expect(hedgehogCard.isCompleted()).toBe(true)
+
+      eagleCard.points.forEach(() => {
+        eagleCard.removeAnimalToken()
+      })
+      expect(eagleCard.isCompleted()).toBe(true)
+
+      kingfisherCard.points.forEach(() => {
+        kingfisherCard.removeAnimalToken()
+      })
+      expect(kingfisherCard.isCompleted()).toBe(true)
+
+      pickedCardsHolder.transferCompletedCards()
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+      expect(scoreBoard.animalCardsScores()).toEqual({
+        Hérisson: 12,
+        Aigle: 11,
+        'Martin-pêcheur': 18,
+        total: 41,
+      })
+    })
+  })
+
   describe('toString', () => {
-    it('should return the total score', () => {
+    it('should return the total score when only tokens', () => {
       const treeSpy = vi.spyOn(scoreBoard, 'treeScore')
       const mountainSpy = vi.spyOn(scoreBoard, 'mountainScore')
       const fieldSpy = vi.spyOn(scoreBoard, 'fieldScore')
       const buildingSpy = vi.spyOn(scoreBoard, 'buildingScore')
       const riverSpy = vi.spyOn(scoreBoard, 'riverScore')
-      expect(scoreBoard.toString()).toBe(`{"tree":11,"mountain":11,"field":10,"building":10,"river":8,"total":50}`)
+      expect(JSON.parse(scoreBoard.toString())).toEqual({
+        tokens: {
+          tree: 11,
+          mountain: 11,
+          field: 10,
+          building: 10,
+          river: 8,
+          total: 50,
+        },
+        animals: {
+          total: 0,
+        },
+        total: 50,
+      })
 
       expect(treeSpy).toHaveBeenCalledTimes(1)
       expect(mountainSpy).toHaveBeenCalledTimes(1)
       expect(fieldSpy).toHaveBeenCalledTimes(1)
       expect(buildingSpy).toHaveBeenCalledTimes(1)
       expect(riverSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('should return the total score when only animal cards with all their tokens', () => {
+      const pickedCardsHolder = new PickedCardsHolder()
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+      const treeSpy = vi.spyOn(scoreBoard, 'treeScore')
+      const mountainSpy = vi.spyOn(scoreBoard, 'mountainScore')
+      const fieldSpy = vi.spyOn(scoreBoard, 'fieldScore')
+      const buildingSpy = vi.spyOn(scoreBoard, 'buildingScore')
+      const riverSpy = vi.spyOn(scoreBoard, 'riverScore')
+      expect(JSON.parse(scoreBoard.toString())).toEqual({
+        tokens: {
+          tree: 11,
+          mountain: 11,
+          field: 10,
+          building: 10,
+          river: 8,
+          total: 50,
+        },
+        animals: {
+          Hérisson: 0,
+          Aigle: 0,
+          'Martin-pêcheur': 0,
+          total: 0,
+        },
+        total: 50,
+      })
+
+      expect(treeSpy).toHaveBeenCalledTimes(1)
+      expect(mountainSpy).toHaveBeenCalledTimes(1)
+      expect(fieldSpy).toHaveBeenCalledTimes(1)
+      expect(buildingSpy).toHaveBeenCalledTimes(1)
+      expect(riverSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('should return the total score when only animal cards with some tokens removed', () => {
+      const pickedCardsHolder = new PickedCardsHolder()
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+      hedgehogCard.removeAnimalToken()
+      eagleCard.removeAnimalToken()
+      kingfisherCard.removeAnimalToken()
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+
+      expect(JSON.parse(scoreBoard.toString())).toEqual({
+        tokens: {
+          tree: 11,
+          mountain: 11,
+          field: 10,
+          building: 10,
+          river: 8,
+          total: 50,
+        },
+        animals: {
+          Hérisson: 5,
+          Aigle: 5,
+          'Martin-pêcheur': 5,
+          total: 15,
+        },
+        total: 65,
+      })
+    })
+
+    it('should return the total score when only animal cards with some cards completed', () => {
+      const pickedCardsHolder = new PickedCardsHolder()
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+      hedgehogCard.removeAnimalToken()
+      eagleCard.removeAnimalToken()
+      eagleCard.removeAnimalToken()
+      kingfisherCard.removeAnimalToken()
+      kingfisherCard.removeAnimalToken()
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder)
+
+      expect(JSON.parse(scoreBoard.toString())).toEqual({
+        tokens: {
+          tree: 11,
+          mountain: 11,
+          field: 10,
+          building: 10,
+          river: 8,
+          total: 50,
+        },
+        animals: {
+          Hérisson: 5,
+          Aigle: 11,
+          'Martin-pêcheur': 11,
+          total: 27,
+        },
+        total: 77,
+      })
     })
   })
 })

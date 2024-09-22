@@ -1,10 +1,72 @@
 .preview-box-wrapper {
-  // aspect-ratio: 7 / 12;
+  position: relative;
+  user-select: none;
   width: 100%;
+
   .preview {
-    visibility: hidden;
-    &.preview--visible {
-      visibility: visible;
+    display: flex;
+  }
+
+  .score-board {
+    display: none;
+  }
+
+  .score-board-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    display: none;
+
+    .score {
+      cursor: default;
+      font-family: 'Xilosa';
+      font-size: calc(24vw * 100 / 1280);
+      // width: calc(35vw * 100 / 1280);
+      // text-align: center;
+      color: black;
+    }
+    .total-score {
+      position: absolute;
+      font-size: calc(26vw * 100 / 1280);
+      width: 100%;
+      text-align: center;
+      bottom: 0;
+      left: 1%;
+    }
+    [data-score-for-token='total'] {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      color: black;
+      left: -10%;
+      bottom: 9.3%;
+    }
+  }
+
+  .tokens-scores,
+  .animals-scores {
+    display: flex;
+    flex-direction: column;
+    gap: calc(42vw * 100 / 1280);
+    margin-top: calc(75vw * 100 / 1280);
+    // justify-content: center;
+    align-items: center;
+  }
+
+  &.score-board--show {
+    .preview {
+      display: none;
+    }
+
+    .score-board {
+      display: flex;
+    }
+
+    .score-board-overlay {
+      display: flex;
     }
   }
 }

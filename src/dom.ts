@@ -21,8 +21,9 @@ export const dom = `
     </div>
 
     <div class="column column-right">
-      <div class="preview-box-wrapper">
-        <img class="preview preview--visible" src="./images/helper_river.webp" alt="Preview image" />
+      <div class="preview-box-wrapper score-board--show">
+        <img class="preview" src="./images/helper_river.webp" alt="Preview image" />
+        <img class="score-board" src="./images/score_board.webp" alt="Score board" />
       </div>
       <div class="info-box">
         <div class="button-menu">

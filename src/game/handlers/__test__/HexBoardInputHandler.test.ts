@@ -295,7 +295,8 @@ describe('HexBoardInputHandler', () => {
       expect(currentToken).not.toBeNull()
       expect(currentHexDropZone).not.toBeNull()
 
-      const currentDropZoneParentId = currentHexDropZone.parentElement?.id // should be hex-0-0
+      const currentDropZoneParentId = currentHexDropZone.parentElement?.id
+      expect(currentDropZoneParentId).toBe('hex-0-0')
       const currentTokenTokenType = currentToken.getAttribute('data-token-type')
 
       // Simulate drag start event from the token
