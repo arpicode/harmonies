@@ -28,6 +28,7 @@
       // text-align: center;
       color: black;
     }
+
     .total-score {
       position: absolute;
       font-size: calc(26vw * 100 / 1280);
@@ -36,24 +37,89 @@
       bottom: 0;
       left: 1%;
     }
-    [data-score-for-token='total'] {
+
+    [data-score-for-token],
+    [data-score-for-animal] {
       position: absolute;
-      width: 100%;
+      width: 50%;
       text-align: center;
       color: black;
-      left: -10%;
-      bottom: 9.3%;
     }
   }
 
-  .tokens-scores,
+  .tokens-scores {
+    [data-score-for-token] {
+      font-size: calc(22vw * 100 / 1280);
+      left: 15%;
+    }
+
+    [data-score-for-token='tree'] {
+      bottom: 78.9%;
+    }
+
+    [data-score-for-token='mountain'] {
+      bottom: 63.9%;
+    }
+
+    [data-score-for-token='field'] {
+      bottom: 48.9%;
+    }
+
+    [data-score-for-token='building'] {
+      bottom: 33.9%;
+    }
+
+    [data-score-for-token='river'] {
+      bottom: 18.9%;
+    }
+
+    [data-score-for-token='total'] {
+      font-size: calc(24vw * 100 / 1280);
+      bottom: 9%;
+    }
+  }
   .animals-scores {
-    display: flex;
-    flex-direction: column;
-    gap: calc(42vw * 100 / 1280);
-    margin-top: calc(75vw * 100 / 1280);
-    // justify-content: center;
-    align-items: center;
+    [data-score-for-animal] {
+      font-size: calc(22vw * 100 / 1280);
+      left: 35.3%;
+    }
+
+    [data-position='0'] {
+      bottom: 78%;
+    }
+
+    [data-position='1'] {
+      bottom: 69.6%;
+    }
+
+    [data-position='2'] {
+      bottom: 61.1%;
+    }
+
+    [data-position='3'] {
+      bottom: 52.6%;
+    }
+
+    [data-position='4'] {
+      bottom: 44.1%;
+    }
+
+    [data-position='5'] {
+      bottom: 35.6%;
+    }
+
+    [data-position='6'] {
+      bottom: 27.1%;
+    }
+
+    [data-position='7'] {
+      bottom: 18.6%;
+    }
+
+    [data-score-for-animal='total'] {
+      font-size: calc(24vw * 100 / 1280);
+      bottom: 9%;
+    }
   }
 
   &.score-board--show {

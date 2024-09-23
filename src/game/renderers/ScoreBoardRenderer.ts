@@ -7,9 +7,10 @@ export default class ScoreBoardRenderer implements IRenderer {
   private readonly _scoreBoardState: ScoreBoard
   private _tokensScores: Record<string, number>
   private _animalsScores: Record<string, number>
+  private _animalCardPositionGenerator: Generator<number, void>
 
   private _TOKEN_NAMES = new Map<string, string>([
-    ['tree', 'Abres'],
+    ['tree', 'Arbres'],
     ['mountain', 'Montagnes'],
     ['field', 'Champs'],
     ['building', 'Bâtiments'],
@@ -21,6 +22,7 @@ export default class ScoreBoardRenderer implements IRenderer {
     this._scoreBoardState = gameState.scoreBoard
     this._tokensScores = {}
     this._animalsScores = {}
+    this._animalCardPositionGenerator = this._createAnimalCardPositionGenerator()
     this._initializeScoreBoardDOM()
     this._gameState.on('hexBoardUpdated', () => this.render())
     this._gameState.on('pickedCardsHolderUpdated', () => this.render())
@@ -48,15 +50,12 @@ export default class ScoreBoardRenderer implements IRenderer {
     const wrapper = this._getScoreBoardWrapper()
     const scoreBoardOverlay = document.createElement('div')
     scoreBoardOverlay.classList.add('score-board-overlay')
-    const tokensScoresElement = this.createTokensScoresElement()
-    const animalsScoresElement = this.createAnimalsScoresElement()
+    const tokensScoresElement = this._createTokensScoresElement()
+    const animalsScoresElement = this._createAnimalsScoresElement()
     scoreBoardOverlay.appendChild(tokensScoresElement)
     scoreBoardOverlay.appendChild(animalsScoresElement)
 
     wrapper.appendChild(scoreBoardOverlay)
-    wrapper.addEventListener('dblclick', () => {
-      wrapper.classList.toggle('score-board--show')
-    })
   }
 
   private _getScoreBoardWrapper(): HTMLDivElement {
@@ -77,14 +76,14 @@ export default class ScoreBoardRenderer implements IRenderer {
     return animalsScoresElement
   }
 
-  private createTokensScoresElement(): HTMLDivElement {
+  private _createTokensScoresElement(): HTMLDivElement {
     const tokensScoresElement = document.createElement('div')
     tokensScoresElement.classList.add('tokens-scores')
 
     return tokensScoresElement
   }
 
-  private createAnimalsScoresElement(): HTMLDivElement {
+  private _createAnimalsScoresElement(): HTMLDivElement {
     const animalsScoresElement = document.createElement('div')
     animalsScoresElement.classList.add('animals-scores')
 
@@ -113,6 +112,15 @@ export default class ScoreBoardRenderer implements IRenderer {
     })
   }
 
+  private *_createAnimalCardPositionGenerator(): Generator<number, void> {
+    let counter = 0
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    while (true) {
+      /* Needed to keep the generator running */
+      yield counter++
+    }
+  }
+
   private _updateOrCreateAnimalScoreElement(animalKey: string): void {
     const overlay = this._getAnimalsScoresOverlay()
     let animalScoreElement = overlay.querySelector<HTMLDivElement>(`[data-score-for-animal="${animalKey}"]`)
@@ -122,6 +130,8 @@ export default class ScoreBoardRenderer implements IRenderer {
       animalScoreElement.classList.add('score')
       animalScoreElement.dataset.scoreForAnimal = animalKey
       animalScoreElement.title = animalKey
+      if (animalKey !== 'total')
+        animalScoreElement.dataset.position = `${this._animalCardPositionGenerator.next().value}`
       overlay.appendChild(animalScoreElement)
     }
   }

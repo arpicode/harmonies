@@ -2,7 +2,6 @@
 import GameState from '~/game/GameState'
 import PickedCardsHolderInputHandler, { PickedCardsHolderSelectors } from '../PickedCardsHolderInputHandler'
 import PickedCardsHolderRenderer from '~/game/renderers/PickedCardsHolderRenderer'
-import { MockInstance } from 'vitest'
 import { dom } from '~/dom'
 import { createEventWithTarget } from '~/test-utils/test-utils'
 
@@ -29,12 +28,10 @@ describe('PickedCardsHolderInputHandler', () => {
   let pickedCardsHolderInputHandler: PickedCardsHolderInputHandler
   let pickedCardsHolderRenderer: PickedCardsHolderRenderer
 
-  let consoleLogSpy: MockInstance
-  let consoleErrorSpy: MockInstance
+  const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
+  const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn())
 
   beforeEach(() => {
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn())
     document.body.innerHTML = dom
     gameState = new GameState('multiplayer', 'river')
     pickedCardsHolderRenderer = new PickedCardsHolderRenderer(gameState)
