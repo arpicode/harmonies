@@ -3,14 +3,14 @@ import IInputHandler from '../interfaces/IInputHandler'
 
 export enum AnimalCardDeckSelectors {
   SHOW_BUTTON = '.show-cards-button',
-  CLOSE_BUTTON = '.animal-deck-modal .close-deck-btn',
-  CONFIRM_BUTTON = '.animal-deck-modal .confirm-pick-btn',
-  CANCEL_BUTTON = '.animal-deck-modal .cancel-pick-btn',
+  CLOSE_BUTTON = '.animal-deck-modal .close-deck-button',
+  CONFIRM_BUTTON = '.animal-deck-modal .confirm-pick-button',
+  CANCEL_BUTTON = '.animal-deck-modal .cancel-pick-button',
   CARD_PICKER = '.animal-deck-modal .card-picker',
   PICKED_CARD = '.animal-deck-modal .card-picker .animal-card',
   ANIMAL_DECK_MODAL = '.animal-deck-modal',
-  ANIMAL_CARDS_CONTAINER = '.animal-deck-modal .animal-cards-container',
-  REMAINING_ANIMAL_CARDS = '.animal-deck-modal .animal-cards-container .animal-card',
+  ANIMAL_CARDS_WRAPPER = '.animal-deck-modal .cards-wrapper',
+  REMAINING_ANIMAL_CARDS = '.animal-deck-modal .card-wrapper .animal-card',
   ANIMAL_CARDS = '.animal-deck-modal .animal-card',
   DRAGGING = '.dragging',
   DRAG_OVER = '.drag-over',
@@ -27,7 +27,6 @@ class AnimalCardDeckDOMException extends Error {
 export default class AnimalCardDeckInputHandler implements IInputHandler {
   private readonly _gameState: GameState
   private readonly _animalDeckModal: HTMLDialogElement
-  private readonly _animalCardsContainer: HTMLDivElement
   private readonly _cardPicker: HTMLDivElement
   private readonly _openButton: HTMLButtonElement
   private readonly _closeButton: HTMLButtonElement
@@ -38,7 +37,6 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   constructor(gameState: GameState) {
     this._gameState = gameState
     this._animalDeckModal = this._querySelector<HTMLDialogElement>(AnimalCardDeckSelectors.ANIMAL_DECK_MODAL)
-    this._animalCardsContainer = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.ANIMAL_CARDS_CONTAINER)
     this._cardPicker = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.CARD_PICKER)
     this._openButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.SHOW_BUTTON)
     this._closeButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CLOSE_BUTTON)
@@ -88,6 +86,11 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     const pickedCardElement = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
     if (!pickedCardElement) return
 
+    const oldCardWrapper = document.querySelector<HTMLDivElement>(
+      `.card-wrapper[data-wrapper-for="${pickedCardElement.alt}"]`
+    )
+    if (!oldCardWrapper) return
+
     this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
 
     if (this._gameState.pickedCardsHolder.isFull) {
@@ -99,6 +102,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     this._gameState.pickedCardsHolder.add(pickedCard)
 
     pickedCardElement.remove()
+    oldCardWrapper.remove()
 
     this._gameState.notifyPickedCardsHolderUpdate()
     this._gameState.notifyAnimalCardDeckUpdate()
@@ -144,13 +148,15 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   private _cancelPick() {
     const pickedCard = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
     if (!pickedCard) return
-    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
-    const sortedCards = this._sortElementsByTimestamp(this._animalCards)
-    sortedCards.forEach((card) => {
-      card.setAttribute('draggable', 'true')
-      this._animalCardsContainer.appendChild(card)
-    })
 
+    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+    this._updateCardsDraggableState(true)
+
+    const pickedCardName = pickedCard.alt
+    const cardWrapper = document.querySelector<HTMLDivElement>(`.card-wrapper[data-wrapper-for="${pickedCardName}"]`)
+    if (!cardWrapper) return
+
+    cardWrapper.appendChild(pickedCard)
     this._updateButtonsDisabledState(true)
   }
 
@@ -163,15 +169,5 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     this._animalCards.forEach((card) => {
       card.setAttribute('draggable', isDraggable ? 'true' : 'false')
     })
-  }
-
-  private _sortElementsByTimestamp(elements: NodeListOf<Element>) {
-    return Array.from(elements)
-      .map((element) => ({
-        element,
-        timestamp: parseInt(element.getAttribute('data-timestamp') ?? '0'),
-      }))
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map((item) => item.element)
   }
 }

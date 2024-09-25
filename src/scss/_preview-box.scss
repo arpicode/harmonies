@@ -1,4 +1,5 @@
 .preview-box-wrapper {
+  cursor: pointer;
   position: relative;
   user-select: none;
   width: 100%;
@@ -21,15 +22,13 @@
     display: none;
 
     .score {
-      cursor: default;
       font-family: 'Xilosa';
       font-size: calc(24vw * 100 / 1280);
-      // width: calc(35vw * 100 / 1280);
-      // text-align: center;
       color: black;
     }
 
     .total-score {
+      cursor: default;
       position: absolute;
       font-size: calc(26vw * 100 / 1280);
       width: 100%;
@@ -40,8 +39,9 @@
 
     [data-score-for-token],
     [data-score-for-animal] {
+      cursor: help;
       position: absolute;
-      width: 50%;
+      width: calc(44vw * 100 / 1280);
       text-align: center;
       color: black;
     }
@@ -50,7 +50,7 @@
   .tokens-scores {
     [data-score-for-token] {
       font-size: calc(22vw * 100 / 1280);
-      left: 15%;
+      left: 32.8%;
     }
 
     [data-score-for-token='tree'] {
@@ -78,10 +78,11 @@
       bottom: 9%;
     }
   }
+
   .animals-scores {
     [data-score-for-animal] {
       font-size: calc(22vw * 100 / 1280);
-      left: 35.3%;
+      left: 52.5%;
     }
 
     [data-position='0'] {

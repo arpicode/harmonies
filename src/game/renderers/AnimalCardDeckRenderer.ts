@@ -18,16 +18,15 @@ export default class AnimalCardDeckRenderer implements IRenderer {
 
   render(): void {
     console.time('[Render] AnimalCardDeckRenderer')
-    const animalCardsContainer = document.querySelector('.animal-cards-container')
-    if (!animalCardsContainer) throw new Error('Animal cards container not found')
-    const animalCardNames = Array.from(animalCardsContainer.querySelectorAll<HTMLImageElement>('.animal-card')).map(
+    const cardsWrapper = document.querySelector('.cards-wrapper')
+    if (!cardsWrapper) throw new Error('Animal cards wrapper not found')
+    const animalCardNames = Array.from(cardsWrapper.querySelectorAll<HTMLImageElement>('.animal-card')).map(
       (card) => card.alt
     )
     for (const animal of this._animalCardDeck.drawnCards) {
       if (animalCardNames.includes(animal.name)) continue
       const cardElement = this._createCardElement(animal)
-      cardElement.setAttribute('data-timestamp', `${animal.timestamp}`)
-      animalCardsContainer.appendChild(cardElement)
+      cardsWrapper.insertBefore(cardElement, cardsWrapper.lastChild)
     }
     console.timeEnd('[Render] AnimalCardDeckRenderer')
   }
@@ -35,39 +34,44 @@ export default class AnimalCardDeckRenderer implements IRenderer {
   private _initializeAnimalCardDeckDOM(): void {
     const animalDeckModal = this._getAnimalDeckModal()
     const cardsWrapper = this._createCardsWrapper()
-    const animalCardsContainer = this._createAnimalCardsContainer()
     const cardPicker = this._createCardPicker()
     const footer = this._createModalFooter()
 
     animalDeckModal.appendChild(cardsWrapper)
-    cardsWrapper.appendChild(animalCardsContainer)
     cardsWrapper.appendChild(cardPicker)
     animalDeckModal.appendChild(footer)
   }
+
   private _getAnimalDeckModal(): HTMLDialogElement {
     const animalDeckModal = document.querySelector('.animal-deck-modal')
     if (!animalDeckModal) throw new Error('Animal deck modal not found')
     return animalDeckModal as HTMLDialogElement
   }
+
   private _createCardsWrapper(): HTMLDivElement {
     const cardsWrapper = document.createElement('div')
     cardsWrapper.classList.add('cards-wrapper')
     return cardsWrapper
   }
 
-  private _createAnimalCardsContainer(): HTMLDivElement {
-    const animalCardsContainer = document.createElement('div')
-    animalCardsContainer.classList.add('animal-cards-container')
-    return animalCardsContainer
+  private _createCardWrapper(): HTMLDivElement {
+    const cardWrapper = document.createElement('div')
+    cardWrapper.classList.add('card-wrapper')
+    return cardWrapper
   }
 
-  private _createCardElement(animal: AnimalCard): HTMLImageElement {
+  private _createCardElement(animal: AnimalCard): HTMLDivElement {
+    const cardWrapper = this._createCardWrapper()
     const cardElement = document.createElement('img')
     cardElement.classList.add('animal-card')
     cardElement.src = animal.image
     cardElement.alt = animal.name
     cardElement.draggable = true
-    return cardElement
+    cardElement.dataset.timestamp = `${animal.timestamp}`
+
+    cardWrapper.appendChild(cardElement)
+    cardWrapper.dataset.wrapperFor = animal.name
+    return cardWrapper
   }
 
   private _createCardPicker(): HTMLDivElement {
@@ -78,18 +82,19 @@ export default class AnimalCardDeckRenderer implements IRenderer {
 
   private _createModalFooter(): HTMLElement {
     const footer = document.createElement('footer')
+    footer.classList.add('modal-footer')
 
     const createButton = (className: string, textContent: string, disabled = false): HTMLButtonElement => {
       const button = document.createElement('button')
-      button.classList.add(className)
+      button.classList.add('button', className)
       button.textContent = textContent
       button.disabled = disabled
       return button
     }
 
-    footer.appendChild(createButton('confirm-pick-btn', 'Confirmer', true))
-    footer.appendChild(createButton('cancel-pick-btn', 'Annuler', true))
-    footer.appendChild(createButton('close-deck-btn', 'Fermer'))
+    footer.appendChild(createButton('confirm-pick-button', 'Confirmer', true))
+    footer.appendChild(createButton('cancel-pick-button', 'Annuler', true))
+    footer.appendChild(createButton('close-deck-button', 'Fermer'))
 
     return footer
   }

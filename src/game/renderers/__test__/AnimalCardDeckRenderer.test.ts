@@ -33,19 +33,22 @@ describe('AnimalCardDeckRenderer', () => {
     }).toThrowError('Animal deck modal not found')
   })
 
-  it('should render the initial animal cards', () => {
+  it('should render the initial animal cards with their wrappers', () => {
     initializeDraftTable()
     animalCardDeckRenderer.render()
-    const initialCards = document.querySelector('.animal-cards-container')
-    expect(initialCards?.children).toHaveLength(AnimalCardDeck.MAX_DRAWN_CARDS)
+    const initialCardWrappers = document.querySelectorAll('.card-wrapper')
+    expect(initialCardWrappers).toHaveLength(AnimalCardDeck.MAX_DRAWN_CARDS)
+    initialCardWrappers.forEach((wrapper) => {
+      expect(wrapper.querySelector('.animal-card')).not.toBeNull()
+    })
   })
 
   it('should not re-render the same animal cards', () => {
     initializeDraftTable()
     animalCardDeckRenderer.render()
-    const initialCards = document.querySelectorAll('.animal-cards-container .animal-card')
+    const initialCards = document.querySelectorAll('.cards-wrapper .animal-card')
     animalCardDeckRenderer.render()
-    const reRenderedCards = document.querySelectorAll('.animal-cards-container .animal-card')
+    const reRenderedCards = document.querySelectorAll('.cards-wrapper .animal-card')
     expect(initialCards).toHaveLength(AnimalCardDeck.MAX_DRAWN_CARDS)
     expect(reRenderedCards).toHaveLength(AnimalCardDeck.MAX_DRAWN_CARDS)
 
@@ -56,10 +59,10 @@ describe('AnimalCardDeckRenderer', () => {
 
   it('should throw an error if animal cards container is not found', () => {
     initializeDraftTable()
-    document.querySelector('.animal-cards-container')?.classList.remove('animal-cards-container')
+    document.querySelector('.cards-wrapper')?.classList.remove('cards-wrapper')
     expect(() => {
       animalCardDeckRenderer.render()
-    }).toThrowError('Animal cards container not found')
+    }).toThrowError('Animal cards wrapper not found')
   })
 
   it('should render the card picker', () => {

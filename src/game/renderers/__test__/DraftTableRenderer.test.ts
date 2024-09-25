@@ -42,18 +42,6 @@ describe('DraftTableRenderer', () => {
     }).toThrowError('No draft table wrapper found')
   })
 
-  // it.each`
-  //   gameMode
-  //   ${'solo'}
-  //   ${'multiplayer'}
-  // `('should throw an error if game zone left container is not found', ({ gameMode }: { gameMode: GameMode }) => {
-  //   initializeDraftTable(gameMode)
-  //   document.querySelector('.game-zone-left')?.classList.remove('game-zone-left')
-  //   expect(() => {
-  //     new DraftTableRenderer(new GameState(gameMode, 'river'))
-  //   }).toThrowError('No game-zone-left container found')
-  // })
-
   it.each`
     gameMode         | imageSrc
     ${'solo'}        | ${DraftTableRenderer.TABLE_IMAGES.solo}
