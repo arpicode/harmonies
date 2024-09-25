@@ -1,7 +1,7 @@
 import AnimalCard from '../../board/AnimalCard'
 import AnimalCardDeck from '../../board/AnimalCardDeck'
 import GameState from '../GameState'
-import IRenderer from './interfaces/IRenderer'
+import IRenderer from '../interfaces/IRenderer'
 
 export default class AnimalCardDeckRenderer implements IRenderer {
   private readonly _gameState: GameState

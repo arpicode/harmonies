@@ -1,7 +1,7 @@
 import AnimalCard from '../../board/AnimalCard'
 import PickedCardsHolder from '../../board/PickedCardsHolder'
 import GameState from '../GameState'
-import IRenderer from './interfaces/IRenderer'
+import IRenderer from '../interfaces/IRenderer'
 
 export default class PickedCardsHolderRenderer implements IRenderer {
   private readonly _gameState: GameState

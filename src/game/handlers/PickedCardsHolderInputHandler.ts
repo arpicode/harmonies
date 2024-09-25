@@ -1,5 +1,5 @@
 import GameState from '../GameState'
-import IInputHandler from './interfaces/IInputHandler'
+import IInputHandler from '../interfaces/IInputHandler'
 
 export enum PickedCardsHolderSelectors {
   PICKED_CARDS_HOLDER = '.picked-cards-wrapper',

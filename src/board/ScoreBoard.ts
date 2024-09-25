@@ -87,7 +87,6 @@ export default class ScoreBoard {
       scores[animalCard.name] = score
     })
 
-    // Calculate total score for animal cards
     scores.total = Object.values(scores).reduce((acc, score) => acc + score, 0)
 
     return scores
@@ -102,7 +101,6 @@ export default class ScoreBoard {
       river: this.riverScore(),
     } as Record<string, number>
 
-    // Calculate total score for tokens
     scores.total = Object.values(scores).reduce((acc, score) => acc + score, 0)
 
     return scores

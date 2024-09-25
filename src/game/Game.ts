@@ -1,14 +1,16 @@
 import { HexBoardType } from '../board/HexBoard'
-import GameRenderer from './renderers/GameRenderer'
+import IRenderer from './interfaces/IRenderer'
+import IInputHandler from './interfaces/IInputHandler'
+import GameRenderer from './GameRenderer'
 import GameState from './GameState'
-import GameInputHandler from './handlers/GameInputHandler'
+import GameInputHandler from './GameInputHandler'
 
 export type GameMode = 'solo' | 'multiplayer'
 
 export default class Game {
   private _gameState: GameState
-  private _gameRenderer: GameRenderer
-  private _inputHandler: GameInputHandler
+  private _gameRenderer: IRenderer
+  private _inputHandler: IInputHandler
 
   constructor(gameMode: GameMode, hexBoardType: HexBoardType) {
     this._gameState = new GameState(gameMode, hexBoardType)

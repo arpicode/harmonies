@@ -1,5 +1,5 @@
 import GameState from '../GameState'
-import IInputHandler from './interfaces/IInputHandler'
+import IInputHandler from '../interfaces/IInputHandler'
 
 export enum AnimalCardDeckSelectors {
   SHOW_BUTTON = '.show-cards-button',

@@ -1,6 +1,6 @@
 import Token, { TokenType } from '../../board/Token'
 import GameState from '../GameState'
-import IInputHandler from './interfaces/IInputHandler'
+import IInputHandler from '../interfaces/IInputHandler'
 
 export enum HexBoardSelectors {
   HEX_BOARD = '.hex-board-svg-overlay',
@@ -102,8 +102,6 @@ export default class HexBoardInputHandler implements IInputHandler {
       this._addTokenToHex(hexQ, hexR, currentTokenType)
       this._removeTokenFromDraftedTokens(currentTokenType)
       currentToken.remove()
-      // const scorboard = new ScoreBoard(this._gameState.hexBoard, this._gameState.pickedCardsHolder)
-      // console.log(`%c[ScoreBoard] %c${scorboard.toString()}`, 'color: #e8ac2d;', 'color: #e0d28e;')
       if (event.target instanceof SVGElement) event.target.classList.remove('drag-over')
       this._gameState.notifyHexBoardUpdate()
     } catch (error) {

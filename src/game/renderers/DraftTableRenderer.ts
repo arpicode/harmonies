@@ -2,7 +2,7 @@ import DraftTable from '../../board/DraftTable'
 import { GameMode } from '../Game'
 import GameState from '../GameState'
 import { SVG_NAMESPACE } from '../../utils/utils'
-import IRenderer from './interfaces/IRenderer'
+import IRenderer from '../interfaces/IRenderer'
 
 export default class DraftTableRenderer implements IRenderer {
   public static readonly DRAFT_TABLE_WRAPPER_CLASS = 'draft-table-wrapper'

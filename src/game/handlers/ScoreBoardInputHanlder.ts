@@ -1,4 +1,4 @@
-import IInputHandler from './interfaces/IInputHandler'
+import IInputHandler from '../interfaces/IInputHandler'
 
 export enum ScoreBoardSelectors {
   SCORE_BOARD_WRAPPER = '.preview-box-wrapper',

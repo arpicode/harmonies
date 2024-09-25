@@ -1,5 +1,5 @@
 import GameState from '../GameState'
-import IInputHandler from './interfaces/IInputHandler'
+import IInputHandler from '../interfaces/IInputHandler'
 
 export default class DraftTableInputHandler implements IInputHandler {
   private _gameState: GameState

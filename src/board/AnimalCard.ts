@@ -52,10 +52,6 @@ export default class AnimalCard {
     this.animalTokenCount--
   }
 
-  // should return the correct point value based on animalTokenCount
-  // if points = [18, 8] and animalTokenCount = 2, value should return 0
-  // if points = [18, 8] and animalTokenCount = 1, value should return 8
-  // if points = [18, 8] and animalTokenCount = 0, value should return 18
   value(): number {
     return this.points[this.animalTokenCount] || 0
   }

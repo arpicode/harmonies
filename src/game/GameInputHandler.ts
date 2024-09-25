@@ -1,10 +1,10 @@
-import DraftTableInputHandler from './DraftTableInputHandler'
-import GameState from '../GameState'
-import HexBoardInputHandler from './HexBoardInputHandler'
+import DraftTableInputHandler from './handlers/DraftTableInputHandler'
+import GameState from './GameState'
+import HexBoardInputHandler from './handlers/HexBoardInputHandler'
 import IInputHandler from './interfaces/IInputHandler'
-import AnimalCardDeckInputHandler from './AnimalCardDeckInputHandler'
-import PickedCardsHolderInputHandler from './PickedCardsHolderInputHandler'
-import ScoreBoardInputHandler from './ScoreBoardInputHanlder'
+import AnimalCardDeckInputHandler from './handlers/AnimalCardDeckInputHandler'
+import PickedCardsHolderInputHandler from './handlers/PickedCardsHolderInputHandler'
+import ScoreBoardInputHandler from './handlers/ScoreBoardInputHanlder'
 
 export default class GameInputHandler implements IInputHandler {
   private readonly _draftTableInputHandler: IInputHandler

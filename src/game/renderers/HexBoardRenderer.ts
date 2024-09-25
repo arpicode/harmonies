@@ -4,7 +4,7 @@ import { Layout } from '../../board/Layout'
 import Token, { TokenType } from '../../board/Token'
 import GameState from '../GameState'
 import { SVG_NAMESPACE } from '../../utils/utils'
-import IRenderer from './interfaces/IRenderer'
+import IRenderer from '../interfaces/IRenderer'
 import AnimalCard from '~/board/AnimalCard'
 
 export default class HexBoardRenderer implements IRenderer {

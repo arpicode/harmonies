@@ -1,5 +1,5 @@
 import ScoreBoard from '~/board/ScoreBoard'
-import IRenderer from './interfaces/IRenderer'
+import IRenderer from '../interfaces/IRenderer'
 import GameState from '../GameState'
 
 export default class ScoreBoardRenderer implements IRenderer {

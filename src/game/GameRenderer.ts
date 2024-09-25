@@ -1,10 +1,10 @@
-import AnimalCardDeckRenderer from './AnimalCardDeckRenderer'
-import DraftTableRenderer from './DraftTableRenderer'
-import HexBoardRenderer from './HexBoardRenderer'
+import AnimalCardDeckRenderer from './renderers/AnimalCardDeckRenderer'
+import DraftTableRenderer from './renderers/DraftTableRenderer'
+import HexBoardRenderer from './renderers/HexBoardRenderer'
 import IRenderer from './interfaces/IRenderer'
-import GameState from '../GameState'
-import PickedCardsHolderRenderer from './PickedCardsHolderRenderer'
-import ScoreBoardRenderer from './ScoreBoardRenderer'
+import GameState from './GameState'
+import PickedCardsHolderRenderer from './renderers/PickedCardsHolderRenderer'
+import ScoreBoardRenderer from './renderers/ScoreBoardRenderer'
 
 export default class GameRenderer implements IRenderer {
   private readonly _hexBoardRenderer: IRenderer
