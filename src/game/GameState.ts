@@ -11,6 +11,7 @@ import EventEmitter from './EventEmitter'
 import PickedCardsHolder from '../board/PickedCardsHolder'
 import { Hex } from '~/board/Hex'
 import ScoreBoard from '~/board/ScoreBoard'
+import EndTurnButton from '~/board/EndTurnButton'
 
 export default class GameState extends EventEmitter {
   public readonly gameMode: GameMode
@@ -22,6 +23,7 @@ export default class GameState extends EventEmitter {
   public readonly animalCardDeck: AnimalCardDeck
   public readonly pickedCardsHolder: PickedCardsHolder
   public readonly scoreBoard: ScoreBoard
+  public readonly endTurnButton: EndTurnButton
 
   constructor(gameMode: GameMode, hexBoardType: HexBoardType) {
     super()
@@ -34,6 +36,7 @@ export default class GameState extends EventEmitter {
     this.animalCardDeck = this._createAnimalCardDeck()
     this.pickedCardsHolder = this._createPickedCardsHolder()
     this.scoreBoard = this._createScoreBoard()
+    this.endTurnButton = this.createEndTurnButton()
   }
 
   notifyHexBoardUpdate() {
@@ -46,6 +49,10 @@ export default class GameState extends EventEmitter {
 
   notifyAnimalCardDeckUpdate() {
     this.emit('animalCardDeckUpdated')
+  }
+
+  notifyAnimalCardDeckDraw(animalCard: AnimalCard) {
+    this.emit('animalCardDeckDraw', animalCard)
   }
 
   notifyPickedCardsHolderUpdate() {
@@ -62,6 +69,14 @@ export default class GameState extends EventEmitter {
 
   notifyPlaceAnimalEnd(animalCard: AnimalCard, hex: Hex) {
     this.emit('placeAnimalEnd', animalCard, hex)
+  }
+
+  notifyEndTurnButtonUpdated() {
+    this.emit('endTurnButtonUpdated')
+  }
+
+  public isGameOver(): boolean {
+    return this.bag.size() < DraftTable.MAX_SLOT_SIZE || this.hexBoard.getEmptyHexes().length < DraftTable.MAX_SLOT_SIZE
   }
 
   private _createLayout(): Layout {
@@ -120,5 +135,9 @@ export default class GameState extends EventEmitter {
 
   private _createScoreBoard(): ScoreBoard {
     return new ScoreBoard(this.hexBoard, this.pickedCardsHolder)
+  }
+
+  public createEndTurnButton(): EndTurnButton {
+    return new EndTurnButton('Terminer le Tour', true)
   }
 }

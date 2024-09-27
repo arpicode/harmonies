@@ -336,5 +336,65 @@ describe('HexBoardInputHandler', () => {
       expect(currentHexDropZone.children.length).toBe(1)
       expect(currentHexDropZone.children.item(0)?.getAttribute('class')).toBe(currentTokenTokenType?.toLowerCase())
     })
+
+    it('should handle dropping the last picked token token on hex', () => {
+      game.gameState.draftTable.draftedTokens.tokens.pop()
+      game.gameState.draftTable.draftedTokens.tokens.pop()
+      expect(game.gameState.draftTable.draftedTokens.size()).toBe(1)
+
+      const endTurnButton = document.querySelector<HTMLButtonElement>('.end-turn-button')!
+      expect(endTurnButton).not.toBeNull()
+      expect(endTurnButton.disabled).toBe(true)
+
+      const currentToken = document.querySelector('.picked-token')!
+      let currentHexDropZone = document.querySelector('.hex')!
+      expect(currentToken).not.toBeNull()
+      expect(currentHexDropZone).not.toBeNull()
+
+      const currentDropZoneParentId = currentHexDropZone.parentElement?.id
+      expect(currentDropZoneParentId).toBe('hex-0-0')
+      const currentTokenTokenType = currentToken.getAttribute('data-token-type')
+
+      // Simulate drag start event from the token
+      const dragStartEvent = createEventWithTarget('dragstart', currentToken, { clientX: 0, clientY: 0 })
+      currentToken.dispatchEvent(dragStartEvent)
+      expect(currentToken.classList.contains('dragging')).toBe(true)
+
+      // Simulaire drag enter event on the hex
+      const dragEnterEvent = createEventWithTarget('dragenter', currentHexDropZone, {
+        clientX: 10,
+        clientY: 10,
+      })
+      currentHexDropZone.dispatchEvent(dragEnterEvent)
+      expect(currentHexDropZone.classList.contains('drag-over')).toBe(true)
+
+      // Simulate drop event on the hex
+      const dropEvent = createEventWithTarget('drop', currentHexDropZone, {
+        clientX: 10,
+        clientY: 10,
+      })
+      currentHexDropZone.dispatchEvent(dropEvent)
+
+      // Simulate the dropend event on the token
+      const dropEndEvent = createEventWithTarget('dropend', currentToken, {
+        clientX: 10,
+        clientY: 10,
+      })
+      currentToken.dispatchEvent(dropEndEvent)
+
+      // get the rendered token holder
+      tokenHolder = document.querySelector('.picked-tokens-wrapper')!
+      expect(tokenHolder).not.toBeNull()
+      expect(tokenHolder.children.length).toBe(2)
+
+      currentHexDropZone = document.querySelector(`#${currentDropZoneParentId} .token-stack`)!
+      expect(currentHexDropZone).not.toBeNull()
+      expect(currentHexDropZone.children.length).toBe(1)
+      expect(currentHexDropZone.children.item(0)?.getAttribute('class')).toBe(currentTokenTokenType?.toLowerCase())
+
+      // end turn button should be enabled
+      expect(endTurnButton.disabled).toBe(false)
+      expect(game.gameState.endTurnButton.disabled).toBe(false)
+    })
   })
 })

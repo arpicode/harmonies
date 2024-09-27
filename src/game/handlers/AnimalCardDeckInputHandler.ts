@@ -1,3 +1,4 @@
+import AnimalCard from '~/board/AnimalCard'
 import GameState from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
 
@@ -14,6 +15,7 @@ export enum AnimalCardDeckSelectors {
   ANIMAL_CARDS = '.animal-deck-modal .animal-card',
   DRAGGING = '.dragging',
   DRAG_OVER = '.drag-over',
+  LAST_DRAWN_CARD = '.animal-deck-modal > .card-wrapper:nth-child(5) > .animal-card',
 }
 
 class AnimalCardDeckDOMException extends Error {
@@ -42,7 +44,8 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     this._closeButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CLOSE_BUTTON)
     this._confirmButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CONFIRM_BUTTON)
     this._cancelButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CANCEL_BUTTON)
-    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.ANIMAL_CARDS)
+    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
+    this._gameState.on('animalCardDeckDraw', (animalCard: AnimalCard) => this._bindEventsToNewDrawnCard(animalCard))
   }
 
   private _querySelector<T extends HTMLElement>(selector: AnimalCardDeckSelectors): T {
@@ -52,7 +55,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   initialize() {
-    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.ANIMAL_CARDS)
+    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
     this._bindEvents()
   }
 
@@ -89,7 +92,10 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     const oldCardWrapper = document.querySelector<HTMLDivElement>(
       `.card-wrapper[data-wrapper-for="${pickedCardElement.alt}"]`
     )
-    if (!oldCardWrapper) return
+    if (!oldCardWrapper) {
+      console.error('%c[InvalidDOM] %cInvalid data-wrapper-for', 'color: #ff4d4f;', 'color: #ff7a45;')
+      return
+    }
 
     this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
 
@@ -154,8 +160,10 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
     const pickedCardName = pickedCard.alt
     const cardWrapper = document.querySelector<HTMLDivElement>(`.card-wrapper[data-wrapper-for="${pickedCardName}"]`)
-    if (!cardWrapper) return
-
+    if (!cardWrapper) {
+      console.error('%c[InvalidDOM] %cInvalid data-wrapper-for', 'color: #ff4d4f;', 'color: #ff7a45;')
+      return
+    }
     cardWrapper.appendChild(pickedCard)
     this._updateButtonsDisabledState(true)
   }
@@ -169,5 +177,17 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     this._animalCards.forEach((card) => {
       card.setAttribute('draggable', isDraggable ? 'true' : 'false')
     })
+  }
+
+  private _bindEventsToNewDrawnCard(animalCard: AnimalCard) {
+    const newCard = document.querySelector<HTMLImageElement>(`[data-wrapper-for="${animalCard.name}"] .animal-card`)
+    console.log('newCard', newCard?.dataset.wrapperFor)
+    if (!newCard) {
+      console.error('%c[InvalidDOM] %cInvalid data-wrapper-for', 'color: #ff4d4f;', 'color: #ff7a45;')
+      return
+    }
+
+    newCard.addEventListener('dragstart', () => this._handleCardDragStart(newCard))
+    newCard.addEventListener('dragend', () => this._handleCardDragEnd(newCard))
   }
 }

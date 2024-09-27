@@ -81,7 +81,11 @@ describe('DraftTableInputHandler', () => {
     expect(gameState.draftTable.draftedTokens.size()).toBe(3)
 
     slot.dispatchEvent(clickEvent)
-    expect(consoleLogSpy).toHaveBeenCalledWith('%c[Info] %cToken slot is empty', 'color: #2cc2e8;', 'color: #8ecfe0;')
+    expect(consoleLogSpy).toHaveBeenCalledWith(
+      '%c[Info] %cTokens have already been drafted for this turn',
+      'color: #2cc2e8;',
+      'color: #8ecfe0;'
+    )
   })
 
   it('should log an error if slot index is not found', () => {

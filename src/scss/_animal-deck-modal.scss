@@ -1,5 +1,6 @@
 .animal-deck-modal {
   margin: auto;
+  user-select: none;
   width: 90%;
   padding: calc(20vw * 100 / 1280);
   border: 1px solid rgb(68, 94, 151);
@@ -18,23 +19,27 @@
   width: 100%;
 }
 
-.card-wrapper,
-.card-picker {
-  padding: calc(5vw * 100 / 1280);
-  flex-basis: 16.66667%;
-}
-
 .card-wrapper {
+  display: none;
   transform: scale(1);
-  transition: transform 150ms ease-in-out;
-}
+  transition: transform 150ms ease-in-out, opacity 150ms ease-in-out;
+  opacity: 0.8;
 
-.card-wrapper:has(img):hover {
-  transform: scale(1.05);
-  transition: transform 150ms ease-in-out;
+  &:has(img) {
+    display: block;
+    padding: calc(5vw * 100 / 1280);
+    flex-basis: 16.66667%;
+  }
+
+  &:has(img):hover {
+    opacity: 1;
+    transform: scale(1.08);
+    transition: transform 150ms ease-in-out, opacity 150ms ease-in-out;
+  }
 }
 
 .card-picker {
+  flex-basis: 16.66667%;
   border: calc(1vw * 100 / 1280) solid rgb(68, 94, 151);
   margin-left: auto;
   background-color: #1a1a1a;
@@ -45,7 +50,7 @@
   display: flex;
   justify-content: flex-end;
   gap: calc(8vw * 100 / 1280);
-  margin-top: calc(16vw * 100 / 1280);
+  margin-top: calc(24vw * 100 / 1280);
 }
 
 .confirm-pick-button {
@@ -70,40 +75,40 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: calc(var(--animal-card-width) + 31px);
-  height: calc((var(--animal-card-width) + 27px) * 172 / 100);
   background-color: #272727;
-  border: 2px dashed rgb(68, 94, 151);
+  border: calc(2vw * 100 / 1280) dashed rgb(68, 94, 151);
   border-radius: 0.5rem;
 
   &::before {
-    content: 'glisser/déposer\Aune carte';
+    content: 'glisser-déposer\Aune carte';
     white-space: pre-wrap;
     position: absolute;
-    top: 2rem;
+    top: calc(24vw * 100 / 1280);
     display: block;
-    font-size: 0.9rem;
-    color: rgb(87, 123, 202);
+    font-family: 'Xilosa';
+    font-size: calc(24vw * 100 / 1280);
+    color: rgb(89, 133, 226);
     text-align: center;
   }
 
   &::after {
     content: '+';
     position: absolute;
-    bottom: 2rem;
+    bottom: calc(24vw * 100 / 1280);
     display: grid;
     place-items: center;
-    width: 54px;
-    height: 54px;
+    width: calc(54vw * 100 / 1280);
+    height: calc(54vw * 100 / 1280);
     border-radius: 100%;
-    border: 2px dotted rgb(68, 94, 151, 0.7);
-    font-size: 2rem;
+    border: calc(2vw * 100 / 1280) dotted rgb(68, 94, 151, 0.7);
+    font-size: calc(32vw * 100 / 1280);
     font-family: auto;
     color: rgb(68, 94, 151, 0.7);
   }
 
   &.drag-over {
-    border: 2px solid rgb(68, 94, 151, 0.7);
+    border: calc(2vw * 100 / 1280) solid rgb(68, 94, 151, 0.7);
+    background-color: rgb(68, 94, 151, 0.4);
 
     &::before,
     &::after {
@@ -112,8 +117,6 @@
   }
 
   .animal-card {
-    opacity: 1;
-
     &:hover {
       transform: none;
       box-shadow: none;

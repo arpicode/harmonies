@@ -108,4 +108,10 @@ describe('DraftTable', () => {
       expect((error as Error).name).toBe('InsufficientTokensError')
     }
   })
+
+  it('should clear the drafted tokens correctly', () => {
+    expect(draftTable.isFull()).toBe(true)
+    draftTable.clear()
+    expect(draftTable.slots.every((slot) => slot.length === 0)).toBe(true)
+  })
 })

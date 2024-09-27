@@ -5,6 +5,7 @@ import IInputHandler from './interfaces/IInputHandler'
 import AnimalCardDeckInputHandler from './handlers/AnimalCardDeckInputHandler'
 import PickedCardsHolderInputHandler from './handlers/PickedCardsHolderInputHandler'
 import ScoreBoardInputHandler from './handlers/ScoreBoardInputHanlder'
+import EndTurnButtonInputHandler from './handlers/EndTurnButtonInputHandler'
 
 export default class GameInputHandler implements IInputHandler {
   private readonly _draftTableInputHandler: IInputHandler
@@ -12,6 +13,7 @@ export default class GameInputHandler implements IInputHandler {
   private readonly _animalCardDeckInputHandler: IInputHandler
   private readonly _pickedCardsHolderInputHandler: IInputHandler
   private readonly _scoreBoardInputHandler: IInputHandler
+  private readonly _endTurnButtonInputHandler: IInputHandler
 
   constructor(gameState: GameState) {
     this._draftTableInputHandler = new DraftTableInputHandler(gameState)
@@ -19,15 +21,16 @@ export default class GameInputHandler implements IInputHandler {
     this._animalCardDeckInputHandler = new AnimalCardDeckInputHandler(gameState)
     this._pickedCardsHolderInputHandler = new PickedCardsHolderInputHandler(gameState)
     this._scoreBoardInputHandler = new ScoreBoardInputHandler()
+    this._endTurnButtonInputHandler = new EndTurnButtonInputHandler(gameState)
   }
 
-  // Initialize event listeners
   initialize() {
     this._draftTableInputHandler.initialize()
     this._hexBoardInputHandler.initialize()
     this._animalCardDeckInputHandler.initialize()
     this._pickedCardsHolderInputHandler.initialize()
     this._scoreBoardInputHandler.initialize()
+    this._endTurnButtonInputHandler.initialize()
     /* c8 ignore start */
     document.addEventListener('contextmenu', (event) => {
       if (event.target instanceof HTMLImageElement || event.target instanceof SVGElement) event.preventDefault()

@@ -43,7 +43,23 @@ export default class ScoreBoardRenderer implements IRenderer {
   }
 
   private _initializeScoreBoardDOM() {
+    this._renderScoringHelper()
     this._renderScoreBoardOverlay()
+  }
+
+  private _renderScoringHelper() {
+    const scoringHelper = document.querySelector<HTMLImageElement>('.preview')
+    if (!scoringHelper) throw new Error('Scoring helper not found')
+    switch (this._gameState.hexBoardType) {
+      case 'river':
+        scoringHelper.src = 'helper_river.webp'
+        break
+      case 'island':
+        scoringHelper.src = 'helper_island.webp'
+        break
+      default:
+        scoringHelper.src = 'helper_custom.webp'
+    }
   }
 
   private _renderScoreBoardOverlay() {
@@ -64,6 +80,7 @@ export default class ScoreBoardRenderer implements IRenderer {
 
     return wrapper
   }
+
   private _getTokensScoresOverlay(): HTMLDivElement {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tokensScoresElement = document.querySelector<HTMLDivElement>('.score-board-overlay .tokens-scores')!

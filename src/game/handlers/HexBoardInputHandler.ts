@@ -104,6 +104,10 @@ export default class HexBoardInputHandler implements IInputHandler {
       currentToken.remove()
       if (event.target instanceof SVGElement) event.target.classList.remove('drag-over')
       this._gameState.notifyHexBoardUpdate()
+      if (this._gameState.draftTable.draftedTokens.size() === 0) {
+        this._gameState.endTurnButton.disabled = false
+        this._gameState.notifyEndTurnButtonUpdated()
+      }
     } catch (error) {
       console.warn((error as Error).message)
     }

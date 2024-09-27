@@ -31,6 +31,10 @@
     background-color: #2a8b2a;
     color: white;
     border: calc(1vw * 100 / 1280) solid #509c50;
+
+    &:disabled {
+      visibility: hidden;
+    }
   }
 
   .options-button {

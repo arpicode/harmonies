@@ -32,15 +32,18 @@ export default class AnimalCardDeck extends Stack<AnimalCard> {
     }
   }
 
-  draw(): void {
+  draw(): AnimalCard | null {
     if (this.isEmpty()) throw new Error('Deck is empty')
+    if (this.drawnCards.length === AnimalCardDeck.MAX_DRAWN_CARDS) {
+      console.log('%c[Info] %cNo new card drawn', 'color: #2cc2e8;', 'color: #8ecfe0;')
+      return null
+    }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const drawnCard = this.pop()! // we know it's not empty
-    const newTimestamp = this.timestampGenerator.next().value
-    if (newTimestamp) {
-      drawnCard.timestamp = newTimestamp
-      this.drawnCards.push(drawnCard)
-    }
+    const newTimestamp = this.timestampGenerator.next().value as number
+    drawnCard.timestamp = newTimestamp
+    this.drawnCards.push(drawnCard)
+    return drawnCard
   }
 
   shuffle() {

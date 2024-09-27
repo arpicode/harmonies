@@ -121,7 +121,7 @@ $token-types: (
 }
 
 .coords {
-  // display: none;
+  display: none;
   font-family: Verdana;
   fill: get-color('coords', 'fill');
   font-size: 80%;

@@ -6,22 +6,39 @@ const animals = animalsJson as IAnimalCards
 
 describe('AnimalCardDeck', () => {
   let deck: AnimalCardDeck
+  const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
 
   beforeEach(() => {
     deck = new AnimalCardDeck(animals)
   })
 
+  afterEach(() => {
+    consoleLogSpy.mockClear()
+  })
+
   it('should initialize the deck with animal cards', () => {
-    expect(deck.size()).toBeGreaterThan(0)
+    expect(deck.size()).toBe(Object.keys(animals).length - deck.drawnCards.length)
+    console.log(deck.size())
   })
 
   it('should draw an animal card from the deck', () => {
     const initialSize = deck.size()
-    const drawnCardsSize = deck.drawnCards.length
-    deck.draw()
+    deck.drawnCards.splice(0, deck.drawnCards.length) // remove all cards from the drawn cards array
+    const drawnCard = deck.draw()
     expect(deck.size()).toBe(initialSize - 1)
-    expect(deck.drawnCards).toHaveLength(drawnCardsSize + 1)
-    expect(deck.drawnCards[deck.drawnCards.length - 1]).toBeInstanceOf(AnimalCard)
+    expect(deck.drawnCards).toHaveLength(1)
+    expect(drawnCard).toBeInstanceOf(AnimalCard)
+    expect(consoleLogSpy).not.toHaveBeenCalled()
+  })
+
+  it('should not draw a card when the drawn cards array is full', () => {
+    const initialSize = deck.size()
+    const drawnCardsSize = deck.drawnCards.length
+    const drawnCard = deck.draw()
+    expect(deck.size()).toBe(initialSize)
+    expect(deck.drawnCards).toHaveLength(drawnCardsSize)
+    expect(drawnCard).toBeNull()
+    expect(consoleLogSpy).toHaveBeenCalledWith('%c[Info] %cNo new card drawn', 'color: #2cc2e8;', 'color: #8ecfe0;')
   })
 
   it('should remove a drawn card by name', () => {

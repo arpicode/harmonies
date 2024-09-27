@@ -138,6 +138,23 @@ export default class DraftTable {
     }
   }
 
+  /**
+   * Checks if the draft table is full.
+   * @returns `true` if the draft table is full, `false` otherwise.
+   */
+  isFull(): boolean {
+    return !this.slots.some((slot) => slot.length < DraftTable.MAX_SLOT_SIZE)
+  }
+
+  /**
+   * Clears all slots.
+   */
+  clear(): void {
+    for (let i = 0; i < this.slotCount; i++) {
+      this.slots[i] = []
+    }
+  }
+
   get draftedTokens(): DraftedTokensHolder {
     return this._draftedTokens
   }

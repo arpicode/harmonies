@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import GameState from '~/game/GameState'
 import ScoreBoardRenderer from '../ScoreBoardRenderer'
 import { GameMode } from '~/game/Game'
@@ -61,12 +62,31 @@ describe('ScoreBoardRenderer', () => {
       'should throw an error if the score board wrapper is not found for a $hexBoardType board in $gameMode mode',
       ({ hexBoardType, gameMode }: { hexBoardType: HexBoardType; gameMode: GameMode }) => {
         document.body.innerHTML = ''
-        expect(() => initializeScoreBoardRenderer(hexBoardType, gameMode)).toThrowError('Score board wrapper not found')
+        expect(() => initializeScoreBoardRenderer(hexBoardType, gameMode)).toThrowError('Scoring helper not found')
       }
     )
   })
 
   describe('Rendering', () => {
+    it.each`
+      hexBoardType | gameMode
+      ${'river'}   | ${'solo'}
+      ${'island'}  | ${'solo'}
+      ${'custom'}  | ${'solo'}
+      ${'river'}   | ${'multiplayer'}
+      ${'island'}  | ${'multiplayer'}
+      ${'custom'}  | ${'multiplayer'}
+    `(
+      'should render the scoring helper a $hexBoardType board in $gameMode mode',
+      ({ hexBoardType, gameMode }: { hexBoardType: HexBoardType; gameMode: GameMode }) => {
+        initializeScoreBoardRenderer(hexBoardType, gameMode)
+        scoreBoardRenderer.render()
+        const helperImage = document.querySelector<HTMLImageElement>('.preview')!
+        expect(helperImage).not.toBeNull()
+        expect(helperImage.src).toContain(`helper_${hexBoardType}.webp`)
+      }
+    )
+
     it.each`
       hexBoardType | gameMode
       ${'river'}   | ${'solo'}

@@ -21,8 +21,8 @@ export default class DraftTableInputHandler implements IInputHandler {
   private _handleClick(event: Event) {
     const target = event.target as SVGElement
     if (!target.classList.contains('draft-table-slot')) return
-    if (this._gameState.draftTable.draftedTokens.size() !== 0) {
-      console.log('%c[Info] %cToken slot is empty', 'color: #2cc2e8;', 'color: #8ecfe0;')
+    if (!this._gameState.draftTable.isFull()) {
+      console.log('%c[Info] %cTokens have already been drafted for this turn', 'color: #2cc2e8;', 'color: #8ecfe0;')
       return
     }
 
@@ -42,6 +42,9 @@ export default class DraftTableInputHandler implements IInputHandler {
     this._gameState.draftTable.pickUp(slotIndex)
     this._gameState.notifyDraftTableUpdate()
     this._bindEventsToTokensInTokenHolder()
+
+    this._gameState.endTurnButton.disabled = true
+    this._gameState.notifyEndTurnButtonUpdated()
   }
 
   private _bindEventsToTokensInTokenHolder() {

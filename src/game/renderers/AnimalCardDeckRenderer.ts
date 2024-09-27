@@ -20,13 +20,22 @@ export default class AnimalCardDeckRenderer implements IRenderer {
     console.time('[Render] AnimalCardDeckRenderer')
     const cardsWrapper = document.querySelector('.cards-wrapper')
     if (!cardsWrapper) throw new Error('Animal cards wrapper not found')
-    const animalCardNames = Array.from(cardsWrapper.querySelectorAll<HTMLImageElement>('.animal-card')).map(
-      (card) => card.alt
-    )
+    let remainingCards = cardsWrapper.querySelectorAll<HTMLImageElement>('.card-wrapper .animal-card')
+    const animalCardNames = Array.from(remainingCards).map((card) => card.alt)
     for (const animal of this._animalCardDeck.drawnCards) {
       if (animalCardNames.includes(animal.name)) continue
       const cardElement = this._createCardElement(animal)
       cardsWrapper.insertBefore(cardElement, cardsWrapper.lastChild)
+    }
+
+    // TODO: use proper notification
+    const cardPicker = document.querySelector<HTMLDivElement>('.card-picker')
+    if (!cardPicker) throw new Error('Card picker not found')
+    remainingCards = cardsWrapper.querySelectorAll<HTMLImageElement>('.card-wrapper .animal-card')
+    if (remainingCards.length < AnimalCardDeck.MAX_DRAWN_CARDS) {
+      cardPicker.style.display = 'none'
+    } else {
+      cardPicker.style.display = 'grid'
     }
     console.timeEnd('[Render] AnimalCardDeckRenderer')
   }

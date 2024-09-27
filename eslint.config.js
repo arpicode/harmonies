@@ -30,6 +30,7 @@ export default tseslint.config(
       '@typescript-eslint/no-confusing-void-expression': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
       'tsdoc/syntax': 'warn',
     },
   },

@@ -22,8 +22,8 @@ export const dom = `
 
     <div class="column column-right">
       <div class="preview-box-wrapper score-board--show">
-        <img class="preview" src="./images/helper_river.webp" alt="Preview image" />
-        <img class="score-board" src="./images/score_board.webp" alt="Score board" />
+        <img class="preview" src="helper_river.webp" alt="Scoring helper" />
+        <img class="score-board" src="score_board.webp" alt="Score board" />
       </div>
       <div class="info-box">
         <div class="button-menu">
@@ -32,7 +32,7 @@ export const dom = `
             <button class="button fullscreen-toggle-button" title="Plein écran">Fullscreen</button>
           </div>
           <button class="button show-cards-button">Afficher la Pioche</button>
-          <button class="button end-turn-button" title="Finir le tour">Terminer le Tour</button>
+          <!-- <button class="button end-turn-button" title="Finir le tour">Terminer le Tour</button> -->
         </div>
       </div>
     </div>
