@@ -181,7 +181,6 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
   private _bindEventsToNewDrawnCard(animalCard: AnimalCard) {
     const newCard = document.querySelector<HTMLImageElement>(`[data-wrapper-for="${animalCard.name}"] .animal-card`)
-    console.log('newCard', newCard?.dataset.wrapperFor)
     if (!newCard) {
       console.error('%c[InvalidDOM] %cInvalid data-wrapper-for', 'color: #ff4d4f;', 'color: #ff7a45;')
       return

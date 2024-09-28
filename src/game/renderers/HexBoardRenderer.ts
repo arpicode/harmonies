@@ -98,7 +98,7 @@ export default class HexBoardRenderer implements IRenderer {
   private _createHexSvgGroup(hex: Hex): SVGGElement {
     const group = document.createElementNS(SVG_NAMESPACE, 'g')
     group.setAttribute('id', `hex-${hex.q}-${hex.r}`)
-    group.addEventListener('contextmenu', (e) => this.handleHexClick(e, hex))
+    // group.addEventListener('contextmenu', (e) => this.handleHexClick(e, hex))
     return group
   }
 
@@ -195,7 +195,7 @@ export default class HexBoardRenderer implements IRenderer {
 
     const center = this._layout.hexToPixel(hex)
 
-    // Create a circle for the animal token
+    // TODO: create cubes for animal tokens
     const animalTokenSvg = document.createElementNS(SVG_NAMESPACE, 'circle')
     animalTokenSvg.setAttribute('cx', center.x.toFixed(5))
     animalTokenSvg.setAttribute('cy', (center.y - this._layout.size.y * 0.6).toFixed(5))
