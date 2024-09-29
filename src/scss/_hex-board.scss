@@ -1,10 +1,15 @@
-.hex-board-wrapper {
+.hex-board-wrapper,
+.hex-board-wrapper-clone {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 1;
   height: var(--hex-board-wrapper-height);
+
+  &.board-clone {
+    height: 100%;
+  }
 }
 
 .hex-board-svg-overlay {

@@ -422,7 +422,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(confirmButton.disabled).toBe(false)
           expect(cancelButton.disabled).toBe(false)
 
-          // remove the card wwrapper
+          // remove the card wrapper
           const cardWrapper = document.querySelector<HTMLDivElement>(
             `.card-wrapper[data-wrapper-for="${animalCard.alt}"]`
           )
@@ -471,7 +471,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(confirmButton.disabled).toBe(false)
           expect(cancelButton.disabled).toBe(false)
 
-          // remove the card wwrapper
+          // remove the card wrapper
           const cardWrapper = document.querySelector<HTMLDivElement>(
             `.card-wrapper[data-wrapper-for="${animalCard.alt}"]`
           )

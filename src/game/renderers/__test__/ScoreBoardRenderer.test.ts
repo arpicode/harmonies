@@ -59,10 +59,28 @@ describe('ScoreBoardRenderer', () => {
       ${'island'}  | ${'multiplayer'}
       ${'custom'}  | ${'multiplayer'}
     `(
-      'should throw an error if the score board wrapper is not found for a $hexBoardType board in $gameMode mode',
+      'should throw an error if the preview element is not found for a $hexBoardType board in $gameMode mode',
       ({ hexBoardType, gameMode }: { hexBoardType: HexBoardType; gameMode: GameMode }) => {
-        document.body.innerHTML = ''
+        const previewElement = document.querySelector('.preview')
+        previewElement?.remove()
         expect(() => initializeScoreBoardRenderer(hexBoardType, gameMode)).toThrowError('Scoring helper not found')
+      }
+    )
+
+    it.each`
+      hexBoardType | gameMode
+      ${'river'}   | ${'solo'}
+      ${'island'}  | ${'solo'}
+      ${'custom'}  | ${'solo'}
+      ${'river'}   | ${'multiplayer'}
+      ${'island'}  | ${'multiplayer'}
+      ${'custom'}  | ${'multiplayer'}
+    `(
+      'should throw an error if the preview wrapper is not found for a $hexBoardType board in $gameMode mode',
+      ({ hexBoardType, gameMode }: { hexBoardType: HexBoardType; gameMode: GameMode }) => {
+        const previewElement = document.querySelector('.preview-box-wrapper')
+        previewElement?.classList.remove('preview-box-wrapper')
+        expect(() => initializeScoreBoardRenderer(hexBoardType, gameMode)).toThrowError('Score board wrapper not found')
       }
     )
   })

@@ -77,12 +77,14 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   private _handleOpenDeck = () => {
+    this._gameState.emit('animalDeckOpened')
     this._animalDeckModal.showModal()
   }
 
   private _handleCloseDeck = () => {
     this._animalDeckModal.close()
     this._cancelPick()
+    this._gameState.emit('animalDeckClosed')
   }
 
   private _handleConfirmPick = () => {
@@ -109,7 +111,9 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
     pickedCardElement.remove()
     oldCardWrapper.remove()
+    this._animalDeckModal.close()
 
+    this._gameState.emit('animalDeckClosed')
     this._gameState.notifyPickedCardsHolderUpdate()
     this._gameState.notifyAnimalCardDeckUpdate()
 

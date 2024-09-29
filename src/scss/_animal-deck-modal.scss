@@ -12,6 +12,19 @@
   }
 }
 
+.clones-wrapper {
+  display: flex;
+  gap: calc(30vw * 100 / 1280);
+  justify-content: center;
+  height: calc(230vw * 100 / 1280);
+  margin-bottom: calc(30vw * 100 / 1280);
+
+  img,
+  svg {
+    width: unset;
+  }
+}
+
 .cards-wrapper {
   display: flex;
   flex-wrap: nowrap;

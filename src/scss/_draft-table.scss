@@ -1,6 +1,11 @@
-.draft-table-wrapper {
+.draft-table-wrapper,
+.draft-table-wrapper-clone {
   position: relative;
   width: 100%;
+
+  &.draft-table-clone {
+    width: unset;
+  }
 }
 
 .draft-table-svg-overlay {

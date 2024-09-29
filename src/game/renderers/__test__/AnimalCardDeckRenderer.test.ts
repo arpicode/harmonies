@@ -6,6 +6,7 @@ import AnimalCardDeckRenderer from '../AnimalCardDeckRenderer'
 describe('AnimalCardDeckRenderer', () => {
   let animalCardDeckRenderer: AnimalCardDeckRenderer
   let gameState: GameState
+  const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
   const consoleTimeSpy = vi.spyOn(console, 'time').mockImplementation(vi.fn())
   const consoleTimeEndSpy = vi.spyOn(console, 'timeEnd').mockImplementation(vi.fn())
 
@@ -72,10 +73,97 @@ describe('AnimalCardDeckRenderer', () => {
     expect(cardPicker).not.toBeNull()
   })
 
+  it('should throw an error if card picker is not found', () => {
+    initializeDraftTable()
+    document.querySelector('.card-picker')?.remove()
+    expect(() => {
+      animalCardDeckRenderer.render()
+    }).toThrowError('Card picker not found')
+  })
+
   it('should render the buttons', () => {
     initializeDraftTable()
     animalCardDeckRenderer.render()
     const buttons = document.querySelectorAll('.animal-deck-modal button')
     expect(buttons).toHaveLength(3)
+  })
+
+  it('should render the hex board clone when the animal deck modal is open', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    gameState.emit('animalDeckOpened')
+    const hexBoardClone = document.querySelector('.hex-board-wrapper-clone')
+    expect(hexBoardClone).not.toBeNull()
+  })
+
+  it('should not render the hex board clone when the animal deck modal is closed', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    const hexBoardClone = document.querySelector('.hex-board-wrapper-clone')
+    expect(hexBoardClone).toBeNull()
+  })
+
+  it('should throw an error when the original hex board is not found', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    document.querySelector('.hex-board-wrapper')?.remove()
+    expect(() => {
+      gameState.emit('animalDeckOpened')
+    }).toThrowError('Board not found')
+  })
+
+  it('should remove the hex board clone when the animal deck modal is closed', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    gameState.emit('animalDeckOpened')
+    let hexBoardClone = document.querySelector('.hex-board-wrapper-clone')
+    expect(hexBoardClone).not.toBeNull()
+
+    gameState.emit('animalDeckClosed')
+    hexBoardClone = document.querySelector('.hex-board-wrapper-clone')
+    expect(hexBoardClone).toBeNull()
+  })
+
+  it('should render the draft table clone when the animal deck modal is open', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    gameState.emit('animalDeckOpened')
+    const draftTableClone = document.querySelector('.draft-table-clone')
+    expect(draftTableClone).not.toBeNull()
+  })
+
+  it('should not render the draft table clone when the animal deck modal is closed', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    const draftTableClone = document.querySelector('.draft-table-clone')
+    expect(draftTableClone).toBeNull()
+  })
+
+  it('should throw an error when the original draft table is not found', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    document.querySelector('.draft-table-wrapper')?.remove()
+    expect(() => {
+      gameState.emit('animalDeckOpened')
+    }).toThrowError('Draft table not found')
+  })
+
+  it('should remove the draft table clone when the animal deck modal is closed', () => {
+    initializeDraftTable()
+    animalCardDeckRenderer.render()
+    gameState.emit('animalDeckOpened')
+    let draftTableClone = document.querySelector('.draft-table-clone')
+    expect(draftTableClone).not.toBeNull()
+
+    gameState.emit('animalDeckClosed')
+    draftTableClone = document.querySelector('.draft-table-clone')
+    expect(draftTableClone).toBeNull()
+
+    expect(consoleLogSpy).toHaveBeenNthCalledWith(
+      2,
+      expect.stringMatching(/\[EventEmitter\]/),
+      expect.stringMatching(/color:/),
+      expect.stringMatching(/color:/)
+    )
   })
 })

@@ -1,7 +1,7 @@
 import GameState from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
 
-export enum GameSelectors {
+export enum EndTurnButtonSelectors {
   GAME_WRAPPER = '.game-wrapper',
   END_TURN_BUTTON = '.end-turn-button',
 }
@@ -20,10 +20,10 @@ export default class EndTurnButtonInputHandler implements IInputHandler {
 
   constructor(gameState: GameState) {
     this._gameState = gameState
-    this._endTurnButton = this._querySelector<HTMLButtonElement>(GameSelectors.END_TURN_BUTTON)
+    this._endTurnButton = this._querySelector<HTMLButtonElement>(EndTurnButtonSelectors.END_TURN_BUTTON)
   }
 
-  private _querySelector<T extends HTMLElement>(selector: GameSelectors): T {
+  private _querySelector<T extends HTMLElement>(selector: EndTurnButtonSelectors): T {
     const element = document.querySelector<T>(selector)
     if (!element) throw new EndTurnButtonDOMException(selector)
     return element

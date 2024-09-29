@@ -13,6 +13,8 @@ export default class AnimalCardDeckRenderer implements IRenderer {
     this._animalCardDeck = gameState.animalCardDeck
     this._initializeAnimalCardDeckDOM()
     this._gameState.on('animalCardDeckUpdated', () => this.render())
+    this._gameState.on('animalDeckOpened', () => this._renderClones())
+    this._gameState.on('animalDeckClosed', () => this._renderRemoveClones())
     console.timeEnd('[Initialize] AnimalCardDeckRenderer')
   }
 
@@ -106,5 +108,46 @@ export default class AnimalCardDeckRenderer implements IRenderer {
     footer.appendChild(createButton('close-deck-button', 'Fermer'))
 
     return footer
+  }
+
+  private _createClonesWrapper(): HTMLElement {
+    const clonesWrapper = document.createElement('div')
+    clonesWrapper.classList.add('clones-wrapper')
+    return clonesWrapper
+  }
+
+  private _createBoardClone(): HTMLElement {
+    const board = document.querySelector('.hex-board-wrapper')
+    if (!board) throw new Error('Board not found')
+    const boardClone = board.cloneNode(true) as HTMLElement
+    boardClone.classList.remove('hex-board-wrapper')
+    boardClone.classList.add('hex-board-wrapper-clone', 'board-clone')
+    return boardClone
+  }
+
+  private _createDraftTableClone(): HTMLElement {
+    const draftTable = document.querySelector('.draft-table-wrapper')
+    if (!draftTable) throw new Error('Draft table not found')
+    const draftTableClone = draftTable.cloneNode(true) as HTMLElement
+    draftTableClone.classList.remove('draft-table')
+    draftTableClone.classList.add('draft-table-clone')
+    return draftTableClone
+  }
+
+  private _renderClones(): void {
+    const clonesWrapper = this._createClonesWrapper()
+    const boardClone = this._createBoardClone()
+    const draftTableClone = this._createDraftTableClone()
+    const animalDeckModal = this._getAnimalDeckModal()
+
+    clonesWrapper.appendChild(draftTableClone)
+    clonesWrapper.appendChild(boardClone)
+
+    animalDeckModal.insertAdjacentElement('afterbegin', clonesWrapper)
+  }
+
+  private _renderRemoveClones(): void {
+    const clonesWrapper = document.querySelector('.clones-wrapper')
+    clonesWrapper?.remove()
   }
 }
