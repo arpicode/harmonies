@@ -14,7 +14,7 @@
 
 .clones-wrapper {
   display: flex;
-  gap: calc(30vw * 100 / 1280);
+  gap: calc(16vw * 100 / 1280);
   justify-content: center;
   height: calc(230vw * 100 / 1280);
   margin-bottom: calc(30vw * 100 / 1280);
@@ -22,6 +22,17 @@
   img,
   svg {
     width: unset;
+  }
+
+  .animal-cards-clone-wrapper {
+    display: flex;
+    gap: calc(8vw * 100 / 1280);
+    // width: calc(230vw * 100 / 1280);
+    // height: calc(230vw * 100 / 1280);
+    // padding: calc(8vw * 100 / 1280);
+    // border: calc(1vw * 100 / 1280) solid rgb(68, 94, 151);
+    // border-radius: calc(10vw * 100 / 1280);
+    // background-color: #1a1a1a;
   }
 }
 

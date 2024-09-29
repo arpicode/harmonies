@@ -134,14 +134,33 @@ export default class AnimalCardDeckRenderer implements IRenderer {
     return draftTableClone
   }
 
+  private _createAnimalCardsCloneWrapper(): HTMLDivElement {
+    const animalCardsCloneWrapper = document.createElement('div')
+    animalCardsCloneWrapper.classList.add('animal-cards-clone-wrapper')
+    return animalCardsCloneWrapper
+  }
+
+  private _createAnimalCardsClones(): HTMLDivElement {
+    const actualAnimalCards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
+    const clonesWrapper = this._createAnimalCardsCloneWrapper()
+    actualAnimalCards.forEach((card) => {
+      const cardClone = card.cloneNode(true) as HTMLImageElement
+      cardClone.draggable = false
+      clonesWrapper.appendChild(cardClone)
+    })
+    return clonesWrapper
+  }
+
   private _renderClones(): void {
     const clonesWrapper = this._createClonesWrapper()
     const boardClone = this._createBoardClone()
     const draftTableClone = this._createDraftTableClone()
+    const pickedCardsClone = this._createAnimalCardsClones()
     const animalDeckModal = this._getAnimalDeckModal()
 
     clonesWrapper.appendChild(draftTableClone)
     clonesWrapper.appendChild(boardClone)
+    clonesWrapper.appendChild(pickedCardsClone)
 
     animalDeckModal.insertAdjacentElement('afterbegin', clonesWrapper)
   }
