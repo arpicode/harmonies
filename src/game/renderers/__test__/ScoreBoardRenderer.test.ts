@@ -138,7 +138,9 @@ describe('ScoreBoardRenderer', () => {
         expect(document.querySelector('.total-score')).not.toBeNull()
 
         const expectedInitialTotalScore = gameState.hexBoardType === 'river' ? '0' : '5'
+        const expectedTitleElement = gameState.gameMode === 'solo' ? document.querySelector('.suns-count') : null
         expect(document.querySelector('.total-score')?.textContent).toBe(expectedInitialTotalScore)
+        expect(document.querySelector('.suns-count')).toBe(expectedTitleElement)
       }
     )
 

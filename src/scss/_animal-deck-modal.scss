@@ -3,7 +3,7 @@
   user-select: none;
   width: 90%;
   padding: calc(20vw * 100 / 1280);
-  border: 1px solid rgb(68, 94, 151);
+  border: calc(1vw * 100 / 1280) solid rgb(68, 94, 151);
   background-color: #1f1f1f;
 
   &::backdrop {
@@ -89,9 +89,9 @@
 }
 
 .discard-pick-button {
-  background-color: coral;
-  color: rgb(78, 40, 28);
-  border: calc(1vw * 100 / 1280) solid rgb(255, 144, 103);
+  background-color: #ac2222;
+  color: #ffe2e2;
+  border: calc(1vw * 100 / 1280) solid #9c5050;
 }
 
 .cancel-pick-button {
@@ -101,9 +101,9 @@
 }
 
 .close-deck-button {
-  background-color: #ac2222;
-  color: #ffe2e2;
-  border: calc(1vw * 100 / 1280) solid #9c5050;
+  background-color: #2e5794;
+  color: white;
+  border: calc(1vw * 100 / 1280) solid #396dbb;
 }
 
 .card-picker {

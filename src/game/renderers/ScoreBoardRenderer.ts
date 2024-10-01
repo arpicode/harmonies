@@ -66,8 +66,10 @@ export default class ScoreBoardRenderer implements IRenderer {
     const wrapper = this._getScoreBoardWrapper()
     const scoreBoardOverlay = document.createElement('div')
     scoreBoardOverlay.classList.add('score-board-overlay')
+    const titleElement = this._createTitleElement('Score')
     const tokensScoresElement = this._createTokensScoresElement()
     const animalsScoresElement = this._createAnimalsScoresElement()
+    scoreBoardOverlay.appendChild(titleElement)
     scoreBoardOverlay.appendChild(tokensScoresElement)
     scoreBoardOverlay.appendChild(animalsScoresElement)
 
@@ -179,5 +181,21 @@ export default class ScoreBoardRenderer implements IRenderer {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const totalScoreElement = document.querySelector<HTMLDivElement>('.total-score')! // We just created it
     totalScoreElement.textContent = `${tokensTotal + animalsTotal}`
+    const sunsCountElement = document.querySelector<HTMLSpanElement>('.suns-count')
+    if (sunsCountElement) {
+      sunsCountElement.textContent = `${this._scoreBoardState.soloBonusScore(tokensTotal + animalsTotal)}🌞`
+      sunsCountElement.title = `${this._scoreBoardState.soloBonusScore(tokensTotal + animalsTotal)} / 11`
+    }
+  }
+
+  private _createTitleElement(title: string): HTMLDivElement {
+    const titleElement = document.createElement('div')
+    titleElement.classList.add('score-board-title')
+    titleElement.innerHTML = `<span>${title}</span>`
+    if (this._gameState.gameMode === 'solo') {
+      titleElement.innerHTML += '<span class="suns-count"></span>'
+    }
+
+    return titleElement
   }
 }

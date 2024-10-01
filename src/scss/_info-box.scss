@@ -24,7 +24,7 @@
   .fullscreen-toggle-button {
     background-color: #2e5794;
     color: white;
-    border: 1px solid #396dbb;
+    border: calc(1vw * 100 / 1280) solid #396dbb;
   }
 
   .end-turn-button {
@@ -41,7 +41,7 @@
     flex-grow: 1;
     background-color: coral;
     color: rgb(78, 37, 24);
-    border: 1px solid rgb(255, 144, 103);
+    border: calc(1vw * 100 / 1280) solid rgb(255, 144, 103);
   }
 }
 

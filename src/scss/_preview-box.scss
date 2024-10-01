@@ -21,10 +21,27 @@
     z-index: 50;
     display: none;
 
-    .score {
+    .score,
+    .score-board-title {
       font-family: 'Xilosa';
       font-size: calc(24vw * 100 / 1280);
       color: black;
+    }
+
+    .score-board-title {
+      font-size: calc(20vw * 100 / 1280);
+      display: flex;
+      justify-content: center;
+      gap: calc(8vw * 100 / 1280);
+      position: absolute;
+      top: 0;
+      left: 25%;
+      width: 50%;
+      text-align: center;
+
+      .suns-count {
+        cursor: help;
+      }
     }
 
     .total-score {
