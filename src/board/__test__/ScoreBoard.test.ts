@@ -419,5 +419,67 @@ describe('ScoreBoard', () => {
         total: 77,
       })
     })
+
+    it('should return the total score with solo suns count when on a river board', () => {
+      const pickedCardsHolder = new PickedCardsHolder()
+      const hedgehogCard = new AnimalCard(animals.hedgehog)
+      const eagleCard = new AnimalCard(animals.eagle)
+      const kingfisherCard = new AnimalCard(animals.kingfisher)
+      pickedCardsHolder.add(hedgehogCard)
+      pickedCardsHolder.add(eagleCard)
+      pickedCardsHolder.add(kingfisherCard)
+      hedgehogCard.removeAnimalToken()
+      eagleCard.removeAnimalToken()
+      eagleCard.removeAnimalToken()
+      kingfisherCard.removeAnimalToken()
+      kingfisherCard.removeAnimalToken()
+      const scoreBoard = new ScoreBoard(testRiverHexBoard, pickedCardsHolder, 'solo')
+
+      expect(JSON.parse(scoreBoard.toString())).toEqual({
+        tokens: {
+          tree: 11,
+          mountain: 11,
+          field: 10,
+          building: 10,
+          river: 8,
+          total: 50,
+        },
+        animals: {
+          Hérisson: 5,
+          Aigle: 11,
+          'Martin-pêcheur': 11,
+          total: 27,
+        },
+        total: 77,
+        suns: 5,
+      })
+    })
+  })
+
+  describe('solo suns count', () => {
+    it('should correctly calculate the solo suns count when on a river board', () => {
+      const scoreBoard = new ScoreBoard(emptyHexBoard, new PickedCardsHolder())
+      // river board: 1, no spirit: 2, score threshold: 0
+      expect(scoreBoard.soloBonusScore(scoreBoard.totalScore())).toBe(3)
+    })
+
+    it('should correctly calculate the solo suns count when on an island board', () => {
+      const islandEmptyHexBoard = new HexBoard(7, 4, 'island')
+      const scoreBoard = new ScoreBoard(islandEmptyHexBoard, new PickedCardsHolder())
+      // island board: 0, no spirit: 2, score threshold: 0
+      expect(scoreBoard.soloBonusScore(scoreBoard.totalScore())).toBe(2)
+    })
+
+    it('should correctly calculate the solo suns count when on a river board and score threshold is reached', () => {
+      const scoreBoard = new ScoreBoard(emptyHexBoard, new PickedCardsHolder())
+      // river board: 1, no spirit: 2, score threshold: 1
+      expect(scoreBoard.soloBonusScore(40)).toBe(4)
+      expect(scoreBoard.soloBonusScore(50)).toBe(4)
+
+      expect(scoreBoard.soloBonusScore(39)).toBe(3)
+      expect(scoreBoard.soloBonusScore(130)).toBe(8)
+
+      expect(scoreBoard.soloBonusScore(200)).toBe(11)
+    })
   })
 })

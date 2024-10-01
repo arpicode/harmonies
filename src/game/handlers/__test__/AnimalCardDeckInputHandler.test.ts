@@ -30,7 +30,7 @@ describe('AnimalCardDeckInputHandler', () => {
 
   beforeEach(() => {
     document.body.innerHTML = dom
-    gameState = new GameState('multiplayer', 'river')
+    gameState = new GameState('solo', 'river')
     animalCardDeckRenderer = new AnimalCardDeckRenderer(gameState)
     animalCardDeckRenderer.render()
   })
@@ -54,7 +54,7 @@ describe('AnimalCardDeckInputHandler', () => {
       ${AnimalCardDeckSelectors.CARD_PICKER}          | ${'card-picker'}
       ${AnimalCardDeckSelectors.SHOW_BUTTON}          | ${'show-cards-button'}
       ${AnimalCardDeckSelectors.CLOSE_BUTTON}         | ${'close-deck-button'}
-      ${AnimalCardDeckSelectors.CONFIRM_BUTTON}       | ${'confirm-pick-button'}
+      ${AnimalCardDeckSelectors.CONFIRM_DRAW_BUTTON}  | ${'confirm-pick-button'}
       ${AnimalCardDeckSelectors.CANCEL_BUTTON}        | ${'cancel-pick-button'}
     `(
       'should throw an error if $selector is not found',
@@ -205,15 +205,37 @@ describe('AnimalCardDeckInputHandler', () => {
       expect(animalCardDeckElement?.open).toBe(false)
     })
 
-    describe('confirm button behavior', () => {
-      it('should do nothing when confirm is clicked with no cards in the card picker', () => {
+    describe('confirm draw button behavior', () => {
+      it('should do nothing when confirm draw button is clicked with no cards in the card picker', () => {
         const animalCardDeckElement = openModal()
-        const confirmButton: HTMLButtonElement | null = document.querySelector(AnimalCardDeckSelectors.CONFIRM_BUTTON)
-        expect(confirmButton).not.toBeNull()
+        const confirmDrawButton: HTMLButtonElement | null = document.querySelector(
+          AnimalCardDeckSelectors.CONFIRM_DRAW_BUTTON
+        )
+        expect(confirmDrawButton).not.toBeNull()
         expect(animalCardDeckElement?.open).toBe(true)
 
-        const confirmButtonClickEvent = createEventWithTarget('click', confirmButton!)
-        confirmButton?.dispatchEvent(confirmButtonClickEvent)
+        const confirmButtonClickEvent = createEventWithTarget('click', confirmDrawButton!)
+        confirmDrawButton?.dispatchEvent(confirmButtonClickEvent)
+
+        expect(animalCardDeckElement?.open).toBe(true)
+      })
+    })
+
+    describe('confirm discard button behavior', () => {
+      it('should do nothing when confirm discard button is clicked with no cards in the card picker', () => {
+        gameState = new GameState('solo', 'river')
+        animalCardDeckRenderer = new AnimalCardDeckRenderer(gameState)
+        animalCardDeckRenderer.render()
+
+        const animalCardDeckElement = openModal()
+        const confirmDiscardButton: HTMLButtonElement | null = document.querySelector(
+          AnimalCardDeckSelectors.CONFIRM_DISCARD_BUTTON
+        )
+        expect(confirmDiscardButton).not.toBeNull()
+        expect(animalCardDeckElement?.open).toBe(true)
+
+        const confirmButtonClickEvent = createEventWithTarget('click', confirmDiscardButton!)
+        confirmDiscardButton?.dispatchEvent(confirmButtonClickEvent)
 
         expect(animalCardDeckElement?.open).toBe(true)
       })
@@ -281,18 +303,20 @@ describe('AnimalCardDeckInputHandler', () => {
       let animalCardDeckInputHandler: AnimalCardDeckInputHandler
       let animalCard: HTMLImageElement
       let cardPicker: HTMLDivElement
-      let confirmButton: HTMLButtonElement
+      let confirmDrawButton: HTMLButtonElement
+      let confirmDiscardButton: HTMLButtonElement
       let cancelButton: HTMLButtonElement
       let animalCards: NodeListOf<HTMLImageElement>
       let initialCardNames: string[]
 
       beforeEach(() => {
-        confirmButton = document.querySelector(AnimalCardDeckSelectors.CONFIRM_BUTTON)!
+        confirmDrawButton = document.querySelector(AnimalCardDeckSelectors.CONFIRM_DRAW_BUTTON)!
+        confirmDiscardButton = document.querySelector(AnimalCardDeckSelectors.CONFIRM_DISCARD_BUTTON)!
         cancelButton = document.querySelector(AnimalCardDeckSelectors.CANCEL_BUTTON)!
         animalCardDeckInputHandler = new AnimalCardDeckInputHandler(gameState)
         animalCardDeckInputHandler.initialize()
 
-        animalCards = document.querySelectorAll(AnimalCardDeckSelectors.ANIMAL_CARDS)
+        animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
         cardPicker = document.querySelector(AnimalCardDeckSelectors.CARD_PICKER)!
 
         animalCards.item(0).removeAttribute('data-timestamp') // Edge case where the timestamp wouldn't be set => '0'
@@ -301,7 +325,8 @@ describe('AnimalCardDeckInputHandler', () => {
 
         // Ensure that elements are present
         expect(animalCards).toHaveLength(5)
-        expect(confirmButton).not.toBeNull()
+        expect(confirmDrawButton).not.toBeNull()
+        expect(confirmDiscardButton).not.toBeNull()
         expect(cancelButton).not.toBeNull()
         expect(animalCard).not.toBeNull()
         expect(cardPicker).not.toBeNull()
@@ -310,7 +335,7 @@ describe('AnimalCardDeckInputHandler', () => {
       it.each([0, 1, 2, 3, 4])('should move the card #%i to the card picker on drop', (cardIndex) => {
         animalCard = animalCards.item(cardIndex)!
         const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
-        expect(confirmButton.disabled).toBe(true)
+        expect(confirmDrawButton.disabled).toBe(true)
         expect(cancelButton.disabled).toBe(true)
 
         // Simulate dragstart event from the animal card
@@ -337,7 +362,7 @@ describe('AnimalCardDeckInputHandler', () => {
         expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
 
         // Ensure buttons are enabled after dropping the card
-        expect(confirmButton.disabled).toBe(false)
+        expect(confirmDrawButton.disabled).toBe(false)
         expect(cancelButton.disabled).toBe(false)
       })
 
@@ -369,7 +394,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
 
           // Ensure buttons are enabled after dropping the card
-          expect(confirmButton.disabled).toBe(false)
+          expect(confirmDrawButton.disabled).toBe(false)
           expect(cancelButton.disabled).toBe(false)
 
           // Simulate the click event on the cancel button
@@ -383,7 +408,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.classList.contains(dragOverClassName)).toBe(false)
 
           // Ensure buttons are disabled after canceling the card picking
-          expect(confirmButton.disabled).toBe(true)
+          expect(confirmDrawButton.disabled).toBe(true)
           expect(cancelButton.disabled).toBe(true)
 
           const cardNamesAfterCancel = Array.from(animalCards).map((card) => card.getAttribute('alt')!)
@@ -419,7 +444,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
 
           // Ensure buttons are enabled after dropping the card
-          expect(confirmButton.disabled).toBe(false)
+          expect(confirmDrawButton.disabled).toBe(false)
           expect(cancelButton.disabled).toBe(false)
 
           // remove the card wrapper
@@ -440,7 +465,7 @@ describe('AnimalCardDeckInputHandler', () => {
       )
 
       it.each([0, 1, 2, 3, 4])(
-        'should handle the click event for the confirm button to confirm the card #%i picking',
+        'should handle the click event for the confirm draw button to confirm the card #%i when the card wrapper is not found',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
           const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
@@ -468,7 +493,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
 
           // Ensure buttons are enabled after dropping the card
-          expect(confirmButton.disabled).toBe(false)
+          expect(confirmDrawButton.disabled).toBe(false)
           expect(cancelButton.disabled).toBe(false)
 
           // remove the card wrapper
@@ -478,8 +503,8 @@ describe('AnimalCardDeckInputHandler', () => {
           cardWrapper?.remove()
 
           // Simulate the click event on the confirm button
-          const confirmClickEvent = createEventWithTarget('click', confirmButton)
-          confirmButton.dispatchEvent(confirmClickEvent)
+          const confirmClickEvent = createEventWithTarget('click', confirmDrawButton)
+          confirmDrawButton.dispatchEvent(confirmClickEvent)
 
           expect(consoleErrorSpy).toHaveBeenCalledWith(
             '%c[InvalidDOM] %cInvalid data-wrapper-for',
@@ -490,7 +515,7 @@ describe('AnimalCardDeckInputHandler', () => {
       )
 
       it.each([0, 1, 2, 3, 4])(
-        'should handle the click event for the confirm button to confirm the card #%i when the card wrapper is not found',
+        'should handle the click event for the confirm draw button to confirm the card #%i picking',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
           const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
@@ -518,12 +543,12 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
 
           // Ensure buttons are enabled after dropping the card
-          expect(confirmButton.disabled).toBe(false)
+          expect(confirmDrawButton.disabled).toBe(false)
           expect(cancelButton.disabled).toBe(false)
 
           // Simulate the click event on the confirm button
-          const confirmClickEvent = createEventWithTarget('click', confirmButton)
-          confirmButton.dispatchEvent(confirmClickEvent)
+          const confirmClickEvent = createEventWithTarget('click', confirmDrawButton)
+          confirmDrawButton.dispatchEvent(confirmClickEvent)
 
           // Assert the card is no longer inside the card picker
           expect(cardPicker.contains(animalCard)).toBe(false)
@@ -535,7 +560,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.classList.contains(dragOverClassName)).toBe(false)
 
           // Ensure buttons are disabled after confirming the card picking
-          expect(confirmButton.disabled).toBe(true)
+          expect(confirmDrawButton.disabled).toBe(true)
           expect(cancelButton.disabled).toBe(true)
 
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(1)
@@ -543,7 +568,7 @@ describe('AnimalCardDeckInputHandler', () => {
       )
 
       it.each([0, 1, 2, 3, 4])(
-        'should handle the click event for the confirm card #%i button when the picked cards holder is full',
+        'should handle the click event for the confirm draw card #%i button when the picked cards holder is full',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
           const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
@@ -571,7 +596,7 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
 
           // Ensure buttons are enabled after dropping the card
-          expect(confirmButton.disabled).toBe(false)
+          expect(confirmDrawButton.disabled).toBe(false)
           expect(cancelButton.disabled).toBe(false)
 
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
@@ -585,8 +610,8 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(4)
 
           // Simulate the click event on the confirm button
-          const confirmClickEvent = createEventWithTarget('click', confirmButton)
-          confirmButton.dispatchEvent(confirmClickEvent)
+          const confirmClickEvent = createEventWithTarget('click', confirmDrawButton)
+          confirmDrawButton.dispatchEvent(confirmClickEvent)
 
           // Assert the card is no longer inside the card picker
           expect(cardPicker.contains(animalCard)).toBe(false)
@@ -595,6 +620,109 @@ describe('AnimalCardDeckInputHandler', () => {
           expect(cardPicker.children).toHaveLength(0)
 
           expect(consoleWarnSpy).toHaveBeenCalledWith('Picked cards holder is full')
+        }
+      )
+
+      it.each([0, 1, 2, 3, 4])(
+        'should handle the click event for the confirm discard button to confirm the card #%i picking',
+        (cardIndex) => {
+          const animalCard = animalCards.item(cardIndex)
+          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
+
+          // Simulate dragstart event from the animal card
+          const dragStartEvent = createEventWithTarget('dragstart', animalCard, { clientX: 0, clientY: 0 })
+          animalCard.dispatchEvent(dragStartEvent)
+
+          // Simulate dragenter and dragover on the card picker
+          const dragEnterEvent = createEventWithTarget('dragenter', cardPicker, { clientX: 10, clientY: 0 })
+          cardPicker.dispatchEvent(dragEnterEvent)
+
+          const dragOverEvent = createEventWithTarget('dragover', cardPicker, { clientX: 10, clientY: 0 })
+          cardPicker.dispatchEvent(dragOverEvent)
+
+          // Simulate the drop event on the card picker
+          const dropEvent = createEventWithTarget('drop', cardPicker, { clientX: 10, clientY: 0 })
+          cardPicker.dispatchEvent(dropEvent)
+
+          // Assert the card is now inside the card picker
+          expect(cardPicker.contains(animalCard)).toBe(true)
+
+          // Check that the 'drag-over' class is still present
+          expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
+
+          // Ensure buttons are enabled after dropping the card
+          expect(confirmDiscardButton.disabled).toBe(false)
+          expect(cancelButton.disabled).toBe(false)
+
+          // Simulate the click event on the confirm button
+          const confirmClickEvent = createEventWithTarget('click', confirmDiscardButton)
+          confirmDiscardButton.dispatchEvent(confirmClickEvent)
+
+          // Assert the card is no longer inside the card picker
+          expect(cardPicker.contains(animalCard)).toBe(false)
+
+          // Ensure the card picker is empty
+          expect(cardPicker.children).toHaveLength(0)
+
+          // Check that the 'drag-over' class is no longer present
+          expect(cardPicker.classList.contains(dragOverClassName)).toBe(false)
+
+          // Ensure buttons are disabled after confirming the card picking
+          expect(confirmDiscardButton.disabled).toBe(true)
+          expect(cancelButton.disabled).toBe(true)
+
+          expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
+        }
+      )
+
+      it.each([0, 1, 2, 3, 4])(
+        'should handle the click event for the confirm discard button for the card #%i when the card wrapper is not found',
+        (cardIndex) => {
+          animalCard = animalCards.item(cardIndex)!
+          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
+
+          // Simulate dragstart event from the animal card
+          const dragStartEvent = createEventWithTarget('dragstart', animalCard, { clientX: 0, clientY: 0 })
+          animalCard.dispatchEvent(dragStartEvent)
+
+          // Simulate dragenter and dragover on the card picker
+          const dragEnterEvent = createEventWithTarget('dragenter', cardPicker, { clientX: 10, clientY: 0 })
+          cardPicker.dispatchEvent(dragEnterEvent)
+
+          const dragOverEvent = createEventWithTarget('dragover', cardPicker, { clientX: 10, clientY: 0 })
+          cardPicker.dispatchEvent(dragOverEvent)
+
+          // Simulate the drop event on the card picker
+          const dropEvent = createEventWithTarget('drop', cardPicker, { clientX: 10, clientY: 0 })
+          cardPicker.dispatchEvent(dropEvent)
+
+          // Assert the card is now inside the card picker
+          expect(cardPicker.contains(animalCard)).toBe(true)
+
+          // Check that the 'drag-over' class is still present
+          expect(cardPicker.classList.contains(dragOverClassName)).toBe(true)
+
+          // Ensure buttons are enabled after dropping the card
+          expect(confirmDiscardButton.disabled).toBe(false)
+          expect(cancelButton.disabled).toBe(false)
+
+          // remove the card wrapper
+          const cardWrapper = document.querySelector<HTMLDivElement>(
+            `.card-wrapper[data-wrapper-for="${animalCard.alt}"]`
+          )
+          cardWrapper?.remove()
+
+          // Simulate the click event on the confirm button
+          const confirmClickEvent = createEventWithTarget('click', confirmDiscardButton)
+          confirmDiscardButton.dispatchEvent(confirmClickEvent)
+
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            '%c[InvalidDOM] %cInvalid data-wrapper-for',
+            'color: #ff4d4f;',
+            'color: #ff7a45;'
+          )
         }
       )
     })

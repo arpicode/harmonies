@@ -27,12 +27,6 @@
   .animal-cards-clone-wrapper {
     display: flex;
     gap: calc(8vw * 100 / 1280);
-    // width: calc(230vw * 100 / 1280);
-    // height: calc(230vw * 100 / 1280);
-    // padding: calc(8vw * 100 / 1280);
-    // border: calc(1vw * 100 / 1280) solid rgb(68, 94, 151);
-    // border-radius: calc(10vw * 100 / 1280);
-    // background-color: #1a1a1a;
   }
 }
 
@@ -75,12 +69,29 @@
   justify-content: flex-end;
   gap: calc(8vw * 100 / 1280);
   margin-top: calc(24vw * 100 / 1280);
+
+  .buttons-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    gap: calc(8vw * 100 / 1280);
+
+    &.hidden {
+      // visibility: hidden;
+      display: none;
+    }
+  }
 }
 
-.confirm-pick-button {
+.draw-pick-button {
   background-color: #2a8b2a;
-  color: white;
+  color: #eeffee;
   border: calc(1vw * 100 / 1280) solid #509c50;
+}
+
+.discard-pick-button {
+  background-color: coral;
+  color: rgb(78, 40, 28);
+  border: calc(1vw * 100 / 1280) solid rgb(255, 144, 103);
 }
 
 .cancel-pick-button {
@@ -91,7 +102,7 @@
 
 .close-deck-button {
   background-color: #ac2222;
-  color: white;
+  color: #ffe2e2;
   border: calc(1vw * 100 / 1280) solid #9c5050;
 }
 

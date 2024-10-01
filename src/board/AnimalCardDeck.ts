@@ -55,7 +55,7 @@ export default class AnimalCardDeck extends Stack<AnimalCard> {
 
   removeDrawnCardByName(name: string): AnimalCard {
     const index = this.drawnCards.findIndex((card) => card.name === name)
-    if (index === -1) throw new Error('Card name not found')
+    if (index === -1) throw new Error(`Card name ${name} not found`)
     const removedCard = this.drawnCards.splice(index, 1)[0]
     return removedCard
   }

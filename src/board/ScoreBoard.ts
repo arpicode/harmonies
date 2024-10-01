@@ -1,3 +1,4 @@
+import { GameMode } from '~/game/Game'
 import { Hex } from './Hex'
 import { HexBoard } from './HexBoard'
 import PickedCardsHolder from './PickedCardsHolder'
@@ -10,13 +11,26 @@ const BUILDING_SCORE = 5
 const RIVER_TOKEN_SCORE = 4
 const ISLAND_SCORE = 5
 
+const SOLO_THRESHOLD_BONUSES = [0, 40, 70, 90, 110, 130, 140, 150, 160] // respectively 0, 1, 2, 3, 4, 5, 6, 7, 8 suns
+const SOLO_BOARD_BONUS = { river: 1, island: 0 }
+const SOLO_SPIRIT_BONUS = { none: 2, landscapeCount: 0, landscapeGroups: 1 }
+
+interface IScoreResult {
+  tokens: Record<string, number>
+  animals: Record<string, number>
+  total: number
+  suns?: number
+}
+
 export default class ScoreBoard {
   private _hexBoard: HexBoard
   private _pickedCardsHolder: PickedCardsHolder
+  private _gameMode: GameMode
 
-  constructor(hexBoard: HexBoard, pickedCardsHolder: PickedCardsHolder) {
+  constructor(hexBoard: HexBoard, pickedCardsHolder: PickedCardsHolder, gameMode: GameMode = 'multiplayer') {
     this._hexBoard = hexBoard
     this._pickedCardsHolder = pickedCardsHolder
+    this._gameMode = gameMode
   }
 
   private _calculateTokenScore(tokenType: TokenType, scoreMapping: number[], minChainLength = 1) {
@@ -113,6 +127,20 @@ export default class ScoreBoard {
     return tokensScores.total + animalCardsScores.total
   }
 
+  soloBonusScore(totalScore: number) {
+    const board = this._hexBoard.type === 'river' ? SOLO_BOARD_BONUS.river : SOLO_BOARD_BONUS.island
+    const spirit = SOLO_SPIRIT_BONUS.none // TODO: Change when spirits are implemented
+
+    let bonus = 0
+    for (let i = 0; i < SOLO_THRESHOLD_BONUSES.length; i++) {
+      if (totalScore < SOLO_THRESHOLD_BONUSES[i]) break
+
+      bonus = i
+    }
+
+    return board + spirit + bonus
+  }
+
   toString() {
     const tokensScores = this.tokensScores()
     const animalCardsScores = this.animalCardsScores()
@@ -123,6 +151,11 @@ export default class ScoreBoard {
       tokens: tokensScores,
       animals: animalCardsScores,
       total: totalScore,
+    } as IScoreResult
+
+    if (this._gameMode === 'solo') {
+      const soloBonus = this.soloBonusScore(totalScore)
+      result.suns = soloBonus
     }
 
     return JSON.stringify(result, null, 2)

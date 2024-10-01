@@ -83,11 +83,20 @@ describe('AnimalCardDeckRenderer', () => {
     }).toThrowError('Card picker not found')
   })
 
-  it('should render the buttons', () => {
+  it('should render the buttons for a multiplayer game', () => {
     initializeDraftTable()
     animalCardDeckRenderer.render()
     const buttons = document.querySelectorAll('.animal-deck-modal button')
     expect(buttons).toHaveLength(3)
+  })
+
+  it('should render the buttons for a solo game', () => {
+    document.body.innerHTML = dom
+    gameState = new GameState('solo', 'river')
+    animalCardDeckRenderer = new AnimalCardDeckRenderer(gameState)
+    animalCardDeckRenderer.render()
+    const buttons = document.querySelectorAll('.animal-deck-modal button')
+    expect(buttons).toHaveLength(4)
   })
 
   describe('hex board clone', () => {
@@ -127,6 +136,7 @@ describe('AnimalCardDeckRenderer', () => {
       expect(hexBoardClone).toBeNull()
     })
   })
+
   it('should render the draft table clone when the animal deck modal is open', () => {
     initializeDraftTable()
     animalCardDeckRenderer.render()

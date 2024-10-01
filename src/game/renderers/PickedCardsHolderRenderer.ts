@@ -123,7 +123,6 @@ export default class PickedCardsHolderRenderer implements IRenderer {
   private _initializePickedCardsHolderDOM(): void {
     const pickedCardsWrapper = this._getPickedCardsWrapper()
     const pickedCardWrapper = this._createPickedCardWrapper()
-    // const pickedCardsContainer = this._createPickedCardsContainer()
     pickedCardsWrapper.appendChild(pickedCardWrapper)
   }
 
@@ -189,7 +188,6 @@ export default class PickedCardsHolderRenderer implements IRenderer {
   }
 
   private _createWrapperContent(animalCard: AnimalCard): HTMLDivElement {
-    // const cardAndActionWrapper = this._createCardAndActionWrapper()
     const pickedCardWrapper = this._createPickedCardWrapper()
     const cardElement = this._createCardElement(animalCard)
     const cardSVGOverlay = this._createCardSVGOverlay(animalCard)
@@ -198,7 +196,6 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     pickedCardWrapper.appendChild(cardElement)
     if (cardSVGOverlay) pickedCardWrapper.appendChild(cardSVGOverlay)
     if (cardActionButton) pickedCardWrapper.appendChild(cardActionButton)
-    // cardAndActionWrapper.appendChild(pickedCardWrapper)
     return pickedCardWrapper
   }
 }

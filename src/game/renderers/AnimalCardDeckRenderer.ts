@@ -94,6 +94,9 @@ export default class AnimalCardDeckRenderer implements IRenderer {
   private _createModalFooter(): HTMLElement {
     const footer = document.createElement('footer')
     footer.classList.add('modal-footer')
+    const buttonsWrapper = document.createElement('div')
+    buttonsWrapper.classList.add('buttons-wrapper', 'hidden')
+    footer.appendChild(buttonsWrapper)
 
     const createButton = (className: string, textContent: string, disabled = false): HTMLButtonElement => {
       const button = document.createElement('button')
@@ -103,8 +106,11 @@ export default class AnimalCardDeckRenderer implements IRenderer {
       return button
     }
 
-    footer.appendChild(createButton('confirm-pick-button', 'Confirmer', true))
-    footer.appendChild(createButton('cancel-pick-button', 'Annuler', true))
+    if (this._gameState.gameMode === 'solo') {
+      buttonsWrapper.appendChild(createButton('discard-pick-button', 'Défausser', true))
+    }
+    buttonsWrapper.appendChild(createButton('draw-pick-button', 'Piocher', true))
+    buttonsWrapper.appendChild(createButton('cancel-pick-button', 'Annuler', true))
     footer.appendChild(createButton('close-deck-button', 'Fermer'))
 
     return footer

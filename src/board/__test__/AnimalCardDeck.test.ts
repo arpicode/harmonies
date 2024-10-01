@@ -50,7 +50,7 @@ describe('AnimalCardDeck', () => {
   })
 
   it('should throw an error when removing a card by name that is not in the drawn cards', () => {
-    expect(() => deck.removeDrawnCardByName('non-existing')).toThrow('Card name not found')
+    expect(() => deck.removeDrawnCardByName('non-existing')).toThrow('Card name non-existing not found')
   })
 
   it('should throw an error when drawing from an empty deck', () => {
