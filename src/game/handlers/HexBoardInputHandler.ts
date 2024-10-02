@@ -1,10 +1,17 @@
 import Token, { TokenType } from '../../board/Token'
 import GameState, { RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
+import placeTokenSoundFile from '../../assets/sounds/place_token.ogg'
+import placeAnimalSoundFile from '../../assets/sounds/place_animal.mp3'
 
 export enum HexBoardSelector {
   HEX_BOARD = '.hex-board-svg-overlay',
 }
+
+const placeTokenSound = new Audio(placeTokenSoundFile)
+placeTokenSound.volume = 0.1
+const placeAnimalSound = new Audio(placeAnimalSoundFile)
+placeAnimalSound.volume = 0.2
 
 class HexBoardDOMException extends Error {
   constructor(selector: string) {
@@ -80,6 +87,7 @@ export default class HexBoardInputHandler implements IInputHandler {
     animalCard.removeAnimalToken()
     this._gameState.pickedCardsHolder.transferCompletedCards()
     this._gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, hex)
+    void placeAnimalSound.play()
   }
 
   private _handleDragOver(event: Event) {
@@ -104,6 +112,7 @@ export default class HexBoardInputHandler implements IInputHandler {
       currentToken.remove()
       if (event.target instanceof SVGElement) event.target.classList.remove('drag-over')
       this._gameState.emit(RendererEvent.HEX_BOARD_UPDATED)
+      void placeTokenSound.play()
       if (this._gameState.draftTable.draftedTokens.size() === 0) {
         this._gameState.endTurnButton.disabled = false
         this._gameState.emit(RendererEvent.END_TURN_BUTTON_UPDATED)

@@ -1,10 +1,14 @@
 import GameState, { RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
+import endTurnSoundFile from '../../assets/sounds/endturn.mp3'
 
 export enum EndTurnButtonSelector {
   GAME_WRAPPER = '.game-wrapper',
   END_TURN_BUTTON = '.end-turn-button',
 }
+
+const endTurnSound = new Audio(endTurnSoundFile)
+endTurnSound.volume = 0.08
 
 class EndTurnButtonDOMException extends Error {
   constructor(selector: string) {
@@ -63,5 +67,6 @@ export default class EndTurnButtonInputHandler implements IInputHandler {
 
     this._gameState.endTurnButton.disabled = true
     this._gameState.emit(RendererEvent.END_TURN_BUTTON_UPDATED)
+    void endTurnSound.play()
   }
 }

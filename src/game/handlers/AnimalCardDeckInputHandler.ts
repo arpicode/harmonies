@@ -1,6 +1,9 @@
 import AnimalCard from '~/board/AnimalCard'
 import GameState, { InputHandlerEvent, RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
+import drawSoundFile from '../../assets/sounds/draw_v2.mp3'
+import discardSoundFile from '../../assets/sounds/discard.mp3'
+import uiClickSoundFile from '../../assets/sounds/ui_click.mp3'
 
 export enum AnimalCardDeckSelector {
   SHOW_BUTTON = '.show-cards-button',
@@ -17,6 +20,13 @@ export enum AnimalCardDeckSelector {
   DRAGGING = '.dragging',
   DRAG_OVER = '.drag-over',
 }
+
+const drawSound = new Audio(drawSoundFile)
+drawSound.volume = 0.2
+const discardSound = new Audio(discardSoundFile)
+discardSound.volume = 0.2
+const uiClickSound = new Audio(uiClickSoundFile)
+uiClickSound.volume = 0.2
 
 class AnimalCardDeckDOMException extends Error {
   constructor(selector: string) {
@@ -87,12 +97,14 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
   private _handleOpenDeck = () => {
     this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
+    void uiClickSound.play()
     this._animalDeckModal.showModal()
   }
 
   private _handleCloseDeck = () => {
     this._animalDeckModal.close()
     this._cancelPick()
+    void uiClickSound.play()
     this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
   }
 
@@ -125,6 +137,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
     this._gameState.emit(RendererEvent.PICKED_CARDS_HOLDER_UPDATED)
     this._gameState.emit(RendererEvent.ANIMAL_CARD_DECK_UPDATED)
+    void drawSound.play()
 
     this._animalCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
     this._updateCardsDraggableState(true)
@@ -152,6 +165,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
     this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
     this._gameState.emit(RendererEvent.ANIMAL_CARD_DECK_UPDATED)
+    void discardSound.play()
 
     this._animalCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
     this._updateCardsDraggableState(true)

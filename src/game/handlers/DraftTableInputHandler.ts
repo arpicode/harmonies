@@ -1,5 +1,9 @@
 import GameState, { RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
+import draftTokensSoundFile from '../../assets/sounds/draft_tokens.mp3'
+
+const draftTokensSound = new Audio(draftTokensSoundFile)
+draftTokensSound.volume = 0.2
 
 export default class DraftTableInputHandler implements IInputHandler {
   private _gameState: GameState
@@ -45,6 +49,7 @@ export default class DraftTableInputHandler implements IInputHandler {
 
     this._gameState.endTurnButton.disabled = true
     this._gameState.emit(RendererEvent.END_TURN_BUTTON_UPDATED)
+    void draftTokensSound.play()
   }
 
   private _bindEventsToTokensInTokenHolder() {
