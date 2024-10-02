@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import GameState from '~/game/GameState'
-import PickedCardsHolderInputHandler, { PickedCardsHolderSelectors } from '../PickedCardsHolderInputHandler'
+import PickedCardsHolderInputHandler, { PickedCardsHolderSelector } from '../PickedCardsHolderInputHandler'
 import PickedCardsHolderRenderer from '~/game/renderers/PickedCardsHolderRenderer'
 import { dom } from '~/dom'
 import { createEventWithTarget } from '~/test-utils/test-utils'
@@ -46,7 +46,7 @@ describe('PickedCardsHolderInputHandler', () => {
   it('should throw an error if the picked cards holder is not found', () => {
     document.body.innerHTML = ''
     expect(() => (pickedCardsHolderInputHandler = new PickedCardsHolderInputHandler(gameState))).toThrow(
-      `Element with selector "${PickedCardsHolderSelectors.PICKED_CARDS_HOLDER}" not found`
+      `Element with selector "${PickedCardsHolderSelector.PICKED_CARDS_HOLDER}" not found`
     )
   })
 
@@ -59,7 +59,7 @@ describe('PickedCardsHolderInputHandler', () => {
     pickedCardsHolderInputHandler.initialize()
 
     const pickedCardsHolderElement: HTMLDivElement = document.querySelector(
-      PickedCardsHolderSelectors.PICKED_CARDS_HOLDER
+      PickedCardsHolderSelector.PICKED_CARDS_HOLDER
     )!
     expect(pickedCardsHolderElement).not.toBeNull()
 

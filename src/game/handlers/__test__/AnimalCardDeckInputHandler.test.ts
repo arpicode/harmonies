@@ -2,8 +2,8 @@
 import { MockInstance } from 'vitest'
 import { createEventWithTarget } from '~/test-utils/test-utils'
 import { dom } from '~/dom'
-import GameState from '~/game/GameState'
-import AnimalCardDeckInputHandler, { AnimalCardDeckSelectors } from '../AnimalCardDeckInputHandler'
+import GameState, { RendererEvent } from '~/game/GameState'
+import AnimalCardDeckInputHandler, { AnimalCardDeckSelector } from '../AnimalCardDeckInputHandler'
 import AnimalCardDeckRenderer from '~/game/renderers/AnimalCardDeckRenderer'
 import AnimalCard, { IAnimal } from '~/board/AnimalCard'
 
@@ -19,9 +19,9 @@ describe('AnimalCardDeckInputHandler', () => {
 
   const openModal = () => {
     const animalCardDeckElement: HTMLDialogElement | null = document.querySelector(
-      AnimalCardDeckSelectors.ANIMAL_DECK_MODAL
+      AnimalCardDeckSelector.ANIMAL_DECK_MODAL
     )
-    const showButton: HTMLButtonElement | null = document.querySelector(AnimalCardDeckSelectors.SHOW_BUTTON)
+    const showButton: HTMLButtonElement | null = document.querySelector(AnimalCardDeckSelector.SHOW_BUTTON)
 
     const btnClickEvent = createEventWithTarget('click', showButton!)
     showButton?.dispatchEvent(btnClickEvent)
@@ -48,14 +48,14 @@ describe('AnimalCardDeckInputHandler', () => {
     })
 
     it.each`
-      selector                                        | className
-      ${AnimalCardDeckSelectors.ANIMAL_DECK_MODAL}    | ${'animal-deck-modal'}
-      ${AnimalCardDeckSelectors.ANIMAL_CARDS_WRAPPER} | ${'animal-cards-container'}
-      ${AnimalCardDeckSelectors.CARD_PICKER}          | ${'card-picker'}
-      ${AnimalCardDeckSelectors.SHOW_BUTTON}          | ${'show-cards-button'}
-      ${AnimalCardDeckSelectors.CLOSE_BUTTON}         | ${'close-deck-button'}
-      ${AnimalCardDeckSelectors.CONFIRM_DRAW_BUTTON}  | ${'confirm-pick-button'}
-      ${AnimalCardDeckSelectors.CANCEL_BUTTON}        | ${'cancel-pick-button'}
+      selector                                       | className
+      ${AnimalCardDeckSelector.ANIMAL_DECK_MODAL}    | ${'animal-deck-modal'}
+      ${AnimalCardDeckSelector.ANIMAL_CARDS_WRAPPER} | ${'animal-cards-container'}
+      ${AnimalCardDeckSelector.CARD_PICKER}          | ${'card-picker'}
+      ${AnimalCardDeckSelector.SHOW_BUTTON}          | ${'show-cards-button'}
+      ${AnimalCardDeckSelector.CLOSE_BUTTON}         | ${'close-deck-button'}
+      ${AnimalCardDeckSelector.CONFIRM_DRAW_BUTTON}  | ${'confirm-pick-button'}
+      ${AnimalCardDeckSelector.CANCEL_BUTTON}        | ${'cancel-pick-button'}
     `(
       'should throw an error if $selector is not found',
       ({ selector, className }: { selector: string; className: string }) => {
@@ -84,32 +84,33 @@ describe('AnimalCardDeckInputHandler', () => {
       expect(gameState.animalCardDeck.drawnCards.length).toBe(initialSize)
       expect(animalCard).not.toBeNull()
       animalCardDeckRenderer.render()
-      gameState.notifyAnimalCardDeckDraw(animalCard!)
+      gameState.emit(RendererEvent.ANIMAL_CARD_DECK_DRAW, animalCard)
       const newCardElement = document.querySelector<HTMLImageElement>(
         `[data-wrapper-for="${animalCard!.name}"] .animal-card`
       )
       expect(newCardElement).not.toBeNull()
 
       // expect the new card to have event listeners for dragstart and dragend
-      expect(newCardElement?.classList.contains(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))).toBe(false)
+      expect(newCardElement?.classList.contains(AnimalCardDeckSelector.DRAGGING.replace('.', ''))).toBe(false)
 
       const dragStartEvent = createEventWithTarget('dragstart', newCardElement!)
       newCardElement?.dispatchEvent(dragStartEvent)
 
-      expect(newCardElement?.classList.contains(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))).toBe(true)
-      expect(document.querySelectorAll(AnimalCardDeckSelectors.DRAGGING)).toHaveLength(1)
+      expect(newCardElement?.classList.contains(AnimalCardDeckSelector.DRAGGING.replace('.', ''))).toBe(true)
+      expect(document.querySelectorAll(AnimalCardDeckSelector.DRAGGING)).toHaveLength(1)
 
       const dragEndEvent = createEventWithTarget('dragend', newCardElement!)
       newCardElement?.dispatchEvent(dragEndEvent)
 
-      expect(newCardElement?.classList.contains(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))).toBe(false)
-      expect(document.querySelectorAll(AnimalCardDeckSelectors.DRAGGING)).toHaveLength(0)
+      expect(newCardElement?.classList.contains(AnimalCardDeckSelector.DRAGGING.replace('.', ''))).toBe(false)
+      expect(document.querySelectorAll(AnimalCardDeckSelector.DRAGGING)).toHaveLength(0)
     })
 
     it('should not bind the dragstart and dragend events to the new drawn card if the element is not found', () => {
       animalCardDeckInputHandler = new AnimalCardDeckInputHandler(gameState)
       animalCardDeckInputHandler.initialize()
-      gameState.notifyAnimalCardDeckDraw(
+      gameState.emit(
+        RendererEvent.ANIMAL_CARD_DECK_DRAW,
         new AnimalCard(
           JSON.parse(`{
                         "name": "non-existing-card",
@@ -171,11 +172,11 @@ describe('AnimalCardDeckInputHandler', () => {
 
     it('should handle the click event for the show button to open the animal card deck modal', () => {
       const animalCardDeckElement: HTMLDialogElement | null = document.querySelector(
-        AnimalCardDeckSelectors.ANIMAL_DECK_MODAL
+        AnimalCardDeckSelector.ANIMAL_DECK_MODAL
       )
       expect(animalCardDeckElement).not.toBeNull()
 
-      const showButton: HTMLButtonElement | null = document.querySelector(AnimalCardDeckSelectors.SHOW_BUTTON)
+      const showButton: HTMLButtonElement | null = document.querySelector(AnimalCardDeckSelector.SHOW_BUTTON)
       expect(showButton).not.toBeNull()
 
       expect(animalCardDeckElement?.open).toBe(false)
@@ -189,11 +190,11 @@ describe('AnimalCardDeckInputHandler', () => {
 
     it('should handle the click event for the close button to close the animal card deck modal', () => {
       const animalCardDeckElement: HTMLDialogElement | null = document.querySelector(
-        AnimalCardDeckSelectors.ANIMAL_DECK_MODAL
+        AnimalCardDeckSelector.ANIMAL_DECK_MODAL
       )
       expect(animalCardDeckElement).not.toBeNull()
 
-      const closeButton: HTMLButtonElement | null = document.querySelector(AnimalCardDeckSelectors.CLOSE_BUTTON)
+      const closeButton: HTMLButtonElement | null = document.querySelector(AnimalCardDeckSelector.CLOSE_BUTTON)
       expect(closeButton).not.toBeNull()
 
       expect(animalCardDeckElement?.open).toBe(false)
@@ -209,7 +210,7 @@ describe('AnimalCardDeckInputHandler', () => {
       it('should do nothing when confirm draw button is clicked with no cards in the card picker', () => {
         const animalCardDeckElement = openModal()
         const confirmDrawButton: HTMLButtonElement | null = document.querySelector(
-          AnimalCardDeckSelectors.CONFIRM_DRAW_BUTTON
+          AnimalCardDeckSelector.CONFIRM_DRAW_BUTTON
         )
         expect(confirmDrawButton).not.toBeNull()
         expect(animalCardDeckElement?.open).toBe(true)
@@ -229,7 +230,7 @@ describe('AnimalCardDeckInputHandler', () => {
 
         const animalCardDeckElement = openModal()
         const confirmDiscardButton: HTMLButtonElement | null = document.querySelector(
-          AnimalCardDeckSelectors.CONFIRM_DISCARD_BUTTON
+          AnimalCardDeckSelector.CONFIRM_DISCARD_BUTTON
         )
         expect(confirmDiscardButton).not.toBeNull()
         expect(animalCardDeckElement?.open).toBe(true)
@@ -247,10 +248,10 @@ describe('AnimalCardDeckInputHandler', () => {
 
       beforeEach(() => {
         openModal()
-        availableCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
+        availableCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
         expect(availableCards).toHaveLength(5)
 
-        dropZone = document.querySelector<HTMLDivElement>(AnimalCardDeckSelectors.CARD_PICKER)
+        dropZone = document.querySelector<HTMLDivElement>(AnimalCardDeckSelector.CARD_PICKER)
         expect(dropZone).not.toBeNull()
         expect(dropZone?.children).toHaveLength(0)
       })
@@ -259,24 +260,24 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the dragstart and dragend events for the card at index %i',
         (cardIndex) => {
           const card: HTMLImageElement = availableCards.item(cardIndex)
-          expect(card.classList.contains(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))).toBe(false)
+          expect(card.classList.contains(AnimalCardDeckSelector.DRAGGING.replace('.', ''))).toBe(false)
 
           const dragStartEvent = createEventWithTarget('dragstart', card)
           card.dispatchEvent(dragStartEvent)
 
-          expect(card.classList.contains(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))).toBe(true)
-          expect(document.querySelectorAll(AnimalCardDeckSelectors.DRAGGING)).toHaveLength(1)
+          expect(card.classList.contains(AnimalCardDeckSelector.DRAGGING.replace('.', ''))).toBe(true)
+          expect(document.querySelectorAll(AnimalCardDeckSelector.DRAGGING)).toHaveLength(1)
 
           const dragEndEvent = createEventWithTarget('dragend', card)
           card.dispatchEvent(dragEndEvent)
 
-          expect(card.classList.contains(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))).toBe(false)
-          expect(document.querySelectorAll(AnimalCardDeckSelectors.DRAGGING)).toHaveLength(0)
+          expect(card.classList.contains(AnimalCardDeckSelector.DRAGGING.replace('.', ''))).toBe(false)
+          expect(document.querySelectorAll(AnimalCardDeckSelector.DRAGGING)).toHaveLength(0)
         }
       )
 
       it('should prevent the default behavior on dragover event', () => {
-        expect(dropZone?.classList.contains(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))).toBe(false)
+        expect(dropZone?.classList.contains(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))).toBe(false)
 
         const dragOverEvent = createEventWithTarget('dragover', dropZone!)
         dropZone?.dispatchEvent(dragOverEvent)
@@ -285,17 +286,17 @@ describe('AnimalCardDeckInputHandler', () => {
       })
 
       it('should handle the dragenter and dragleave events for the card picker', () => {
-        expect(dropZone?.classList.contains(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))).toBe(false)
+        expect(dropZone?.classList.contains(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))).toBe(false)
 
         const dragEnterEvent = createEventWithTarget('dragenter', dropZone!)
         dropZone?.dispatchEvent(dragEnterEvent)
 
-        expect(dropZone?.classList.contains(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))).toBe(true)
+        expect(dropZone?.classList.contains(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))).toBe(true)
 
         const dragLeaveEvent = createEventWithTarget('dragleave', dropZone!)
         dropZone?.dispatchEvent(dragLeaveEvent)
 
-        expect(dropZone?.classList.contains(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))).toBe(false)
+        expect(dropZone?.classList.contains(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))).toBe(false)
       })
     })
 
@@ -310,14 +311,14 @@ describe('AnimalCardDeckInputHandler', () => {
       let initialCardNames: string[]
 
       beforeEach(() => {
-        confirmDrawButton = document.querySelector(AnimalCardDeckSelectors.CONFIRM_DRAW_BUTTON)!
-        confirmDiscardButton = document.querySelector(AnimalCardDeckSelectors.CONFIRM_DISCARD_BUTTON)!
-        cancelButton = document.querySelector(AnimalCardDeckSelectors.CANCEL_BUTTON)!
+        confirmDrawButton = document.querySelector(AnimalCardDeckSelector.CONFIRM_DRAW_BUTTON)!
+        confirmDiscardButton = document.querySelector(AnimalCardDeckSelector.CONFIRM_DISCARD_BUTTON)!
+        cancelButton = document.querySelector(AnimalCardDeckSelector.CANCEL_BUTTON)!
         animalCardDeckInputHandler = new AnimalCardDeckInputHandler(gameState)
         animalCardDeckInputHandler.initialize()
 
-        animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
-        cardPicker = document.querySelector(AnimalCardDeckSelectors.CARD_PICKER)!
+        animalCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
+        cardPicker = document.querySelector(AnimalCardDeckSelector.CARD_PICKER)!
 
         animalCards.item(0).removeAttribute('data-timestamp') // Edge case where the timestamp wouldn't be set => '0'
 
@@ -334,7 +335,7 @@ describe('AnimalCardDeckInputHandler', () => {
 
       it.each([0, 1, 2, 3, 4])('should move the card #%i to the card picker on drop', (cardIndex) => {
         animalCard = animalCards.item(cardIndex)!
-        const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+        const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
         expect(confirmDrawButton.disabled).toBe(true)
         expect(cancelButton.disabled).toBe(true)
 
@@ -370,7 +371,7 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the click event for the cancel button to cancel the card #%i picking',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
-          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
 
           // Simulate dragstart event from the animal card
           const dragStartEvent = createEventWithTarget('dragstart', animalCard, { clientX: 0, clientY: 0 })
@@ -420,7 +421,7 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the click event for the cancel button for the card #%i when the card wrapper is not found',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
-          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
 
           // Simulate dragstart event from the animal card
           const dragStartEvent = createEventWithTarget('dragstart', animalCard, { clientX: 0, clientY: 0 })
@@ -468,7 +469,7 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the click event for the confirm draw button to confirm the card #%i when the card wrapper is not found',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
-          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
 
           // Simulate dragstart event from the animal card
@@ -518,7 +519,7 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the click event for the confirm draw button to confirm the card #%i picking',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
-          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
 
           // Simulate dragstart event from the animal card
@@ -571,7 +572,7 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the click event for the confirm draw card #%i button when the picked cards holder is full',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
-          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
 
           // Simulate dragstart event from the animal card
@@ -627,7 +628,7 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the click event for the confirm discard button to confirm the card #%i picking',
         (cardIndex) => {
           const animalCard = animalCards.item(cardIndex)
-          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
 
           // Simulate dragstart event from the animal card
@@ -680,7 +681,7 @@ describe('AnimalCardDeckInputHandler', () => {
         'should handle the click event for the confirm discard button for the card #%i when the card wrapper is not found',
         (cardIndex) => {
           animalCard = animalCards.item(cardIndex)!
-          const dragOverClassName = AnimalCardDeckSelectors.DRAG_OVER.replace('.', '')
+          const dragOverClassName = AnimalCardDeckSelector.DRAG_OVER.replace('.', '')
           expect(gameState.pickedCardsHolder.pickedCards).toHaveLength(0)
 
           // Simulate dragstart event from the animal card

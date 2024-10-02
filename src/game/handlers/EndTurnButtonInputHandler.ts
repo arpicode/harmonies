@@ -1,7 +1,7 @@
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
 
-export enum EndTurnButtonSelectors {
+export enum EndTurnButtonSelector {
   GAME_WRAPPER = '.game-wrapper',
   END_TURN_BUTTON = '.end-turn-button',
 }
@@ -20,10 +20,10 @@ export default class EndTurnButtonInputHandler implements IInputHandler {
 
   constructor(gameState: GameState) {
     this._gameState = gameState
-    this._endTurnButton = this._querySelector<HTMLButtonElement>(EndTurnButtonSelectors.END_TURN_BUTTON)
+    this._endTurnButton = this._querySelector<HTMLButtonElement>(EndTurnButtonSelector.END_TURN_BUTTON)
   }
 
-  private _querySelector<T extends HTMLElement>(selector: EndTurnButtonSelectors): T {
+  private _querySelector<T extends HTMLElement>(selector: EndTurnButtonSelector): T {
     const element = document.querySelector<T>(selector)
     if (!element) throw new EndTurnButtonDOMException(selector)
     return element
@@ -42,12 +42,12 @@ export default class EndTurnButtonInputHandler implements IInputHandler {
       console.log('Game over')
       this._gameState.endTurnButton.disabled = true
       // TODO: notify game over
-      this._gameState.notifyEndTurnButtonUpdated()
+      this._gameState.emit(RendererEvent.END_TURN_BUTTON_UPDATED)
       return
     }
     if (this._gameState.gameMode === 'solo') this._gameState.draftTable.clear()
     this._gameState.draftTable.refill()
-    this._gameState.notifyDraftTableUpdate()
+    this._gameState.emit(RendererEvent.DRAFT_TABLE_UPDATED)
 
     const drawnCard = this._gameState.animalCardDeck.draw()
     if (drawnCard !== null) {
@@ -57,11 +57,11 @@ export default class EndTurnButtonInputHandler implements IInputHandler {
         'color: #8ecfe0;',
         'color: #8ecfe0;font-weight: bold;'
       )
-      this._gameState.notifyAnimalCardDeckUpdate()
-      this._gameState.notifyAnimalCardDeckDraw(drawnCard)
+      this._gameState.emit(RendererEvent.ANIMAL_CARD_DECK_UPDATED)
+      this._gameState.emit(RendererEvent.ANIMAL_CARD_DECK_DRAW, drawnCard)
     }
 
     this._gameState.endTurnButton.disabled = true
-    this._gameState.notifyEndTurnButtonUpdated()
+    this._gameState.emit(RendererEvent.END_TURN_BUTTON_UPDATED)
   }
 }

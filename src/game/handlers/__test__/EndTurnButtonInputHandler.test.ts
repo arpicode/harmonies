@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import EndTurnButtonRenderer from '~/game/renderers/EndTurnButtonRenderer'
-import EndTurnButtonInputHandler, { EndTurnButtonSelectors } from '../EndTurnButtonInputHandler'
+import EndTurnButtonInputHandler, { EndTurnButtonSelector } from '../EndTurnButtonInputHandler'
 import GameState from '~/game/GameState'
 import { dom } from '~/dom'
 import { createEventWithTarget } from '~/test-utils/test-utils'
@@ -37,9 +37,9 @@ describe('EndTurnButtonInputHandler', () => {
     })
 
     it.each`
-      selector                                  | className
-      ${EndTurnButtonSelectors.GAME_WRAPPER}    | ${'game-wrapper'}
-      ${EndTurnButtonSelectors.END_TURN_BUTTON} | ${'end-turn-button'}
+      selector                                 | className
+      ${EndTurnButtonSelector.GAME_WRAPPER}    | ${'game-wrapper'}
+      ${EndTurnButtonSelector.END_TURN_BUTTON} | ${'end-turn-button'}
     `(
       'should throw an error if $selector is not found',
       ({ selector, className }: { selector: string; className: string }) => {
@@ -75,7 +75,7 @@ describe('EndTurnButtonInputHandler', () => {
         endTurnButtonInputHandler.initialize()
         gameState.animalCardDeck.drawnCards.pop()
 
-        const endTurnButton = document.querySelector<HTMLButtonElement>(EndTurnButtonSelectors.END_TURN_BUTTON)!
+        const endTurnButton = document.querySelector<HTMLButtonElement>(EndTurnButtonSelector.END_TURN_BUTTON)!
         expect(endTurnButton).not.toBeNull()
 
         endTurnButton.disabled = false
@@ -109,7 +109,7 @@ describe('EndTurnButtonInputHandler', () => {
         endTurnButtonInputHandler.initialize()
         gameState.animalCardDeck.drawnCards.pop()
 
-        const endTurnButton = document.querySelector<HTMLButtonElement>(EndTurnButtonSelectors.END_TURN_BUTTON)!
+        const endTurnButton = document.querySelector<HTMLButtonElement>(EndTurnButtonSelector.END_TURN_BUTTON)!
         expect(endTurnButton).not.toBeNull()
 
         endTurnButton.disabled = false

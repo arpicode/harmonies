@@ -1,4 +1,4 @@
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
 
 export default class DraftTableInputHandler implements IInputHandler {
@@ -40,11 +40,11 @@ export default class DraftTableInputHandler implements IInputHandler {
     }
     slotTokens.innerHTML = ''
     this._gameState.draftTable.pickUp(slotIndex)
-    this._gameState.notifyDraftTableUpdate()
+    this._gameState.emit(RendererEvent.DRAFT_TABLE_UPDATED)
     this._bindEventsToTokensInTokenHolder()
 
     this._gameState.endTurnButton.disabled = true
-    this._gameState.notifyEndTurnButtonUpdated()
+    this._gameState.emit(RendererEvent.END_TURN_BUTTON_UPDATED)
   }
 
   private _bindEventsToTokensInTokenHolder() {

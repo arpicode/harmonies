@@ -1,6 +1,6 @@
 import IInputHandler from '../interfaces/IInputHandler'
 
-export enum ScoreBoardSelectors {
+export enum ScoreBoardSelector {
   SCORE_BOARD_WRAPPER = '.preview-box-wrapper',
   SCORE_BOARD_SHOW_MODIFIER = '.score-board--show',
 }
@@ -17,10 +17,10 @@ export default class ScoreBoardInputHandler implements IInputHandler {
   private readonly _scoreBoardWrapper: HTMLDivElement
 
   constructor() {
-    this._scoreBoardWrapper = this._querySelector<HTMLDivElement>(ScoreBoardSelectors.SCORE_BOARD_WRAPPER)
+    this._scoreBoardWrapper = this._querySelector<HTMLDivElement>(ScoreBoardSelector.SCORE_BOARD_WRAPPER)
   }
 
-  private _querySelector<T extends HTMLElement>(selector: ScoreBoardSelectors): T {
+  private _querySelector<T extends HTMLElement>(selector: ScoreBoardSelector): T {
     const element = document.querySelector<T>(selector)
     if (!element) throw new ScoreBoardDOMException(selector)
     return element

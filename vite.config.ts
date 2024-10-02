@@ -10,6 +10,14 @@ export default defineConfig({
     },
   },
 
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+      },
+    },
+  },
+
   test: {
     include: ['**/*.test.*'],
     environment: 'jsdom',

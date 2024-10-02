@@ -2,7 +2,7 @@
 import { MockInstance } from 'vitest'
 import { createEventWithTarget } from '~/test-utils/test-utils'
 import Game from '~/game/Game'
-import GameState from '~/game/GameState'
+import GameState, { RendererEvent } from '~/game/GameState'
 import HexBoardInputHandler from '../HexBoardInputHandler'
 import HexBoardRenderer from '~/game/renderers/HexBoardRenderer'
 import { Hex } from '~/board/Hex'
@@ -72,7 +72,7 @@ describe('HexBoardInputHandler', () => {
 
       const clickEvent = createEventWithTarget('click', hex)
 
-      gameState.notifyPlaceAnimalStart(animalCard, [new Hex(1, 0, -1)])
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animalCard, [new Hex(1, 0, -1)])
       hex.dispatchEvent(clickEvent)
       const isAnimalPlaced = gameState.hexBoard.hexes.get('1,0')?.isSpawn
       expect(isAnimalPlaced).toBeTruthy()

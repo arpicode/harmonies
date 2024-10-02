@@ -1,6 +1,6 @@
 import DraftTable from '../../board/DraftTable'
 import { GameMode } from '../Game'
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import { SVG_NAMESPACE } from '../../utils/utils'
 import IRenderer from '../interfaces/IRenderer'
 
@@ -24,7 +24,7 @@ export default class DraftTableRenderer implements IRenderer {
     this._draftTableState = gameState.draftTable
     this._svg = this._createDraftTableSVGOverlayElement()
     this._initializeDraftTableDOM()
-    this._gameState.on('draftTableUpdated', () => this.render())
+    this._gameState.on(RendererEvent.DRAFT_TABLE_UPDATED, () => this.render())
     console.timeEnd('[Initialize] DraftTable')
   }
 

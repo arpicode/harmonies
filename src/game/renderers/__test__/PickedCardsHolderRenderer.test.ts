@@ -1,5 +1,5 @@
 import { dom } from '../../../dom'
-import GameState from '../../GameState'
+import GameState, { RendererEvent } from '../../GameState'
 import PickedCardsHolderRenderer from '../PickedCardsHolderRenderer'
 import AnimalCard, { IAnimalCards } from '../../../board/AnimalCard'
 import PickedCardsHolder from '../../../board/PickedCardsHolder'
@@ -158,7 +158,7 @@ describe('PickedCardsHolderRenderer', () => {
       expect(cards).toHaveLength(1)
 
       gameState.pickedCardsHolder.add(new AnimalCard(animals.eagle))
-      gameState.notifyPickedCardsHolderUpdate()
+      gameState.emit(RendererEvent.PICKED_CARDS_HOLDER_UPDATED)
       cards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
       expect(cards).toHaveLength(2)
     })
@@ -172,7 +172,7 @@ describe('PickedCardsHolderRenderer', () => {
       const lastCubeToken = cubeTokens[cubeTokens.length - 1]
       expect(cubeTokens).toHaveLength(animalCard.points.length)
 
-      gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       cubeTokens = document.querySelectorAll('.cube-token')
       expect(cubeTokens).toHaveLength(animalCard.points.length - 1)
       expect(cubeTokens).not.toContain(lastCubeToken)
@@ -188,14 +188,14 @@ describe('PickedCardsHolderRenderer', () => {
       expect(animalCardElement?.classList).not.toContain('completed-card')
       const animalCard = gameState.pickedCardsHolder.pickedCards[0]
 
-      gameState.notifyPlaceAnimalStart(animalCard, [new Hex(0, 0, 0)])
-      gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animalCard, [new Hex(0, 0, 0)])
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       animalCardElement = document.querySelector('.picked-cards-wrapper .animal-card')
       expect(animalCardElement).not.toBeNull()
       expect(animalCardElement?.classList).not.toContain('completed-card')
 
-      gameState.notifyPlaceAnimalStart(animalCard, [new Hex(0, 0, 0)])
-      gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animalCard, [new Hex(0, 0, 0)])
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       animalCardElement = document.querySelector('.completed-cards-wrapper .animal-card')
       expect(animalCardElement?.classList).toContain('completed-card')
       animalCardElement = document.querySelector('.picked-cards-wrapper .animal-card')
@@ -210,8 +210,8 @@ describe('PickedCardsHolderRenderer', () => {
       gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
       pickedCardsHolderRenderer.render()
       const animalCard = gameState.pickedCardsHolder.pickedCards[0]
-      gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
-      gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       const actionButton = document.querySelector('.card-action-button')
       expect(actionButton).toBeNull()
     })
@@ -221,7 +221,7 @@ describe('PickedCardsHolderRenderer', () => {
       gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
       pickedCardsHolderRenderer.render()
       const animalCard = gameState.pickedCardsHolder.pickedCards[0]
-      gameState.notifyPlaceAnimalStart(animalCard, [new Hex(0, 0, 0)])
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animalCard, [new Hex(0, 0, 0)])
       const actionButton = document.querySelector('.card-action-button')
       expect(actionButton?.getAttribute('data-state')).toBe('cancel')
     })
@@ -232,11 +232,11 @@ describe('PickedCardsHolderRenderer', () => {
       pickedCardsHolderRenderer.render()
       const animalCard = gameState.pickedCardsHolder.pickedCards[0]
 
-      gameState.notifyPlaceAnimalStart(animalCard, [new Hex(0, 0, 0)])
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animalCard, [new Hex(0, 0, 0)])
       let actionButton = document.querySelector('.card-action-button')
       expect(actionButton?.getAttribute('data-state')).toBe('cancel')
 
-      gameState.notifyPlaceAnimalCancel(animalCard)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_CANCEL, animalCard)
       actionButton = document.querySelector('.card-action-button')
       expect(actionButton?.getAttribute('data-state')).toBe('active')
     })
@@ -249,17 +249,17 @@ describe('PickedCardsHolderRenderer', () => {
       let actionButton = document.querySelector('.card-action-button')
       actionButton?.remove()
       expect(() => {
-        gameState.notifyPlaceAnimalStart(animalCard, [])
+        gameState.emit(RendererEvent.PLACE_ANIMAL_START, animalCard, [])
       }).toThrowError('Card action button not found')
       actionButton = document.querySelector('.card-action-button')
       actionButton?.remove()
       expect(() => {
-        gameState.notifyPlaceAnimalCancel(animalCard)
+        gameState.emit(RendererEvent.PLACE_ANIMAL_CANCEL, animalCard)
       }).toThrowError('Card action button not found')
       actionButton = document.querySelector('.card-action-button')
       actionButton?.remove()
       expect(() => {
-        gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+        gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       }).toThrowError('Card action button not found')
     })
 
@@ -268,11 +268,11 @@ describe('PickedCardsHolderRenderer', () => {
       gameState.pickedCardsHolder.add(new AnimalCard(animals.bee))
       pickedCardsHolderRenderer.render()
       const animalCard = gameState.pickedCardsHolder.pickedCards[0]
-      gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       const img = document.querySelector('.picked-cards-wrapper .animal-card')
       img?.remove()
       expect(() => {
-        gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+        gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       }).toThrowError('Card image not found')
     })
 
@@ -290,7 +290,7 @@ describe('PickedCardsHolderRenderer', () => {
       const completedCardsWrapper = document.querySelector('.completed-cards-wrapper')
       completedCardsWrapper?.remove()
       expect(() => {
-        gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+        gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       }).toThrowError('Completed cards wrapper not found')
     })
 
@@ -308,7 +308,7 @@ describe('PickedCardsHolderRenderer', () => {
       const animalCardElement = document.querySelector('.animal-card')
       animalCardElement?.remove()
       expect(() => {
-        gameState.notifyPlaceAnimalEnd(animalCard, new Hex(0, 0, 0))
+        gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, new Hex(0, 0, 0))
       }).toThrowError('Card image not found')
     })
   })

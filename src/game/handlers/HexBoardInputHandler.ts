@@ -1,8 +1,8 @@
 import Token, { TokenType } from '../../board/Token'
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
 
-export enum HexBoardSelectors {
+export enum HexBoardSelector {
   HEX_BOARD = '.hex-board-svg-overlay',
 }
 
@@ -20,7 +20,7 @@ export default class HexBoardInputHandler implements IInputHandler {
 
   constructor(gameState: GameState) {
     this._gameState = gameState
-    this._hexBoardSVG = this._querySelector<SVGElement>(HexBoardSelectors.HEX_BOARD)
+    this._hexBoardSVG = this._querySelector<SVGElement>(HexBoardSelector.HEX_BOARD)
   }
 
   initialize() {
@@ -32,7 +32,7 @@ export default class HexBoardInputHandler implements IInputHandler {
     this._hexBoardSVG.addEventListener('click', (event) => this._handleSpawnHexClick(event))
   }
 
-  private _querySelector<T extends HTMLElement | SVGElement>(selector: HexBoardSelectors): T {
+  private _querySelector<T extends HTMLElement | SVGElement>(selector: HexBoardSelector): T {
     const element = document.querySelector<T>(selector)
     if (!element) throw new HexBoardDOMException(selector)
     return element
@@ -79,7 +79,7 @@ export default class HexBoardInputHandler implements IInputHandler {
     hex.isSpawn = true
     animalCard.removeAnimalToken()
     this._gameState.pickedCardsHolder.transferCompletedCards()
-    this._gameState.notifyPlaceAnimalEnd(animalCard, hex)
+    this._gameState.emit(RendererEvent.PLACE_ANIMAL_END, animalCard, hex)
   }
 
   private _handleDragOver(event: Event) {
@@ -103,10 +103,10 @@ export default class HexBoardInputHandler implements IInputHandler {
       this._removeTokenFromDraftedTokens(currentTokenType)
       currentToken.remove()
       if (event.target instanceof SVGElement) event.target.classList.remove('drag-over')
-      this._gameState.notifyHexBoardUpdate()
+      this._gameState.emit(RendererEvent.HEX_BOARD_UPDATED)
       if (this._gameState.draftTable.draftedTokens.size() === 0) {
         this._gameState.endTurnButton.disabled = false
-        this._gameState.notifyEndTurnButtonUpdated()
+        this._gameState.emit(RendererEvent.END_TURN_BUTTON_UPDATED)
       }
     } catch (error) {
       console.warn((error as Error).message)

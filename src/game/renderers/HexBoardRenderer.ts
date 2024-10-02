@@ -2,7 +2,7 @@ import { Hex } from '../../board/Hex'
 import { HexBoard, HexBoardType } from '../../board/HexBoard'
 import { Layout } from '../../board/Layout'
 import Token, { TokenType } from '../../board/Token'
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import { SVG_NAMESPACE } from '../../utils/utils'
 import IRenderer from '../interfaces/IRenderer'
 import AnimalCard from '~/board/AnimalCard'
@@ -34,12 +34,14 @@ export default class HexBoardRenderer implements IRenderer {
     this._tokenOffsetFactor = 15 / this._layout.size.y
     this._initializeHexBoardDOM()
 
-    this._gameState.on('hexBoardUpdated', () => this.render())
-    this._gameState.on('placeAnimalStart', (animalCard: AnimalCard, spawnHexes: Hex[]) =>
+    this._gameState.on(RendererEvent.HEX_BOARD_UPDATED, () => this.render())
+    this._gameState.on(RendererEvent.PLACE_ANIMAL_START, (animalCard: AnimalCard, spawnHexes: Hex[]) =>
       this._renderSpawnHexesHighlight(animalCard, spawnHexes)
     )
-    this._gameState.on('placeAnimalCancel', () => this._clearHighlightedSpawnHexes())
-    this._gameState.on('placeAnimalEnd', (animalCard: AnimalCard, hex: Hex) => this._renderAnimalToken(animalCard, hex))
+    this._gameState.on(RendererEvent.PLACE_ANIMAL_CANCEL, () => this._clearHighlightedSpawnHexes())
+    this._gameState.on(RendererEvent.PLACE_ANIMAL_END, (animalCard: AnimalCard, hex: Hex) =>
+      this._renderAnimalToken(animalCard, hex)
+    )
     console.timeEnd('[Initialize] HexBoard')
   }
 
@@ -135,7 +137,7 @@ export default class HexBoardRenderer implements IRenderer {
       hex.tokens.push(new Token(TokenType[selectedColor as keyof typeof TokenType]))
       this._renderTokenStackGroup(hex)
       if (this.afterHexClick) this.afterHexClick()
-      this._gameState.notifyHexBoardUpdate()
+      this._gameState.emit(RendererEvent.HEX_BOARD_UPDATED)
     } catch (error) {
       console.error((error as Error).message)
     }

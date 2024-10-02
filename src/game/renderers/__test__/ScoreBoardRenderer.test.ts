@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import GameState from '~/game/GameState'
+import GameState, { RendererEvent } from '~/game/GameState'
 import ScoreBoardRenderer from '../ScoreBoardRenderer'
 import { GameMode } from '~/game/Game'
 import { HexBoardType } from '~/board/HexBoard'
@@ -192,7 +192,7 @@ describe('ScoreBoardRenderer', () => {
       const hedgehogCard = new AnimalCard(animals.hedgehog)
       gameState.pickedCardsHolder.add(hedgehogCard)
 
-      gameState.notifyPickedCardsHolderUpdate()
+      gameState.emit(RendererEvent.PICKED_CARDS_HOLDER_UPDATED)
       const hedgehogCardScore = document.querySelector<HTMLDivElement>('[data-score-for-animal="Hérisson"]')
       expect(hedgehogCardScore?.textContent).toBe('0')
 
@@ -226,7 +226,7 @@ describe('ScoreBoardRenderer', () => {
       expect(hedgehogCardScore?.textContent).toBe('0')
 
       hedgehogCard.removeAnimalToken()
-      gameState.notifyPlaceAnimalEnd(hedgehogCard, new Hex(0, 0, 0))
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, hedgehogCard, new Hex(0, 0, 0))
       hedgehogCardScore = document.querySelector<HTMLDivElement>('[data-score-for-animal="Hérisson"]')
       expect(hedgehogCardScore?.textContent).toBe('5')
 

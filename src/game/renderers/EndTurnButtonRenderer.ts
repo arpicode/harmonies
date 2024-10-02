@@ -1,5 +1,5 @@
 import EndTurnButton from '~/board/EndTurnButton'
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import IRenderer from '../interfaces/IRenderer'
 
 export default class EndTurnButtonRenderer implements IRenderer {
@@ -11,7 +11,7 @@ export default class EndTurnButtonRenderer implements IRenderer {
     this._gameState = gameState
     this._endTurnButton = gameState.endTurnButton
     this._initializeEndTurnButtonDOM()
-    this._gameState.on('endTurnButtonUpdated', () => this.render())
+    this._gameState.on(RendererEvent.END_TURN_BUTTON_UPDATED, () => this.render())
     console.timeEnd('[Initialize] EndTurnButton')
   }
 

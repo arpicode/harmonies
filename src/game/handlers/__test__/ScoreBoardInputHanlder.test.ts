@@ -1,5 +1,5 @@
 import { dom } from '~/dom'
-import ScoreBoardInputHandler, { ScoreBoardSelectors } from '../ScoreBoardInputHanlder'
+import ScoreBoardInputHandler, { ScoreBoardSelector } from '../ScoreBoardInputHanlder'
 import { createEventWithTarget } from '~/test-utils/test-utils'
 
 describe('ScoreBoardInputHandler', () => {
@@ -16,7 +16,7 @@ describe('ScoreBoardInputHandler', () => {
   it('should throw an error if the score board wrapper is not found', () => {
     document.body.innerHTML = ''
     expect(() => (scoreBoardInputHandler = new ScoreBoardInputHandler())).toThrow(
-      `Element with selector "${ScoreBoardSelectors.SCORE_BOARD_WRAPPER}" not found`
+      `Element with selector "${ScoreBoardSelector.SCORE_BOARD_WRAPPER}" not found`
     )
   })
 
@@ -29,15 +29,15 @@ describe('ScoreBoardInputHandler', () => {
     scoreBoardInputHandler.initialize()
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const scoreBoardWrapper: HTMLDivElement = document.querySelector(ScoreBoardSelectors.SCORE_BOARD_WRAPPER)!
+    const scoreBoardWrapper: HTMLDivElement = document.querySelector(ScoreBoardSelector.SCORE_BOARD_WRAPPER)!
     expect(scoreBoardWrapper).not.toBeNull()
-    expect(scoreBoardWrapper.classList.contains(ScoreBoardSelectors.SCORE_BOARD_SHOW_MODIFIER.replace('.', ''))).toBe(
+    expect(scoreBoardWrapper.classList.contains(ScoreBoardSelector.SCORE_BOARD_SHOW_MODIFIER.replace('.', ''))).toBe(
       true
     )
     const clickEvent = createEventWithTarget('click', scoreBoardWrapper)
 
     scoreBoardWrapper.dispatchEvent(clickEvent)
-    expect(scoreBoardWrapper.classList.contains(ScoreBoardSelectors.SCORE_BOARD_SHOW_MODIFIER.replace('.', ''))).toBe(
+    expect(scoreBoardWrapper.classList.contains(ScoreBoardSelector.SCORE_BOARD_SHOW_MODIFIER.replace('.', ''))).toBe(
       false
     )
   })

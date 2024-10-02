@@ -1,6 +1,6 @@
 import ScoreBoard from '~/board/ScoreBoard'
 import IRenderer from '../interfaces/IRenderer'
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 
 export default class ScoreBoardRenderer implements IRenderer {
   private readonly _gameState: GameState
@@ -24,9 +24,9 @@ export default class ScoreBoardRenderer implements IRenderer {
     this._animalsScores = {}
     this._animalCardPositionGenerator = this._createAnimalCardPositionGenerator()
     this._initializeScoreBoardDOM()
-    this._gameState.on('hexBoardUpdated', () => this.render())
-    this._gameState.on('pickedCardsHolderUpdated', () => this.render())
-    this._gameState.on('placeAnimalEnd', () => this.render())
+    this._gameState.on(RendererEvent.HEX_BOARD_UPDATED, () => this.render())
+    this._gameState.on(RendererEvent.PICKED_CARDS_HOLDER_UPDATED, () => this.render())
+    this._gameState.on(RendererEvent.PLACE_ANIMAL_END, () => this.render())
     this._TOKEN_NAMES.set('river', this._gameState.hexBoardType === 'river' ? 'Rivière' : 'Îles')
     console.timeEnd('[Initialize] ScoreBoard')
   }
@@ -183,8 +183,8 @@ export default class ScoreBoardRenderer implements IRenderer {
     totalScoreElement.textContent = `${tokensTotal + animalsTotal}`
     const sunsCountElement = document.querySelector<HTMLSpanElement>('.suns-count')
     if (sunsCountElement) {
-      sunsCountElement.textContent = `${this._scoreBoardState.soloBonusScore(tokensTotal + animalsTotal)}🌞`
-      sunsCountElement.title = `${this._scoreBoardState.soloBonusScore(tokensTotal + animalsTotal)} / 11`
+      sunsCountElement.textContent = `${this._scoreBoardState.soloBonusScore(tokensTotal + animalsTotal)}`
+      sunsCountElement.title = 'Évaluation du score en mode solo sur 11 points'
     }
   }
 
@@ -193,7 +193,7 @@ export default class ScoreBoardRenderer implements IRenderer {
     titleElement.classList.add('score-board-title')
     titleElement.innerHTML = `<span>${title}</span>`
     if (this._gameState.gameMode === 'solo') {
-      titleElement.innerHTML += '<span class="suns-count"></span>'
+      titleElement.innerHTML += '<div class="suns-count"></div>'
     }
 
     return titleElement

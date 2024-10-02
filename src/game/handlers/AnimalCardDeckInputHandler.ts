@@ -1,8 +1,8 @@
 import AnimalCard from '~/board/AnimalCard'
-import GameState from '../GameState'
+import GameState, { InputHandlerEvent, RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
 
-export enum AnimalCardDeckSelectors {
+export enum AnimalCardDeckSelector {
   SHOW_BUTTON = '.show-cards-button',
   CLOSE_BUTTON = '.animal-deck-modal .close-deck-button',
   CONFIRM_DRAW_BUTTON = '.animal-deck-modal .draw-pick-button',
@@ -16,7 +16,6 @@ export enum AnimalCardDeckSelectors {
   ANIMAL_CARDS = '.animal-deck-modal .animal-card',
   DRAGGING = '.dragging',
   DRAG_OVER = '.drag-over',
-  LAST_DRAWN_CARD = '.animal-deck-modal > .card-wrapper:nth-child(5) > .animal-card',
 }
 
 class AnimalCardDeckDOMException extends Error {
@@ -40,29 +39,29 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
 
   constructor(gameState: GameState) {
     this._gameState = gameState
-    this._animalDeckModal = this._querySelector<HTMLDialogElement>(AnimalCardDeckSelectors.ANIMAL_DECK_MODAL)
-    this._cardPicker = this._querySelector<HTMLDivElement>(AnimalCardDeckSelectors.CARD_PICKER)
-    this._openButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.SHOW_BUTTON)
-    this._closeButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CLOSE_BUTTON)
-    this._confirmDrawButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CONFIRM_DRAW_BUTTON)
+    this._animalDeckModal = this._querySelector<HTMLDialogElement>(AnimalCardDeckSelector.ANIMAL_DECK_MODAL)
+    this._cardPicker = this._querySelector<HTMLDivElement>(AnimalCardDeckSelector.CARD_PICKER)
+    this._openButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelector.SHOW_BUTTON)
+    this._closeButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelector.CLOSE_BUTTON)
+    this._confirmDrawButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelector.CONFIRM_DRAW_BUTTON)
     if (this._gameState.gameMode === 'solo') {
-      this._confirmDiscardButton = this._querySelector<HTMLButtonElement>(
-        AnimalCardDeckSelectors.CONFIRM_DISCARD_BUTTON
-      )
+      this._confirmDiscardButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelector.CONFIRM_DISCARD_BUTTON)
     }
-    this._cancelButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelectors.CANCEL_BUTTON)
-    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
-    this._gameState.on('animalCardDeckDraw', (animalCard: AnimalCard) => this._bindEventsToNewDrawnCard(animalCard))
+    this._cancelButton = this._querySelector<HTMLButtonElement>(AnimalCardDeckSelector.CANCEL_BUTTON)
+    this._animalCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
+    this._gameState.on(RendererEvent.ANIMAL_CARD_DECK_DRAW, (animalCard: AnimalCard) =>
+      this._bindEventsToNewDrawnCard(animalCard)
+    )
   }
 
-  private _querySelector<T extends HTMLElement>(selector: AnimalCardDeckSelectors): T {
+  private _querySelector<T extends HTMLElement>(selector: AnimalCardDeckSelector): T {
     const element = document.querySelector<T>(selector)
     if (!element) throw new AnimalCardDeckDOMException(selector)
     return element
   }
 
   initialize() {
-    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
+    this._animalCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
     this._bindEvents()
   }
 
@@ -87,18 +86,18 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   private _handleOpenDeck = () => {
-    this._gameState.emit('animalDeckOpened')
+    this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
     this._animalDeckModal.showModal()
   }
 
   private _handleCloseDeck = () => {
     this._animalDeckModal.close()
     this._cancelPick()
-    this._gameState.emit('animalDeckClosed')
+    this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
   }
 
   private _handleDrawPick = () => {
-    const pickedCardElement = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
+    const pickedCardElement = document.querySelector<HTMLImageElement>(AnimalCardDeckSelector.PICKED_CARD)
     if (!pickedCardElement) return
 
     const oldCardWrapper = document.querySelector<HTMLDivElement>(
@@ -109,7 +108,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
       return
     }
 
-    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+    this._cardPicker.classList.remove(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))
 
     if (this._gameState.pickedCardsHolder.isFull) {
       this._cancelPick()
@@ -123,17 +122,17 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     oldCardWrapper.remove()
     this._animalDeckModal.close()
 
-    this._gameState.emit('animalDeckClosed')
-    this._gameState.notifyPickedCardsHolderUpdate()
-    this._gameState.notifyAnimalCardDeckUpdate()
+    this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
+    this._gameState.emit(RendererEvent.PICKED_CARDS_HOLDER_UPDATED)
+    this._gameState.emit(RendererEvent.ANIMAL_CARD_DECK_UPDATED)
 
-    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
+    this._animalCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
     this._updateCardsDraggableState(true)
     this._updateButtonsDisabledState(true)
   }
 
   private _handleDiscardPick = () => {
-    const pickedCardElement = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
+    const pickedCardElement = document.querySelector<HTMLImageElement>(AnimalCardDeckSelector.PICKED_CARD)
     if (!pickedCardElement) return
 
     const oldCardWrapper = document.querySelector<HTMLDivElement>(
@@ -144,17 +143,17 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
       return
     }
 
-    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+    this._cardPicker.classList.remove(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))
     this._gameState.animalCardDeck.removeDrawnCardByName(pickedCardElement.alt)
 
     pickedCardElement.remove()
     oldCardWrapper.remove()
     this._animalDeckModal.close()
 
-    this._gameState.emit('animalDeckClosed')
-    this._gameState.notifyAnimalCardDeckUpdate()
+    this._gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
+    this._gameState.emit(RendererEvent.ANIMAL_CARD_DECK_UPDATED)
 
-    this._animalCards = document.querySelectorAll(AnimalCardDeckSelectors.REMAINING_ANIMAL_CARDS)
+    this._animalCards = document.querySelectorAll(AnimalCardDeckSelector.REMAINING_ANIMAL_CARDS)
     this._updateCardsDraggableState(true)
     this._updateButtonsDisabledState(true)
   }
@@ -164,11 +163,11 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   private _handleCardDragStart = (card: HTMLImageElement) => {
-    card.classList.add(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))
+    card.classList.add(AnimalCardDeckSelector.DRAGGING.replace('.', ''))
   }
 
   private _handleCardDragEnd = (card: HTMLImageElement) => {
-    card.classList.remove(AnimalCardDeckSelectors.DRAGGING.replace('.', ''))
+    card.classList.remove(AnimalCardDeckSelector.DRAGGING.replace('.', ''))
   }
 
   private _handleCardPickerDragOver = (event: DragEvent) => {
@@ -176,15 +175,15 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   private _handleCardPickerDragEnter = () => {
-    this._cardPicker.classList.add(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+    this._cardPicker.classList.add(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))
   }
 
   private _handleCardPickerDragLeave = () => {
-    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+    this._cardPicker.classList.remove(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))
   }
 
   private _handleCardPickerDrop = () => {
-    const draggedCard = document.querySelector(AnimalCardDeckSelectors.DRAGGING)
+    const draggedCard = document.querySelector(AnimalCardDeckSelector.DRAGGING)
     if (draggedCard) {
       this._cardPicker.appendChild(draggedCard)
       this._updateCardsDraggableState(false)
@@ -193,10 +192,10 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
   }
 
   private _cancelPick() {
-    const pickedCard = document.querySelector<HTMLImageElement>(AnimalCardDeckSelectors.PICKED_CARD)
+    const pickedCard = document.querySelector<HTMLImageElement>(AnimalCardDeckSelector.PICKED_CARD)
     if (!pickedCard) return
 
-    this._cardPicker.classList.remove(AnimalCardDeckSelectors.DRAG_OVER.replace('.', ''))
+    this._cardPicker.classList.remove(AnimalCardDeckSelector.DRAG_OVER.replace('.', ''))
     this._updateCardsDraggableState(true)
 
     const pickedCardName = pickedCard.alt
@@ -213,7 +212,7 @@ export default class AnimalCardDeckInputHandler implements IInputHandler {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const buttonsWrapper = document.querySelector<HTMLDivElement>('.buttons-wrapper')!
     this._cancelButton.disabled = isDisabled
-    this._confirmDrawButton.disabled = isDisabled
+    this._confirmDrawButton.disabled = isDisabled || this._gameState.pickedCardsHolder.isFull
     if (this._confirmDiscardButton) {
       this._confirmDiscardButton.disabled = isDisabled
     }

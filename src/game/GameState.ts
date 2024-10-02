@@ -6,12 +6,28 @@ import { Layout, LAYOUT_FLAT } from '../board/Layout'
 import Token, { startingTokensMap } from '../board/Token'
 import { GameMode } from './Game'
 import animalsJson from '../animals.json'
-import AnimalCard, { IAnimalCards } from '../board/AnimalCard'
+import { IAnimalCards } from '../board/AnimalCard'
 import EventEmitter from './EventEmitter'
 import PickedCardsHolder from '../board/PickedCardsHolder'
-import { Hex } from '~/board/Hex'
 import ScoreBoard from '~/board/ScoreBoard'
 import EndTurnButton from '~/board/EndTurnButton'
+
+export enum RendererEvent {
+  HEX_BOARD_UPDATED = 'hexBoardUpdated',
+  DRAFT_TABLE_UPDATED = 'draftTableUpdated',
+  ANIMAL_CARD_DECK_UPDATED = 'animalCardDeckUpdated',
+  ANIMAL_CARD_DECK_DRAW = 'animalCardDeckDraw',
+  PICKED_CARDS_HOLDER_UPDATED = 'pickedCardsHolderUpdated',
+  PLACE_ANIMAL_START = 'placeAnimalStart',
+  PLACE_ANIMAL_CANCEL = 'placeAnimalCancel',
+  PLACE_ANIMAL_END = 'placeAnimalEnd',
+  END_TURN_BUTTON_UPDATED = 'endTurnButtonUpdated',
+}
+
+export enum InputHandlerEvent {
+  ANIMAL_CARD_DECK_OPENED = 'animalDeckOpened',
+  ANIMAL_CARD_DECK_CLOSED = 'animalDeckClosed',
+}
 
 export default class GameState extends EventEmitter {
   public readonly gameMode: GameMode
@@ -37,42 +53,6 @@ export default class GameState extends EventEmitter {
     this.pickedCardsHolder = this._createPickedCardsHolder()
     this.scoreBoard = this._createScoreBoard()
     this.endTurnButton = this.createEndTurnButton()
-  }
-
-  notifyHexBoardUpdate() {
-    this.emit('hexBoardUpdated')
-  }
-
-  notifyDraftTableUpdate() {
-    this.emit('draftTableUpdated')
-  }
-
-  notifyAnimalCardDeckUpdate() {
-    this.emit('animalCardDeckUpdated')
-  }
-
-  notifyAnimalCardDeckDraw(animalCard: AnimalCard) {
-    this.emit('animalCardDeckDraw', animalCard)
-  }
-
-  notifyPickedCardsHolderUpdate() {
-    this.emit('pickedCardsHolderUpdated')
-  }
-
-  notifyPlaceAnimalStart(animalCard: AnimalCard, spawnHexes: Hex[]) {
-    this.emit('placeAnimalStart', animalCard, spawnHexes)
-  }
-
-  notifyPlaceAnimalCancel(animalCard: AnimalCard) {
-    this.emit('placeAnimalCancel', animalCard)
-  }
-
-  notifyPlaceAnimalEnd(animalCard: AnimalCard, hex: Hex) {
-    this.emit('placeAnimalEnd', animalCard, hex)
-  }
-
-  notifyEndTurnButtonUpdated() {
-    this.emit('endTurnButtonUpdated')
   }
 
   public isGameOver(): boolean {

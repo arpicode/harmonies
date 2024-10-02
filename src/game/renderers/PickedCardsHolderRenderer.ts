@@ -1,6 +1,6 @@
 import AnimalCard from '../../board/AnimalCard'
 import PickedCardsHolder from '../../board/PickedCardsHolder'
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import IRenderer from '../interfaces/IRenderer'
 
 export default class PickedCardsHolderRenderer implements IRenderer {
@@ -12,10 +12,16 @@ export default class PickedCardsHolderRenderer implements IRenderer {
     this._gameState = gameState
     this._pickedCardsHolderState = gameState.pickedCardsHolder
     this._initializePickedCardsHolderDOM()
-    this._gameState.on('pickedCardsHolderUpdated', () => this.render())
-    this._gameState.on('placeAnimalStart', (animalCard: AnimalCard) => this._renderPlaceAnimalStart(animalCard))
-    this._gameState.on('placeAnimalCancel', (animalCard: AnimalCard) => this._renderPlaceAnimalCancel(animalCard))
-    this._gameState.on('placeAnimalEnd', (animalCard: AnimalCard) => this._renderPlaceAnimalEnd(animalCard))
+    this._gameState.on(RendererEvent.PICKED_CARDS_HOLDER_UPDATED, () => this.render())
+    this._gameState.on(RendererEvent.PLACE_ANIMAL_START, (animalCard: AnimalCard) =>
+      this._renderPlaceAnimalStart(animalCard)
+    )
+    this._gameState.on(RendererEvent.PLACE_ANIMAL_CANCEL, (animalCard: AnimalCard) =>
+      this._renderPlaceAnimalCancel(animalCard)
+    )
+    this._gameState.on(RendererEvent.PLACE_ANIMAL_END, (animalCard: AnimalCard) =>
+      this._renderPlaceAnimalEnd(animalCard)
+    )
     console.timeEnd('[Initialize] PickedCardsHolder')
   }
 

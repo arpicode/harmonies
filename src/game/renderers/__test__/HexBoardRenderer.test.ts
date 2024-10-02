@@ -1,6 +1,6 @@
 import HexBoardRenderer from '../HexBoardRenderer'
 import { SVG_NAMESPACE } from '../../../utils/utils'
-import GameState from '../../GameState'
+import GameState, { RendererEvent } from '../../GameState'
 import AnimalCard, { IAnimalCards } from '~/board/AnimalCard'
 import { HexBoardType } from '../../../board/HexBoard'
 import Token, { TokenType } from '../../../board/Token'
@@ -183,7 +183,7 @@ describe('HexBoardRenderer', () => {
       hexBoardRenderer.render()
       const animal = new AnimalCard(animals.bee)
       const spawnHexes = [new Hex(0, 0, 0), new Hex(1, 0, -1)]
-      gameState.notifyPlaceAnimalStart(animal, spawnHexes)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animal, spawnHexes)
       const highlightedHexes = svg.querySelectorAll(`[class*=highlight-ecosystem-${animal.ecosystem.toLowerCase()}]`)
       expect(highlightedHexes.length).toBe(2)
       expect(consoleLogSpy).toHaveBeenCalledTimes(1)
@@ -194,11 +194,11 @@ describe('HexBoardRenderer', () => {
       hexBoardRenderer.render()
       const animal = new AnimalCard(animals.bee)
       const spawnHexes = [new Hex(0, 0, 0), new Hex(1, 0, -1)]
-      gameState.notifyPlaceAnimalStart(animal, spawnHexes)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animal, spawnHexes)
       let highlightedHexes = svg.querySelectorAll(`[class*=highlight-ecosystem-${animal.ecosystem.toLowerCase()}]`)
       expect(highlightedHexes.length).toBe(2)
 
-      gameState.notifyPlaceAnimalCancel(animal)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_CANCEL, animal)
       highlightedHexes = svg.querySelectorAll(`[class*=highlight-ecosystem-${animal.ecosystem.toLowerCase()}]`)
       expect(highlightedHexes.length).toBe(0)
 
@@ -212,8 +212,8 @@ describe('HexBoardRenderer', () => {
       const spawnHex = new Hex(0, 0, 0)
       spawnHex.isSpawn = true
       const spawnHexes = [spawnHex]
-      gameState.notifyPlaceAnimalStart(animal, spawnHexes)
-      gameState.notifyPlaceAnimalEnd(animal, spawnHex)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animal, spawnHexes)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animal, spawnHex)
       const animalGroup = svg.querySelector('.placed-cube-token')
       expect(animalGroup).not.toBeNull()
 
@@ -226,8 +226,8 @@ describe('HexBoardRenderer', () => {
       const animal = new AnimalCard(animals.bee)
       const spawnHex = new Hex(0, 0, 0)
       const spawnHexes = [spawnHex]
-      gameState.notifyPlaceAnimalStart(animal, spawnHexes)
-      gameState.notifyPlaceAnimalEnd(animal, spawnHex)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animal, spawnHexes)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_END, animal, spawnHex)
       const animalGroup = svg.querySelector('.placed-cube-token')
       expect(animalGroup).toBeNull()
 
@@ -241,10 +241,10 @@ describe('HexBoardRenderer', () => {
       const spawnHex = new Hex(0, 0, 0)
       spawnHex.isSpawn = true
       const spawnHexes = [spawnHex]
-      gameState.notifyPlaceAnimalStart(animal, spawnHexes)
+      gameState.emit(RendererEvent.PLACE_ANIMAL_START, animal, spawnHexes)
       const group = svg.querySelector(`#hex-${spawnHex.q}-${spawnHex.r}`)
       group?.remove()
-      expect(() => gameState.notifyPlaceAnimalEnd(animal, spawnHex)).toThrow(
+      expect(() => gameState.emit(RendererEvent.PLACE_ANIMAL_END, animal, spawnHex)).toThrow(
         `Hex group not found for hex (${spawnHex.q}, ${spawnHex.r})`
       )
 

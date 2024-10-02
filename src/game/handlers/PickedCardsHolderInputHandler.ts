@@ -1,7 +1,7 @@
-import GameState from '../GameState'
+import GameState, { RendererEvent } from '../GameState'
 import IInputHandler from '../interfaces/IInputHandler'
 
-export enum PickedCardsHolderSelectors {
+export enum PickedCardsHolderSelector {
   PICKED_CARDS_HOLDER = '.picked-cards-wrapper',
   CARD_ACTION_BUTTONS = '.picked-cards-wrapper .card-action-button',
 }
@@ -21,11 +21,11 @@ export default class PickedCardsHolderInputHandler implements IInputHandler {
 
   constructor(gameState: GameState) {
     this._gameState = gameState
-    this._pickedCardsHolder = this._querySelector<HTMLDivElement>(PickedCardsHolderSelectors.PICKED_CARDS_HOLDER)
-    this._cardActionButtons = document.querySelectorAll(PickedCardsHolderSelectors.CARD_ACTION_BUTTONS)
+    this._pickedCardsHolder = this._querySelector<HTMLDivElement>(PickedCardsHolderSelector.PICKED_CARDS_HOLDER)
+    this._cardActionButtons = document.querySelectorAll(PickedCardsHolderSelector.CARD_ACTION_BUTTONS)
   }
 
-  private _querySelector<T extends HTMLElement>(selector: PickedCardsHolderSelectors): T {
+  private _querySelector<T extends HTMLElement>(selector: PickedCardsHolderSelector): T {
     const element = document.querySelector<T>(selector)
     if (!element) throw new PickedCardsHolderDOMException(selector)
     return element
@@ -52,7 +52,7 @@ export default class PickedCardsHolderInputHandler implements IInputHandler {
 
       if (this._hasCancelStateButtons()) {
         if (target.getAttribute('data-state') === 'cancel') {
-          this._gameState.notifyPlaceAnimalCancel(animalCard)
+          this._gameState.emit(RendererEvent.PLACE_ANIMAL_CANCEL, animalCard)
         }
         return
       }
@@ -63,12 +63,12 @@ export default class PickedCardsHolderInputHandler implements IInputHandler {
         return
       }
 
-      this._gameState.notifyPlaceAnimalStart(animalCard, spawnHexes)
+      this._gameState.emit(RendererEvent.PLACE_ANIMAL_START, animalCard, spawnHexes)
     }
   }
 
   private _hasCancelStateButtons() {
-    this._cardActionButtons = document.querySelectorAll(PickedCardsHolderSelectors.CARD_ACTION_BUTTONS)
+    this._cardActionButtons = document.querySelectorAll(PickedCardsHolderSelector.CARD_ACTION_BUTTONS)
     return Array.from(this._cardActionButtons).some((btn) => btn.getAttribute('data-state') === 'cancel')
   }
 }

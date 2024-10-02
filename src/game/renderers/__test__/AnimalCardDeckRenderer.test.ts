@@ -1,7 +1,7 @@
 import AnimalCard, { IAnimal } from '~/board/AnimalCard'
 import AnimalCardDeck from '../../../board/AnimalCardDeck'
 import { dom } from '../../../dom'
-import GameState from '../../GameState'
+import GameState, { InputHandlerEvent, RendererEvent } from '../../GameState'
 import AnimalCardDeckRenderer from '../AnimalCardDeckRenderer'
 import PickedCardsHolderRenderer from '../PickedCardsHolderRenderer'
 
@@ -103,7 +103,7 @@ describe('AnimalCardDeckRenderer', () => {
     it('should render the hex board clone when the animal deck modal is open', () => {
       initializeDraftTable()
       animalCardDeckRenderer.render()
-      gameState.emit('animalDeckOpened')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
       const hexBoardClone = document.querySelector('.hex-board-wrapper-clone')
       expect(hexBoardClone).not.toBeNull()
     })
@@ -120,18 +120,18 @@ describe('AnimalCardDeckRenderer', () => {
       animalCardDeckRenderer.render()
       document.querySelector('.hex-board-wrapper')?.remove()
       expect(() => {
-        gameState.emit('animalDeckOpened')
+        gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
       }).toThrowError('Board not found')
     })
 
     it('should remove the hex board clone when the animal deck modal is closed', () => {
       initializeDraftTable()
       animalCardDeckRenderer.render()
-      gameState.emit('animalDeckOpened')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
       let hexBoardClone = document.querySelector('.hex-board-wrapper-clone')
       expect(hexBoardClone).not.toBeNull()
 
-      gameState.emit('animalDeckClosed')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
       hexBoardClone = document.querySelector('.hex-board-wrapper-clone')
       expect(hexBoardClone).toBeNull()
     })
@@ -140,7 +140,7 @@ describe('AnimalCardDeckRenderer', () => {
   it('should render the draft table clone when the animal deck modal is open', () => {
     initializeDraftTable()
     animalCardDeckRenderer.render()
-    gameState.emit('animalDeckOpened')
+    gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
     const draftTableClone = document.querySelector('.draft-table-clone')
     expect(draftTableClone).not.toBeNull()
   })
@@ -158,18 +158,18 @@ describe('AnimalCardDeckRenderer', () => {
       animalCardDeckRenderer.render()
       document.querySelector('.draft-table-wrapper')?.remove()
       expect(() => {
-        gameState.emit('animalDeckOpened')
+        gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
       }).toThrowError('Draft table not found')
     })
 
     it('should remove the draft table clone when the animal deck modal is closed', () => {
       initializeDraftTable()
       animalCardDeckRenderer.render()
-      gameState.emit('animalDeckOpened')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
       let draftTableClone = document.querySelector('.draft-table-clone')
       expect(draftTableClone).not.toBeNull()
 
-      gameState.emit('animalDeckClosed')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
       draftTableClone = document.querySelector('.draft-table-clone')
       expect(draftTableClone).toBeNull()
 
@@ -210,10 +210,10 @@ describe('AnimalCardDeckRenderer', () => {
                       }`) as IAnimal
         )
       )
-      gameState.emit('pickedCardsHolderUpdated')
+      gameState.emit(RendererEvent.PICKED_CARDS_HOLDER_UPDATED)
       const pickedCards = document.querySelectorAll('.picked-cards-wrapper .animal-card')
       expect(pickedCards).toHaveLength(1)
-      gameState.emit('animalDeckOpened')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
 
       const animalCardsCloneWrapper = document.querySelector('.animal-cards-clone-wrapper')
       expect(animalCardsCloneWrapper).not.toBeNull()
@@ -232,11 +232,11 @@ describe('AnimalCardDeckRenderer', () => {
     it('should remove the animal cards clone when the animal deck modal is closed', () => {
       initializeDraftTable()
       animalCardDeckRenderer.render()
-      gameState.emit('animalDeckOpened')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED)
       let animalCardsCloneWrapper = document.querySelector('.animal-cards-clone-wrapper')
       expect(animalCardsCloneWrapper).not.toBeNull()
 
-      gameState.emit('animalDeckClosed')
+      gameState.emit(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED)
       animalCardsCloneWrapper = document.querySelector('.animal-cards-clone-wrapper')
       expect(animalCardsCloneWrapper).toBeNull()
     })

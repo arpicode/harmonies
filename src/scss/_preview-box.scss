@@ -30,9 +30,6 @@
 
     .score-board-title {
       font-size: calc(20vw * 100 / 1280);
-      display: flex;
-      justify-content: center;
-      gap: calc(8vw * 100 / 1280);
       position: absolute;
       top: 0;
       left: 25%;
@@ -41,6 +38,23 @@
 
       .suns-count {
         cursor: help;
+        position: absolute;
+        font-size: calc(30vw * 100 / 1280);
+        left: 100%;
+        color: #e9cd6e;
+
+        &::after {
+          content: '';
+          position: absolute;
+          display: block;
+          top: 20%;
+          left: 120%;
+          background-image: url(./sun.png);
+          background-size: contain;
+          background-repeat: no-repeat;
+          width: calc(28vw * 100 / 1280);
+          height: calc(28vw * 100 / 1280);
+        }
       }
     }
 

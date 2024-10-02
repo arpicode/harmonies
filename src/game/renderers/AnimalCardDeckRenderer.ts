@@ -1,6 +1,6 @@
 import AnimalCard from '../../board/AnimalCard'
 import AnimalCardDeck from '../../board/AnimalCardDeck'
-import GameState from '../GameState'
+import GameState, { InputHandlerEvent, RendererEvent } from '../GameState'
 import IRenderer from '../interfaces/IRenderer'
 
 export default class AnimalCardDeckRenderer implements IRenderer {
@@ -12,9 +12,9 @@ export default class AnimalCardDeckRenderer implements IRenderer {
     this._gameState = gameState
     this._animalCardDeck = gameState.animalCardDeck
     this._initializeAnimalCardDeckDOM()
-    this._gameState.on('animalCardDeckUpdated', () => this.render())
-    this._gameState.on('animalDeckOpened', () => this._renderClones())
-    this._gameState.on('animalDeckClosed', () => this._renderRemoveClones())
+    this._gameState.on(RendererEvent.ANIMAL_CARD_DECK_UPDATED, () => this.render())
+    this._gameState.on(InputHandlerEvent.ANIMAL_CARD_DECK_OPENED, () => this._renderClones())
+    this._gameState.on(InputHandlerEvent.ANIMAL_CARD_DECK_CLOSED, () => this._renderRemoveClones())
     console.timeEnd('[Initialize] AnimalCardDeckRenderer')
   }
 
