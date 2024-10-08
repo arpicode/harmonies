@@ -8,7 +8,7 @@ export enum EndTurnButtonSelector {
 }
 
 const endTurnSound = new Audio(endTurnSoundFile)
-endTurnSound.volume = 0.08
+endTurnSound.volume = 0.1
 
 class EndTurnButtonDOMException extends Error {
   constructor(selector: string) {

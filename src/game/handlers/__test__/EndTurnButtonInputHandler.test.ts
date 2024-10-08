@@ -7,6 +7,12 @@ import { createEventWithTarget } from '~/test-utils/test-utils'
 import { GameMode } from '~/game/Game'
 import { HexBoardType } from '~/board/HexBoard'
 
+// Mock HTMLMediaElement.prototype.play since it is not implemented in JSDOM
+Object.defineProperty(HTMLMediaElement.prototype, 'play', {
+  configurable: true,
+  value: vi.fn().mockImplementation(() => Promise.resolve()),
+})
+
 describe('EndTurnButtonInputHandler', () => {
   document.body.innerHTML = ''
   let gameState: GameState
@@ -14,6 +20,7 @@ describe('EndTurnButtonInputHandler', () => {
   let endTurnButtonRenderer: EndTurnButtonRenderer
 
   const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(vi.fn())
+
   beforeEach(() => {
     document.body.innerHTML = dom
   })

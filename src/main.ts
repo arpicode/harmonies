@@ -1,4 +1,4 @@
-import Game from './game/Game'
+import GameCreationForm from './game/GameCreationForm'
 import './style.scss'
 
-new Game('solo', 'river')
+new GameCreationForm()

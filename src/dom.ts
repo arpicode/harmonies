@@ -1,4 +1,5 @@
 export const dom = `
+  <dialog class="game-creation-modal"></dialog>
   <dialog class="animal-deck-modal"></dialog>
 
   <div class="game-wrapper">

@@ -9,7 +9,7 @@ export enum HexBoardSelector {
 }
 
 const placeTokenSound = new Audio(placeTokenSoundFile)
-placeTokenSound.volume = 0.1
+placeTokenSound.volume = 0.2
 const placeAnimalSound = new Audio(placeAnimalSoundFile)
 placeAnimalSound.volume = 0.2
 
