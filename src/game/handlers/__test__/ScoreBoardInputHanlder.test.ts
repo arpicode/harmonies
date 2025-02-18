@@ -1,5 +1,5 @@
 import { dom } from '~/dom'
-import ScoreBoardInputHandler, { ScoreBoardSelector } from '../ScoreBoardInputHanlder'
+import ScoreBoardInputHandler, { ScoreBoardSelector } from '../ScoreBoardInputHandler'
 import { createEventWithTarget } from '~/test-utils/test-utils'
 
 describe('ScoreBoardInputHandler', () => {

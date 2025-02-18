@@ -1,36 +1,16 @@
-import DraftTableInputHandler from './handlers/DraftTableInputHandler'
-import GameState from './GameState'
-import HexBoardInputHandler from './handlers/HexBoardInputHandler'
 import IInputHandler from './interfaces/IInputHandler'
-import AnimalCardDeckInputHandler from './handlers/AnimalCardDeckInputHandler'
-import PickedCardsHolderInputHandler from './handlers/PickedCardsHolderInputHandler'
-import ScoreBoardInputHandler from './handlers/ScoreBoardInputHanlder'
-import EndTurnButtonInputHandler from './handlers/EndTurnButtonInputHandler'
+import CompositeInputHandler from './composites/CompositeInputHandler'
 
 export default class GameInputHandler implements IInputHandler {
-  private readonly _draftTableInputHandler: IInputHandler
-  private readonly _hexBoardInputHandler: IInputHandler
-  private readonly _animalCardDeckInputHandler: IInputHandler
-  private readonly _pickedCardsHolderInputHandler: IInputHandler
-  private readonly _scoreBoardInputHandler: IInputHandler
-  private readonly _endTurnButtonInputHandler: IInputHandler
+  private readonly _compositeInputHandler: CompositeInputHandler
 
-  constructor(gameState: GameState) {
-    this._draftTableInputHandler = new DraftTableInputHandler(gameState)
-    this._hexBoardInputHandler = new HexBoardInputHandler(gameState)
-    this._animalCardDeckInputHandler = new AnimalCardDeckInputHandler(gameState)
-    this._pickedCardsHolderInputHandler = new PickedCardsHolderInputHandler(gameState)
-    this._scoreBoardInputHandler = new ScoreBoardInputHandler()
-    this._endTurnButtonInputHandler = new EndTurnButtonInputHandler(gameState)
+  constructor(inputHandlers: IInputHandler[]) {
+    this._compositeInputHandler = new CompositeInputHandler()
+    inputHandlers.forEach((inputHandler) => this._compositeInputHandler.addHandler(inputHandler))
   }
 
   initialize() {
-    this._draftTableInputHandler.initialize()
-    this._hexBoardInputHandler.initialize()
-    this._animalCardDeckInputHandler.initialize()
-    this._pickedCardsHolderInputHandler.initialize()
-    this._scoreBoardInputHandler.initialize()
-    this._endTurnButtonInputHandler.initialize()
+    this._compositeInputHandler.initialize()
     /* c8 ignore start */
     document.addEventListener('contextmenu', (event) => {
       if (event.target instanceof HTMLImageElement || event.target instanceof SVGElement) event.preventDefault()

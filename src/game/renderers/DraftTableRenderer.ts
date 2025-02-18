@@ -190,9 +190,6 @@ export default class DraftTableRenderer implements IRenderer {
         svgToken.id = `token-${slotIndex}-${i}`
       }
 
-      // Append the token to the slot tokens group
-
-      // Append the slot tokens group to the slot group
       slotTokens.appendChild(svgToken)
     })
   }

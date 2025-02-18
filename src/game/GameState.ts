@@ -52,7 +52,7 @@ export default class GameState extends EventEmitter {
     this.animalCardDeck = this._createAnimalCardDeck()
     this.pickedCardsHolder = this._createPickedCardsHolder()
     this.scoreBoard = this._createScoreBoard()
-    this.endTurnButton = this.createEndTurnButton()
+    this.endTurnButton = this._createEndTurnButton()
   }
 
   public isGameOver(): boolean {
@@ -117,7 +117,7 @@ export default class GameState extends EventEmitter {
     return new ScoreBoard(this.hexBoard, this.pickedCardsHolder)
   }
 
-  public createEndTurnButton(): EndTurnButton {
+  private _createEndTurnButton(): EndTurnButton {
     return new EndTurnButton('Terminer le Tour', true)
   }
 }
